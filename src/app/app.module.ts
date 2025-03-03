@@ -7,7 +7,8 @@ import { NavBarComponent } from './Core/Components/nav-bar/nav-bar.component';
 import { CategoriesListComponent } from './Features/Categories/categories-list/categories-list.component';
 import { AddCategoryComponent } from './Features/Categories/add-category/add-category.component';
 import { FormsModule } from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http'
+import {HttpClientModule} from '@angular/common/http';
+import { EditCategoryComponent } from './Features/Categories/edit-category/edit-category.component'
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import {HttpClientModule} from '@angular/common/http'
     NavBarComponent,
     CategoriesListComponent,
     AddCategoryComponent,
+    EditCategoryComponent,
   ],
   imports: [
     BrowserModule,

@@ -31,7 +31,7 @@ app.UseCors(options =>
 {
     options.AllowAnyHeader();
     options.AllowAnyOrigin();
-    options.AllowAnyHeader();
+    options.AllowAnyMethod();
 });
 
 app.UseAuthorization();
