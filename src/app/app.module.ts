@@ -8,7 +8,7 @@ import { CategoriesListComponent } from './Features/Categories/categories-list/c
 import { AddCategoryComponent } from './Features/Categories/add-category/add-category.component';
 import { FormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import { EditCategoryComponent } from './Features/Categories/edit-category/edit-category.component'
+import { EditCategoryComponent } from './Features/Categories/edit-category/edit-category.component';
 
 @NgModule({
   declarations: [
