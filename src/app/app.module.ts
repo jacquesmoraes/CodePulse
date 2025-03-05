@@ -8,7 +8,10 @@ import { CategoriesListComponent } from './Features/Categories/categories-list/c
 import { AddCategoryComponent } from './Features/Categories/add-category/add-category.component';
 import { FormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import { EditCategoryComponent } from './Features/Categories/edit-category/edit-category.component'
+import { EditCategoryComponent } from './Features/Categories/edit-category/edit-category.component';
+import { BlogpostListComponent } from './Features/blog-post/blogpost-list/blogpost-list.component';
+import { AddBlogpostComponent } from './Features/blog-post/add-blogpost/add-blogpost.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -17,12 +20,16 @@ import { EditCategoryComponent } from './Features/Categories/edit-category/edit-
     CategoriesListComponent,
     AddCategoryComponent,
     EditCategoryComponent,
+    BlogpostListComponent,
+    AddBlogpostComponent
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MarkdownModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

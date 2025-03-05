@@ -1,3 +1,4 @@
+using AutoMapper;
 using CodePulse.API.Data;
 using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.Dto;
@@ -14,53 +15,34 @@ namespace CodePulse.API.Controllers
   public class CategoriesController : ControllerBase
   {
     private readonly ICategoryRepository _categoryRepository;
+    private readonly IMapper _mapper;
 
-    public CategoriesController(ICategoryRepository categoryRepository)
+    public CategoriesController(ICategoryRepository categoryRepository, IMapper mapper)
     {
       _categoryRepository = categoryRepository;
+      _mapper = mapper;
     }
 
     [HttpPost]
     public async Task<IActionResult> createCategory(CreateCategoriesDto request)
     {
       //map dto to domain
-      var categories = new Category
-      {
-        Name = request.Name,
-        UrlHandle = request.UrlHandle,
-      };
-      await _categoryRepository.CreateAsync(categories);
-
-      //domain model to dto
-      var response = new CategoryDto
-      {
-        Id = categories.Id,
-        Name = categories.Name,
-        UrlHandle = categories.UrlHandle,
-      };
 
 
-      return Ok(response);
+      var categories = _mapper.Map<Category>(request);
+      categories = await _categoryRepository.CreateAsync(categories);
+      return Ok(_mapper.Map<CategoryDto>(categories));
+
+
+     
     }
 
     [HttpGet]
     public async Task<IActionResult> GetCategories()
     {
       var categories = await _categoryRepository.GetAllCategories();
+      return Ok(_mapper.Map<IEnumerable<CategoryDto>>(categories));
 
-      //map domain to DTO
-      var response = new List<CategoryDto>();
-
-      foreach (var category in categories)
-      {
-        response.Add(new CategoryDto
-        {
-          Id = category.Id,
-          Name = category.Name,
-          UrlHandle = category.UrlHandle
-        });
-      }
-      return Ok(response);
     }
 
     [HttpGet]
@@ -74,14 +56,8 @@ namespace CodePulse.API.Controllers
         return NotFound();
       }
 
-      var response = new CategoryDto
-      {
-        Id = categoryId.Id,
-        Name = categoryId.Name,
-        UrlHandle = categoryId.UrlHandle
-      };
-
-      return Ok(response);
+      
+      return Ok(_mapper.Map<CategoryDto>(categoryId));
 
     }
 
@@ -90,27 +66,30 @@ namespace CodePulse.API.Controllers
     public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto requestDto)
     {
 
-      var category = new Category
-      {
-        Id = id,
-        Name = requestDto.Name,
-        UrlHandle = requestDto.UrlHandle
-      };
+      var category = _mapper.Map<Category>(requestDto);
+      category.Id = id;
       category = await _categoryRepository.UpdateCategoryAsync(category);
 
-      if (category == null)
+      if(category == null)
       {
         return NotFound();
       }
-      var response = new CategoryDto
+      return Ok(_mapper.Map<CategoryDto>(category));
+
+
+    }
+
+    [HttpDelete]
+    [Route("{id:guid}")]
+    public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
+    {
+      var category = await _categoryRepository.DeleteCategoryAsync(id);
+      if(category == null)
       {
-        Id = category.Id,
-        Name = category.Name,
-        UrlHandle = category.UrlHandle
-      };
-      return Ok(response);
-
-
+        return NotFound();
+      }
+      //map to dto
+      return Ok(_mapper.Map<CategoryDto>(category));
     }
   }
 }

@@ -1,0 +1,25 @@
+.markdown-editor {
+    font-family: 'Courier New', monospace; /* Fonte monoespaçada para parecer um editor de código */
+    background-color: #f8f9fa; /* Fundo levemente cinza */
+    border: 1px solid #ced4da;
+    
+    border-radius: 6px;
+    margin: 0; /* Remove margens extras */
+    padding: 0;
+}
+
+.preview-container {
+    background-color: #fff; /* Fundo branco */
+    border: 1px solid #ced4da;
+    margin-top: 8px;
+    border-radius: 6px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); /* Efeito de profundidade leve */
+   
+        
+    
+}
+
+.preview-container markdown {
+    word-wrap: break-word;
+}
+

@@ -1,0 +1,55 @@
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Blog Posts</h1>
+
+    <!-- Botão de Adicionar Post -->
+    <div class="d-flex justify-content-end mb-3">
+        <a [routerLink]="['/admin/blogpost/add']" class="btn btn-primary">
+            ➕ Add Blog Post
+        </a>
+    </div>
+
+    <!-- Tabela Responsiva -->
+    <div class="table-responsive">
+        <ng-container *ngIf="blogPosts$ | async as blogPosts; else loading">
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Short Description</th>
+                        <th class="text-center">Visibility</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let post of blogPosts">
+                        <td>{{ post.title }}</td>
+                        <td>{{ post.shortDescription }}</td>
+                        <td class="text-center">
+                            <span *ngIf="post.isVisible; else hiddenIcon">
+                                ✅ Visible
+                            </span>
+                            <ng-template #hiddenIcon>
+                                ❌ Hidden
+                            </ng-template>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a [routerLink]="['/admin/blogpost/edit', post.id]" class="btn btn-sm btn-warning">
+                                    ✏️ Edit
+                                </a>
+                                <button class="btn btn-sm btn-danger" >
+                                    🗑️ Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+    </div>
+
+    <!-- Mensagem de Carregamento -->
+    <ng-template #loading>
+        <p class="text-center text-muted">🔄 Loading blog posts...</p>
+    </ng-template>
+</div>
