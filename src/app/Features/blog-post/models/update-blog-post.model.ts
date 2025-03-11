@@ -1,7 +1,4 @@
-import { Category } from "../../Categories/models/category.model";
-
-export interface BlogPost{
-    id:string;
+export interface UpdateBlogPost{
     title : string;
     shortDescription:string;
     content:string;
@@ -10,5 +7,6 @@ export interface BlogPost{
     publishedDate : Date;
     author:string;
     isVisible:boolean;
-    categories: Category[];
+    categories: string[];
+    
 }

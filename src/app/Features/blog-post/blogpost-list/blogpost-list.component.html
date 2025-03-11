@@ -10,12 +10,13 @@
 
     <!-- Tabela Responsiva -->
     <div class="table-responsive">
-        <ng-container *ngIf="blogPosts$ | async as blogPosts; else loading">
+        <ng-container *ngIf="blogPosts.length > 0; else loading">
             <table class="table table-hover table-bordered">
                 <thead class="table-dark">
                     <tr>
                         <th>Title</th>
                         <th>Short Description</th>
+                        <th>Categories</th>
                         <th class="text-center">Visibility</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -24,20 +25,21 @@
                     <tr *ngFor="let post of blogPosts">
                         <td>{{ post.title }}</td>
                         <td>{{ post.shortDescription }}</td>
-                        <td class="text-center">
-                            <span *ngIf="post.isVisible; else hiddenIcon">
-                                ✅ Visible
+                        <td >
+                            <span *ngFor="let category of post.categories">
+                                <span class="badge bg-secondary">{{category.name}}</span>
+
                             </span>
-                            <ng-template #hiddenIcon>
-                                ❌ Hidden
-                            </ng-template>
+                        </td>
+                        <td class="text-center"> <span *ngIf="post.isVisible; else hiddenIcon">   ✅ Visible   </span>
+                            <ng-template #hiddenIcon>❌ Hidden</ng-template>
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
-                                <a [routerLink]="['/admin/blogpost/edit', post.id]" class="btn btn-sm btn-warning">
+                                <a [routerLink]="['/admin/blogpost', post.id]" class="btn btn-sm btn-warning">
                                     ✏️ Edit
                                 </a>
-                                <button class="btn btn-sm btn-danger" >
+                                <button class="btn btn-sm btn-danger"(click)="onDelete(post)" >
                                     🗑️ Delete
                                 </button>
                             </div>

@@ -1,0 +1,76 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">✏️ Edit Blog Post</h2>
+
+  <form (ngSubmit)="onSubmit()">
+      <!-- Título -->
+       <ng-container *ngIf="blogPost">
+
+     
+      <div class="mb-3">
+          <label class="form-label fw-bold">Title</label>
+          <input type="text" class="form-control" [(ngModel)]="blogPost.title" name="title" required>
+      </div>
+
+      <!-- Short Description -->
+      <div class="mb-3">
+          <label class="form-label fw-bold">Short Description</label>
+          <input type="text" class="form-control" [(ngModel)]="blogPost.shortDescription" name="shortDescription" required>
+      </div>
+
+      <!-- Content -->
+      <div >
+        <label for="content" class="form-label fw-bold">Content</label>
+    
+        <!-- Layout responsivo para Editor e Preview -->
+        <div class="row align-items-stretch">
+            <!-- Editor -->
+            <div class="col-md-6 p-2 flex-column">
+                <textarea id="content"
+                    class="form-control markdown-editor flex-grow-1"
+                    style="height: 350px; max-height: 350px;"
+                    name="content"
+                    [(ngModel)]="blogPost.content"
+                    >
+                   
+                </textarea>
+            </div>
+    
+            <!-- Preview -->
+            <div class="col-md-6 p-2 preview-container d-flex flex-column" style="height: 350px; overflow-y: scroll;">
+                <markdown [data]="blogPost.content"></markdown>
+            </div>
+        </div>
+    </div>
+
+      <!-- URL da Imagem -->
+      <div class="mb-3">
+          <label class="form-label fw-bold">Featured Image URL</label>
+          <input type="text" class="form-control" [(ngModel)]="blogPost.featuredImageUrl" name="featuredImageUrl">
+      </div>
+
+      <!-- Seleção de Categorias -->
+      <ng-container *ngIf="categories$ | async as categories">
+      <div class="mb-3">
+          <label class="form-label fw-bold">Categories</label>
+          <select class="form-control" name="categories" [(ngModel)]="selectedCategories" multiple>
+              <option *ngFor="let category of categories" [value]="category.id">
+                  {{category.name}}
+              </option>
+          </select>
+      </div>
+      </ng-container>
+      <!-- Visibilidade -->
+      <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="isVisible" [(ngModel)]="blogPost.isVisible" name="isVisible">
+          <label class="form-check-label" for="isVisible">Publish this post?</label>
+      </div>
+
+      <!-- Botões -->
+      <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" (click)="router.navigateByUrl('/admin/blogpost')">❌ Cancel</button>
+          <button type="submit" class="btn btn-primary">💾 Save changes</button>
+      </div>
+    </ng-container>
+  </form>
+  
+</div>

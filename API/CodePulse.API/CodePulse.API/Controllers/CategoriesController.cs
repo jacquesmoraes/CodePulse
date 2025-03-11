@@ -26,12 +26,11 @@ namespace CodePulse.API.Controllers
     [HttpPost]
     public async Task<IActionResult> createCategory(CreateCategoriesDto request)
     {
-      //map dto to domain
 
+      var category = _mapper.Map<Category>(request);
 
-      var categories = _mapper.Map<Category>(request);
-      categories = await _categoryRepository.CreateAsync(categories);
-      return Ok(_mapper.Map<CategoryDto>(categories));
+      await _categoryRepository.CreateAsync(category);
+      return Ok(_mapper.Map<CategoryDto>(category));
 
 
      
@@ -46,7 +45,7 @@ namespace CodePulse.API.Controllers
     }
 
     [HttpGet]
-    [Route("{id:Guid}")]
+    [Route("{id:guid}")]
     public async Task<IActionResult> GetCategoryById([FromRoute] Guid id)
     {
 

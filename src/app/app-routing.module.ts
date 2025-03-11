@@ -5,13 +5,15 @@ import { AddCategoryComponent } from './Features/Categories/add-category/add-cat
 import { EditCategoryComponent } from './Features/Categories/edit-category/edit-category.component';
 import { BlogpostListComponent } from './Features/blog-post/blogpost-list/blogpost-list.component';
 import { AddBlogpostComponent } from './Features/blog-post/add-blogpost/add-blogpost.component';
+import { EditBlogPostComponent } from './Features/blog-post/edit-blog-post/edit-blog-post.component';
 
 const routes: Routes = [
   {path: 'admin/categories', component:CategoriesListComponent},
   {path:'admin/categories/add', component:AddCategoryComponent },
   {path: 'admin/categories/:id', component:EditCategoryComponent},
   {path: 'admin/blogpost', component: BlogpostListComponent},
-  {path: 'admin/blogpost/add', component:AddBlogpostComponent}
+  {path: 'admin/blogpost/add', component:AddBlogpostComponent},
+  {path: 'admin/blogpost/:id', component:EditBlogPostComponent}
 
 ];
 
