@@ -44,7 +44,9 @@
 
       <!-- URL da Imagem -->
       <div class="mb-3">
-          <label class="form-label fw-bold">Featured Image URL</label>
+          <label class="form-label fw-bold">Featured Image URL
+            <button type="button" class="btn btn-light" (click)="openImageSelector()">select image</button>
+          </label>
           <input type="text" class="form-control" [(ngModel)]="blogPost.featuredImageUrl" name="featuredImageUrl">
       </div>
 
@@ -71,6 +73,11 @@
           <button type="submit" class="btn btn-primary">💾 Save changes</button>
       </div>
     </ng-container>
-  </form>
+    </form>
   
+</div>
+<div class="image-container-modal" [ngClass]="{'d-block' : isImageSelectorVisible, 'd-none' : !isImageSelectorVisible}">
+   <button type="button" class="btn btn-light" style="position: fixed; top: 10px; right: 10px;"
+   (click)="closeImageSelector()">X</button>
+    <app-image-selector></app-image-selector>
 </div>

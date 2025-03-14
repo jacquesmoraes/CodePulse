@@ -20,6 +20,7 @@ namespace CodePulse.API.Mapping
       CreateMap<UpdateBlogPostRequestDto, BlogPost> ( )
           .ForMember ( dest => dest.Categories, opt => opt.MapFrom ( src =>
        src.Categories.Select ( guidId => new Category { Id = guidId } ) ) );
+      CreateMap<BlogImage, BlogImageDto> ( );
 
       // Domain -> DTO (Retornando um post com categorias)
       CreateMap<Category, CategoryDto> ( );
