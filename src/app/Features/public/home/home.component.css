@@ -1,0 +1,240 @@
+.sidebar {
+  padding: 0 0 0 30px;
+}
+
+.sidebar .widget-item {
+  background: #f9f9f9;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.sidebar .widget-title {
+  position: relative;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  padding-left: 15px;
+  margin-bottom: 20px;
+}
+
+.sidebar .widget-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 4px;
+  height: 20px;
+  background-color: #f26522; /* Laranja */
+  border-radius: 2px;
+}
+
+/* Search widget */
+.search-widget form {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.search-widget input[type="text"] {
+  flex: 1;
+  border: none;
+  padding: 10px 15px;
+  font-size: 0.95rem;
+  border-radius: 30px 0 0 30px;
+  outline: none;
+}
+
+.search-widget button {
+  background: transparent;
+  border: none;
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.search-widget button:hover {
+  color: #f26522;
+}
+
+/* Categories */
+.categories-widget ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.categories-widget ul li {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.categories-widget ul li a {
+  color: #34495e;
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  transition: color 0.2s;
+}
+
+.categories-widget ul li a:hover {
+  color: #f26522;
+}
+
+/* Recent Posts */
+.recent-posts-widget .post-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.recent-posts-widget .post-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  margin-right: 12px;
+  border-radius: 6px;
+}
+
+.recent-posts-widget h4 {
+  font-size: 0.9rem;
+  margin: 0 0 4px;
+  color: #2c3e50;
+}
+
+.recent-posts-widget h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.recent-posts-widget h4 a:hover {
+  color: #f26522;
+}
+
+.recent-posts-widget time {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+/* Tags */
+.tags-widget ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-left: 0;
+}
+
+.tags-widget ul li {
+  list-style: none;
+}
+
+.tags-widget ul li a {
+  background-color: #eee;
+  color: #444;
+  font-size: 0.85rem;
+  padding: 5px 10px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.tags-widget ul li a:hover {
+  background-color: #f26522;
+  color: #fff;
+}
+/* Estilo para cada post como um card moderno */
+#category-postst article {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+#category-postst article:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Imagem do post no topo */
+#category-postst .post-img img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid #eee;
+}
+
+/* Categoria (badge) */
+#category-postst .badge {
+  background-color: #f26522;
+  color: white;
+  font-size: 0.75rem;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin: 15px 20px 0;
+  display: inline-block;
+}
+
+/* Título do post */
+#category-postst .title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 10px 20px;
+  color: #2c3e50;
+}
+
+#category-postst .title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+#category-postst .title a:hover {
+  color: #f26522;
+}
+
+/* Meta (autor + data) */
+#category-postst .d-flex {
+  align-items: center;
+  margin: 10px 20px 20px;
+}
+
+#category-postst .post-meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+#category-postst .post-author {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+#category-postst .post-date {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* Se quiser adicionar a foto do autor no futuro */
+#category-postst .d-flex::before {
+  content: "";
+  display: inline-block;
+  background-image: url('https://via.placeholder.com/40'); /* Substitua pela imagem real se quiser */
+  background-size: cover;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+}
+
+

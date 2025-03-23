@@ -1,0 +1,27 @@
+.blog-post {
+    margin-bottom: 40px;
+  }
+  
+  .blog-post-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .blog-post-meta {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+  }
+  
+  .blog-post-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+  .post-image {
+    max-width: 800px;  /* Tamanho máximo desejado */
+    max-height: 800px;
+    width: 100%;       /* Garante responsividade */
+    height: auto;      /* Mantém a proporção da imagem */
+    display: block;
+    margin: 0 auto;    /* Centraliza a imagem */
+  }
+  

@@ -71,6 +71,13 @@ namespace CodePulse.API.Controllers
 
       }
 
+      [HttpGet]
+      [Route("{urlHandle}")]
+      public async Task<IActionResult> GetPostByUrlHandle([FromRoute] string urlHandle){
+      var blogpost = await _postRepository.GetBlogPostByUrlHandle(urlHandle);
+      return Ok ( _mapper.Map<BlogPostDto>(blogpost) );
+      }
+
     [HttpPut]
     [Route ( "{id:guid}" )]
     public async Task<IActionResult> UpdateBlogPost ([FromRoute] Guid id, [FromBody] UpdateBlogPostRequestDto dto ) {

@@ -16,6 +16,8 @@ import { EditBlogPostComponent } from './Features/blog-post/edit-blog-post/edit-
 import { ImageSelectorComponent } from './shared/components/image-selector/image-selector.component';
 import { BlogPostDetailsComponent } from './Features/blog-post/details-blogpost/details-blogpost.component';
 import { FooterComponent } from './Core/Components/footer/footer.component';
+import { HomeComponent } from './Features/public/home/home.component';
+import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.component';
 
 
 @NgModule({
@@ -30,7 +32,9 @@ import { FooterComponent } from './Core/Components/footer/footer.component';
     EditBlogPostComponent,
     ImageSelectorComponent,
     BlogPostDetailsComponent,
-    FooterComponent
+    FooterComponent,
+    HomeComponent,
+    BlogdetailsComponent
     
   ],
   imports: [

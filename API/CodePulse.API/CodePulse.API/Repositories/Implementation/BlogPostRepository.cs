@@ -1,9 +1,9 @@
 using AutoMapper;
 using CodePulse.API.Data;
 using CodePulse.API.Models.Domain;
-using CodePulse.API.Models.Dto;
+
 using CodePulse.API.Repositories.Interface;
-using Microsoft.AspNetCore.Http.HttpResults;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace CodePulse.API.Repositories.Implementation
@@ -65,6 +65,11 @@ namespace CodePulse.API.Repositories.Implementation
         return blogPostToDelete;
       }
       return null;
+      }
+
+    public async Task<BlogPost?> GetBlogPostByUrlHandle ( string urlhandle ) {
+      return await _context.BlogPosts.Include ( x => x.Categories )
+      .FirstOrDefaultAsync ( bp => bp.UrlHandle == urlhandle );
       }
     }
     }

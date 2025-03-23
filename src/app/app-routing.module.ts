@@ -7,6 +7,9 @@ import { BlogpostListComponent } from './Features/blog-post/blogpost-list/blogpo
 import { AddBlogpostComponent } from './Features/blog-post/add-blogpost/add-blogpost.component';
 import { EditBlogPostComponent } from './Features/blog-post/edit-blog-post/edit-blog-post.component';
 import { BlogPostDetailsComponent } from './Features/blog-post/details-blogpost/details-blogpost.component';
+import { HomeComponent } from './Features/public/home/home.component';
+import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.component';
+
 
 const routes: Routes = [
   {path: 'admin/categories', component:CategoriesListComponent},
@@ -15,7 +18,9 @@ const routes: Routes = [
   {path: 'admin/blogpost', component: BlogpostListComponent},
   {path: 'admin/blogpost/add', component:AddBlogpostComponent},
   {path: 'admin/blogpost/:id', component:EditBlogPostComponent},
-  {path: 'admin/blogpost/details/:id', component:BlogPostDetailsComponent}
+  {path: 'admin/blogpost/details/:id', component:BlogPostDetailsComponent},
+  {path: '', component:HomeComponent},
+  {path: 'blog/:url', component:BlogdetailsComponent}
 
 ];
 

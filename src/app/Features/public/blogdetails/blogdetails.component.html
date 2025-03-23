@@ -1,0 +1,17 @@
+<div class="container mt-5">
+      
+    <!-- Post Details -->
+    <ng-container *ngIf="blogposts$ | async as blogpost">
+      <article class="blog-post">
+        <h1 class="blog-post-title">{{ blogpost.title }}</h1>
+        <p class="blog-post-meta">
+          {{ blogpost.publishedDate| date:'mediumDate' }} por {{ blogpost.author }}
+        </p>
+        <img *ngIf="blogpost.featuredImageUrl" [src]="blogpost.featuredImageUrl" alt="Imagem do post" class="img-fluid mb-4 post-image">
+        <div class="blog-post-content">
+          <markdown [data]="blogpost.content"></markdown>
+        </div>
+      </article>
+    </ng-container>
+  </div>
+  
