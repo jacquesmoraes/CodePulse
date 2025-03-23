@@ -1,0 +1,14 @@
+
+.navbar {
+    transition: all 0.3s;
+    padding: 15px 20px;
+    background: rgba(33, 37, 41, 0.1);
+}
+.navbar.scrolled {
+    background: rgba(33, 37, 41, 0.1);
+    padding: 10px 20px;
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.3rem;
+}

@@ -36,6 +36,9 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
+                                <a [routerLink]="['/admin/blogpost/details', post.id]" class="btn btn-sm btn-info">
+                                    🔍 Details
+                                  </a>
                                 <a [routerLink]="['/admin/blogpost', post.id]" class="btn btn-sm btn-warning">
                                     ✏️ Edit
                                 </a>

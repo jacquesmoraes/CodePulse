@@ -1,0 +1,26 @@
+<div class="container mt-5">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center">
+      <p>Carregando post...</p>
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+  
+    <!-- Post Details -->
+    <ng-container *ngIf="!isLoading && !error && blogPost">
+      <article class="blog-post">
+        <h1 class="blog-post-title">{{ blogPost.title }}</h1>
+        <p class="blog-post-meta">
+          {{ blogPost.publishedDate| date:'mediumDate' }} por {{ blogPost.author }}
+        </p>
+        <img *ngIf="blogPost.featuredImageUrl" [src]="blogPost.featuredImageUrl" alt="Imagem do post" class="img-fluid mb-4 post-image">
+        <div class="blog-post-content">
+          <markdown [data]="blogPost.content"></markdown>
+        </div>
+      </article>
+    </ng-container>
+  </div>
+  

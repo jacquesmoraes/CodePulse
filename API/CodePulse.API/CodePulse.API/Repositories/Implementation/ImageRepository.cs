@@ -15,32 +15,38 @@ namespace CodePulse.API.Repositories.Implementation
       _environment = environment;
       _context = context;
       }
-    public async Task<BlogImage> SaveImageAsync ( IFormFile file ) {
+    public async Task<BlogImage> SaveImageAsync ( IFormFile file, string name ) {
       if ( !( file == null || file.Length == 0 ) ) {
         var extension = Path.GetExtension(file.FileName).ToLower();
         var permited = new [] {".jpg", ".jpeg", ".png"};
+
         if ( !permited.Contains ( extension ) ) {
           throw new ArgumentException ( "invalid image format" );
           }
-        if ( file.Length > 10485760 ) {
+
+          if ( file.Length > 10485760 ) {
           throw new ArgumentException ( "the max size of image is 10mb" );
           }
-        var fileName = $"{Guid.NewGuid()}{extension}";
+        var sanitizedFileName = Path.GetFileNameWithoutExtension(name).Replace(" ", "_");
+        var fileName = $"{sanitizedFileName}{extension}";
         var relPath = Path.Combine("images", fileName);
         var completePath = Path.Combine(_environment.WebRootPath, relPath);
 
-        if ( !Directory.Exists ( Path.GetDirectoryName ( completePath ) ) ) {
-          Directory.CreateDirectory ( Path.GetDirectoryName ( completePath )! );
+        var directoryExists = Path.GetDirectoryName(completePath);
+
+        if ( !Directory.Exists ( directoryExists ) ) {
+          Directory.CreateDirectory ( directoryExists! );
           }
-        using ( var stream = new FileStream ( completePath, FileMode.Create ) ) {
+
+          using ( var stream = new FileStream ( completePath, FileMode.Create ) ) {
           await file.CopyToAsync ( stream );
           }
 
         var image = new BlogImage{
           Id  = Guid.NewGuid(),
-          FileName = fileName,
+          FileName = sanitizedFileName,
           FileExtension = extension,
-          Title = Path.GetFileNameWithoutExtension(file.FileName),
+          Title = sanitizedFileName,
           Url = relPath.Replace("\\", "/"),
           DateCreated = DateTime.UtcNow
           };

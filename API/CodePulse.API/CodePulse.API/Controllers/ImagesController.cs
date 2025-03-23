@@ -20,9 +20,11 @@ namespace CodePulse.API.Controllers
       }
 
       [HttpPost]
-    public async Task<ActionResult<BlogImageDto>> UploadImages ( IFormFile file) {
+      
+    public async Task<ActionResult<BlogImageDto>> UploadImages ( IFormFile file, [FromForm] string fileName) {
         try{
-        var savedImage = await _imageRepository.SaveImageAsync(file);
+        
+        var savedImage = await _imageRepository.SaveImageAsync(file, fileName);
         var imageDto = _mapper.Map<BlogImageDto>(savedImage);
         imageDto.Url = $"{Request.Scheme}://{Request.Host}/{savedImage.Url}";
         return Ok ( imageDto );

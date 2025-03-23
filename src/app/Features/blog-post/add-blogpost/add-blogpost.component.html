@@ -63,23 +63,18 @@
 
         <!-- URL da Imagem Destacada -->
         <div class="mb-3">
-            <label for="featuredImageUrl" class="form-label fw-bold">featured Image url</label>
-          
-            <ng-container *ngIf="model.featuredImageUrl !== ''"> 
-                <!-- Pré-visualização da Imagem -->
-             <div  class="text-center mb-3">
-                 <img [src]="model.featuredImageUrl"  class="img-fluid rounded shadow-sm"  style="max-width: 400px;">
-             </div>
-            </ng-container>
-
-            <input type="text" 
-            id="featuredImageUrl"
-             class="form-control" 
-             [(ngModel)]="model.featuredImageUrl"
-             name="featuredImageUrl">
-             
-
-        </div>
+            <label class="form-label fw-bold">
+              Featured Image URL
+              <button type="button" class="btn btn-light" (click)="openImageSelector()">select image</button>
+            </label>
+            <input type="text" class="form-control" [(ngModel)]="model.featuredImageUrl" name="featuredImageUrl">
+          </div>
+          <!-- Preview da imagem (se houver) -->
+          <ng-container *ngIf="model.featuredImageUrl">
+            <div class="text-center mt-3">
+              <img [src]="model.featuredImageUrl" alt="Preview da imagem" class="img-fluid rounded shadow-sm" style="max-width: 400px;">
+            </div>
+          </ng-container>
    
         <!-- Autor -->
         <div class="row">
@@ -90,7 +85,7 @@
                  id="publishedDate" 
                  class="form-control" 
                  value="{{model.publishedDate}}"
-                 [ngModel]="model.publishedDate | date: 'yyy-MM-dd'"
+                 [ngModel]="model.publishedDate | date: 'yyyy-MM-dd'"
                  (ngModelChange)="model.publishedDate= $event" 
                  name="publishedDate" 
                  required>
@@ -134,4 +129,24 @@
             <button type="submit" class="btn btn-primary">💾 Save post</button>
         </div>
     </form>
+   
 </div>
+
+
+
+
+
+
+<div class="image-container-modal position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center"
+  [ngClass]="{'d-block': isImageSelectorVisible, 'd-none': !isImageSelectorVisible}">
+  
+    
+    
+    <!-- Componente de Seleção de Imagem -->
+    <app-image-selector 
+  [isVisible]="isImageSelectorVisible" 
+  (imageSelected)="onImageSelected($event)"
+  (modalClosed)="closeImageSelector()">
+</app-image-selector>
+  </div>
+

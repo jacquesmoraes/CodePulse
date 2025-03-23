@@ -4,6 +4,6 @@ namespace CodePulse.API.Repositories.Interface
   {
   public interface IImageRepository
     {
-    Task<BlogImage> SaveImageAsync ( IFormFile file );
+    Task<BlogImage> SaveImageAsync ( IFormFile file, string fileName );
     }
   }

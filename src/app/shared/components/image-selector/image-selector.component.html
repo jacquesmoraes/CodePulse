@@ -1,47 +1,65 @@
-<div class="card h-100">
-    <div class="card-header">
-      <h3 class="card-title">Images</h3>
-    </div>
-    <div class="card-body">
-      <div class="d-flex flex-md-row flex-sm-column flex-wrap">
-        <div class="col-8 p-4" style="overflow-y: scroll;">
-          <!-- <ng-container *ngIf="images$ | async as images">
-            <div class="d-flex flex-wrap">
-              <div *ngFor="let image of images"
-              (click)="selectImage(image)"
-              style="min-width: 100px;justify-content: center; cursor: pointer;"
-              class="me-1 bg-white d-flex align-items-center flex-column border p-3">
-                <img [src]="image.url" [title]="image.title" style="height: 100px;">
-                <span class="mt-1">{{image.title}}</span>
+<div class="modal fade show d-flex align-items-center justify-content-center" tabindex="-1"
+  [ngClass]="{'d-block': isVisible, 'd-none': !isVisible}"
+  style="z-index: 1050; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5);">
+
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Cabeçalho -->
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">Select or Upload an Image</h5>
+        <button type="button" class="btn-close text-white" (click)="closeModal()"></button>
+      </div>
+
+      <!-- Corpo do Modal -->
+      <div class="modal-body">
+        <div class="row">
+
+          <!-- Preview da Imagem -->
+          <div class="col-md-7 text-center d-flex align-items-center justify-content-center">
+            <div class="border rounded p-3 shadow-sm w-100 bg-light" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Preview" class="img-fluid rounded shadow">
+            </div>
+            <div *ngIf="!imagePreview" class="border rounded p-3 w-100 bg-light text-muted d-flex align-items-center justify-content-center">
+              No image selected
+            </div>
+          </div>
+
+          <!-- Área de Upload -->
+          <div class="col-md-5">
+            <h6 class="fw-bold text-center mb-3">Upload New Image</h6>
+            <form #form="ngForm" (ngSubmit)="confirmSelection()" class="p-2">
+              
+              <!-- Input de Arquivo -->
+              <div class="mb-3">
+                <label class="form-label">Select Image</label>
+                <div class="input-group">
+                  <input type="file" class="form-control" (change)="onFileSelected($event)">
+                </div>
               </div>
-            </div>
-          </ng-container> -->
-  
-        </div>
-        <div class="col-4 p-4 bg-light">
-          <h5>Upload Image</h5>
-  
-          <form #form="ngForm" >
-            <div class="mt-3">
-              <input type="file" class="form-control" >
-            </div>
-  
-            <div class="mt-3">
-              <input type="text" class="form-control"
-              placeholder="File Name" name="filename" >
-            </div>
-  
-            <div class="mt-3">
-              <input type="text" class="form-control"
-              placeholder="Title" name="title" >
-            </div>
-  
-            <div class="mt-3">
-              <button type="submit" class="btn btn-dark">Upload</button>
-            </div>
-          </form>
-  
+
+              <!-- Nome do Arquivo -->
+              <div class="mb-3">
+                <label class="form-label">File Name</label>
+                <input type="text" class="form-control" placeholder="Enter file name" name="filename" [(ngModel)]="filename">
+              </div>
+
+              <!-- Botão de Upload -->
+              <div class="d-grid">
+                <button type="submit" class="btn btn-success fw-bold">Confirm & Upload</button>
+              </div>
+
+            </form>
+          </div>
+
         </div>
       </div>
+
+      <!-- Rodapé do Modal -->
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+      </div>
+
     </div>
   </div>
+</div>
