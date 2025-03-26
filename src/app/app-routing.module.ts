@@ -9,6 +9,7 @@ import { EditBlogPostComponent } from './Features/blog-post/edit-blog-post/edit-
 import { BlogPostDetailsComponent } from './Features/blog-post/details-blogpost/details-blogpost.component';
 import { HomeComponent } from './Features/public/home/home.component';
 import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.component';
+import { LoginComponent } from './Features/auth/login/login.component';
 
 
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path: 'admin/blogpost/:id', component:EditBlogPostComponent},
   {path: 'admin/blogpost/details/:id', component:BlogPostDetailsComponent},
   {path: '', component:HomeComponent},
-  {path: 'blog/:url', component:BlogdetailsComponent}
+  {path: 'blog/:url', component:BlogdetailsComponent},
+  {path: 'login', component:LoginComponent}
 
 ];
 

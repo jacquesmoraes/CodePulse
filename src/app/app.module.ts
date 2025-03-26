@@ -18,6 +18,7 @@ import { BlogPostDetailsComponent } from './Features/blog-post/details-blogpost/
 import { FooterComponent } from './Core/Components/footer/footer.component';
 import { HomeComponent } from './Features/public/home/home.component';
 import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.component';
+import { LoginComponent } from './Features/auth/login/login.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.
     BlogPostDetailsComponent,
     FooterComponent,
     HomeComponent,
-    BlogdetailsComponent
+    BlogdetailsComponent,
+    LoginComponent
     
   ],
   imports: [

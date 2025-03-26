@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CodePulse.API.Migrations
+namespace CodePulse.API.Migrations.Application
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250315211742_constraits add")]
-    partial class constraitsadd
+    [Migration("20250325000059_blogPost Migration")]
+    partial class blogPostMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

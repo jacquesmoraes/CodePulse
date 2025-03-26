@@ -2,7 +2,7 @@ using AutoMapper;
 using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.Dto;
 using CodePulse.API.Repositories.Interface;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodePulse.API.Controllers
@@ -23,6 +23,7 @@ namespace CodePulse.API.Controllers
       }
 
     [HttpPost]
+    [Authorize(Roles = "Writer")]
     public async Task<IActionResult> CreateBlogPost ( [FromBody] CreateBlogPostRequestDto createBlogPost ) {
 
       if ( createBlogPost == null ) {
@@ -53,6 +54,7 @@ namespace CodePulse.API.Controllers
       }
 
     [HttpGet]
+    
     public async Task<IActionResult> GetAllBlogPosts ( ) {
 
       var blogPosts = await _postRepository.GetAllAsync();
@@ -80,6 +82,7 @@ namespace CodePulse.API.Controllers
 
     [HttpPut]
     [Route ( "{id:guid}" )]
+    [Authorize(Roles = "Writer")]
     public async Task<IActionResult> UpdateBlogPost ([FromRoute] Guid id, [FromBody] UpdateBlogPostRequestDto dto ) {
       if ( dto == null )
         return BadRequest ( );
@@ -97,6 +100,7 @@ namespace CodePulse.API.Controllers
 
 
       [HttpDelete ("{id:guid}")]
+      [Authorize(Roles = "Writer")]
       public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id){
       var deletePost = await _postRepository.DeleteBlogPostAsync ( id );
       if ( deletePost == null ) return NotFound();

@@ -1,0 +1,40 @@
+<div class="login-container">
+    <div class="login-box">
+      <h2 class="login-title">Entrar</h2>
+      <form #form="ngForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            
+            placeholder="Seu e-mail"
+            [(ngModel)]="model.email"
+          >
+        
+  
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Sua senha"
+            [(ngModel)]="model.password"
+            
+          >
+        
+  
+        <button type="submit" class="login-btn mt-3" >Entrar</button>
+  
+        <p class="login-link">
+          Esqueceu a senha?
+          <a routerLink="/recuperar-senha">Recuperar</a>
+        </p>
+        </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
