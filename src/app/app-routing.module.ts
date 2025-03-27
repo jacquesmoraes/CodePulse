@@ -10,16 +10,17 @@ import { BlogPostDetailsComponent } from './Features/blog-post/details-blogpost/
 import { HomeComponent } from './Features/public/home/home.component';
 import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.component';
 import { LoginComponent } from './Features/auth/login/login.component';
+import { authGuard } from './Features/auth/guards/auth.guard';
 
 
 const routes: Routes = [
-  {path: 'admin/categories', component:CategoriesListComponent},
-  {path:'admin/categories/add', component:AddCategoryComponent },
-  {path: 'admin/categories/:id', component:EditCategoryComponent},
-  {path: 'admin/blogpost', component: BlogpostListComponent},
-  {path: 'admin/blogpost/add', component:AddBlogpostComponent},
-  {path: 'admin/blogpost/:id', component:EditBlogPostComponent},
-  {path: 'admin/blogpost/details/:id', component:BlogPostDetailsComponent},
+  {path: 'admin/categories', component:CategoriesListComponent, canActivate:[authGuard]},
+  {path:'admin/categories/add', component:AddCategoryComponent , canActivate:[authGuard]},
+  {path: 'admin/categories/:id', component:EditCategoryComponent, canActivate:[authGuard]},
+  {path: 'admin/blogpost', component: BlogpostListComponent, canActivate:[authGuard]},
+  {path: 'admin/blogpost/add', component:AddBlogpostComponent, canActivate:[authGuard]},
+  {path: 'admin/blogpost/:id', component:EditBlogPostComponent, canActivate:[authGuard]},
+  {path: 'admin/blogpost/details/:id', component:BlogPostDetailsComponent, canActivate:[authGuard]},
   {path: '', component:HomeComponent},
   {path: 'blog/:url', component:BlogdetailsComponent},
   {path: 'login', component:LoginComponent}
