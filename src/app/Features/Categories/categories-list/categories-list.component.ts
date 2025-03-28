@@ -20,7 +20,7 @@ export class CategoriesListComponent  implements OnInit {
 
   }
   ngOnInit(): void {
-    this.categories$ = this.categoryService.getAllCategories()
+    this.categories$ = this.categoryService.getAllCategories();
     
   }
   
@@ -50,5 +50,10 @@ export class CategoriesListComponent  implements OnInit {
     });
   }
   
+
+  onSearch(query: string){
+    this.categories$ = this.categoryService.getAllCategories(query);
+
+  }
 
 }

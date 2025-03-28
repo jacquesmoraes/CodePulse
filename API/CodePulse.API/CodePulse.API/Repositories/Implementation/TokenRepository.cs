@@ -31,7 +31,7 @@ namespace CodePulse.API.Repositories.Implementation
         issuer:_configuration["Jwt:Issuer"],
         audience: _configuration["Jwt:Audience"],
         claims : claims,
-        expires: DateTime.Now.AddMinutes(15),
+        expires: DateTime.Now.AddHours(2),
         signingCredentials: credentials
         );
 

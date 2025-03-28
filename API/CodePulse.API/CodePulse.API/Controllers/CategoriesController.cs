@@ -40,9 +40,9 @@ namespace CodePulse.API.Controllers
 
     [HttpGet]
     
-    public async Task<IActionResult> GetCategories()
+    public async Task<IActionResult> GetCategories ( [FromQuery] string? query = null)
     {
-      var categories = await _categoryRepository.GetAllCategories();
+      var categories = await _categoryRepository.GetAllCategories(query);
       return Ok(_mapper.Map<IEnumerable<CategoryDto>>(categories));
 
     }

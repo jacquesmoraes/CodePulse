@@ -237,4 +237,48 @@
   margin-right: 12px;
 }
 
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px 16px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.categories-grid li a {
+  text-decoration: none;
+  color: #495057;
+  display: block;
+  transition: color 0.2s ease-in-out;
+}
+
+.categories-grid li a:hover {
+  color: #007bff;
+}
+
+
+.badge-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-badge {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.category-badge:hover {
+  background-color: #f26522;
+  color: white;
+}
+.category-badge.active {
+  background-color: #f26522;
+  color: white;
+}
 

@@ -3,8 +3,13 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <span class="fw-light text-muted">Manage Categories</span>
-        <a class="btn btn-primary btn-sm px-3" [routerLink]="['/admin/categories/add']">
-            ➕ Add category
+        <div class="d-flex">
+            <input type="text" class="form-control" #queryText>
+            <button type="button" class="btn btn-warning ms-2" (click)="onSearch(queryText.value)">search </button>
+
+        </div>
+        <a class="btn btn-primary  px-3" [routerLink]="['/admin/categories/add']">
+             Add category
         </a>
     </div>
 
