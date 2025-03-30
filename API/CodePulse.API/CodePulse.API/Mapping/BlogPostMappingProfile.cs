@@ -14,7 +14,7 @@ namespace CodePulse.API.Mapping
       CreateMap<CreateBlogPostRequestDto, BlogPost> ( )
           .ForMember ( dest => dest.Categories, opt => opt.MapFrom ( src =>
        src.Categories.Select ( guidId => new Category { Id = guidId }))); // Ignoramos porque vamos buscar no banco
-
+      
       CreateMap<CreateCategoriesDto, Category> ( );
       CreateMap<UpdateCategoryRequestDto, Category> ( );
       CreateMap<UpdateBlogPostRequestDto, BlogPost> ( )
@@ -22,8 +22,14 @@ namespace CodePulse.API.Mapping
        src.Categories.Select ( guidId => new Category { Id = guidId } ) ) );
       CreateMap<BlogImage, BlogImageDto> ( );
 
+       CreateMap<AddCommentRequestDto, BlogPostComment>();
+        CreateMap<BlogPostComment, CommentDto>()
+    .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.UserName))
+    .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CommentDate));
+
       // Domain -> DTO (Retornando um post com categorias)
       CreateMap<Category, CategoryDto> ( );
+      
       CreateMap<BlogPost, BlogPostDto> ( )
           .ForMember ( dest => dest.Categories, opt => opt.MapFrom ( src => src.Categories ) ); //  Converte Categorias corretamente
       }

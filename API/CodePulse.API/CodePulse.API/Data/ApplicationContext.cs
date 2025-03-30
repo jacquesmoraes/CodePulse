@@ -11,7 +11,8 @@ namespace CodePulse.API.Data
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Category> Categories { get; set; }
          public DbSet<BlogImage> blogImages { get; set; }
-
+        public DbSet<BlogPostComment> BlogPostComments { get; set;}
+      
     protected override void OnModelCreating ( ModelBuilder modelBuilder ) {
       modelBuilder.Entity<BlogImage> ( ).HasIndex ( b => b.FileName ).IsUnique ( );                                                    
       }

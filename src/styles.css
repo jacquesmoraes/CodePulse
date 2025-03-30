@@ -12,3 +12,15 @@
 body {
     padding-top: 80px; /* Espaço para a navbar fixa */
 }
+.markdown-container h1,
+.markdown-container h2,
+.markdown-container h3,
+.markdown-container h4,
+.markdown-container h5,
+.markdown-container h6 {
+  text-align: center !important;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+}

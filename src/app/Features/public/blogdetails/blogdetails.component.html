@@ -1,17 +1,92 @@
 <div class="container mt-5">
-      
-    <!-- Post Details -->
-    <ng-container *ngIf="blogposts$ | async as blogpost">
-      <article class="blog-post">
-        <h1 class="blog-post-title">{{ blogpost.title }}</h1>
-        <p class="blog-post-meta">
-          {{ blogpost.publishedDate| date:'mediumDate' }} por {{ blogpost.author }}
-        </p>
-        <img *ngIf="blogpost.featuredImageUrl" [src]="blogpost.featuredImageUrl" alt="Imagem do post" class="img-fluid mb-4 post-image">
-        <div class="blog-post-content">
-          <markdown [data]="blogpost.content"></markdown>
-        </div>
-      </article>
-    </ng-container>
+  <div class="row">
+    <!-- Coluna principal do post -->
+    <div class="col-lg-8">
+      <ng-container *ngIf="blogposts$ | async as blogpost">
+        <article class="blog-post mb-5">
+          <h1 class="blog-post-title mb-2">{{ blogpost.title }}</h1>
+          <p class="blog-post-meta text-muted">
+            {{ blogpost.publishedDate | date: 'mediumDate' }} por <strong>{{ blogpost.author }}</strong>
+          </p>
+          <img
+            *ngIf="blogpost.featuredImageUrl"
+            [src]="blogpost.featuredImageUrl"
+            alt="Imagem do post"
+            class="img-fluid rounded mb-4 shadow-sm"
+          />
+
+          <div class="blog-post-content markdown-container">
+            <markdown [data]="blogpost.content"></markdown>
+          </div>
+        </article>
+
+        <!-- Comentários -->
+        <section class="comments-section mt-5">
+          <h3 class="mb-4 border-bottom pb-2">Comentários</h3>
+
+          <!-- Botão de fazer comentário -->
+          <div class="mb-4" *ngIf="!showCommentForm">
+            <button
+              class="btn btn-outline-primary"
+              (click)="canComment ? showCommentForm = true : promptLogin()"
+            >
+              Faça um comentário
+            </button>
+          </div>
+
+          <!-- Formulário para comentar -->
+          <div *ngIf="showCommentForm">
+            <form (ngSubmit)="submitComment()" class="comment-form mt-3">
+              <textarea
+                class="form-control mb-2"
+                rows="4"
+                placeholder="Escreva seu comentário..."
+                [(ngModel)]="newComment"
+                name="comment"
+                required
+              ></textarea>
+              <button type="submit" class="btn btn-primary">Enviar Comentário</button>
+            </form>
+          </div>
+
+          <!-- Lista de comentários -->
+          <div *ngIf="comments.length > 0; else noComments">
+            <div *ngFor="let comment of comments" class="comment-box mb-3 p-3 border rounded bg-white shadow-sm">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <strong>{{ comment.author }}</strong>
+                <small class="text-muted">{{ comment.createdAt | date: 'short' }}</small>
+              </div>
+              <p class="mb-0">{{ comment.content }}</p>
+            </div>
+          </div>
+
+          <!-- Caso não haja comentários -->
+          <ng-template #noComments>
+            <p class="text-muted fst-italic">Ainda não há comentários. Seja o primeiro a comentar!</p>
+          </ng-template>
+        </section>
+      </ng-container>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4 sidebar">
+      <div class="widget-item p-4 mb-4 border rounded shadow-sm bg-light">
+        <h4 class="widget-title mb-3">Mais do blog</h4>
+        <ul class="list-unstyled small">
+          <li><a href="#">Post relacionado 1</a></li>
+          <li><a href="#">Post relacionado 2</a></li>
+          <li><a href="#">Post relacionado 3</a></li>
+        </ul>
+      </div>
+
+      <div class="widget-item p-4 mb-4 border rounded shadow-sm bg-light">
+        <h4 class="widget-title mb-3">Outros conteúdos</h4>
+        <ul class="list-unstyled small">
+          <li><a href="#">Conteúdo 1</a></li>
+          <li><a href="#">Conteúdo 2</a></li>
+          <li><a href="#">Conteúdo 3</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
-  
+</div>

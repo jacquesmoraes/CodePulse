@@ -23,8 +23,9 @@ app.UseHttpsRedirection();
 app.UseCors(options =>
 {
     options.AllowAnyHeader();
-    options.AllowAnyOrigin();
+    options.WithOrigins("http://localhost:4200");
     options.AllowAnyMethod();
+  options.AllowCredentials();
 });
 
 app.UseAuthentication();

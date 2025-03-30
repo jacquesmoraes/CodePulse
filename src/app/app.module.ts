@@ -20,6 +20,7 @@ import { HomeComponent } from './Features/public/home/home.component';
 import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.component';
 import { LoginComponent } from './Features/auth/login/login.component';
 import { AuthInterceptor } from './Core/interceptors/auth.interceptor';
+import { RegisterComponent } from './Features/auth/register/register.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { AuthInterceptor } from './Core/interceptors/auth.interceptor';
     FooterComponent,
     HomeComponent,
     BlogdetailsComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
     
   ],
   imports: [
@@ -46,6 +48,9 @@ import { AuthInterceptor } from './Core/interceptors/auth.interceptor';
     FormsModule,
     HttpClientModule,
     MarkdownModule.forRoot()
+  ],
+  exports:[
+
   ],
   providers: [
     {

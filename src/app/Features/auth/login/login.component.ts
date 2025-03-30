@@ -18,6 +18,7 @@ export class LoginComponent {
   constructor(private authService : AuthService, private cookieService: CookieService,
     private router: Router){
     this.model = {
+      userName: '',
       email : '',
       password: ''
     };
@@ -31,6 +32,7 @@ export class LoginComponent {
           );
           //set user
           this.authService.setUser({
+            userName:response.userName,
             email: response.email,
             roles: response.roles
           });

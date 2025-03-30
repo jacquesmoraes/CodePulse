@@ -31,6 +31,10 @@
         <a [routerLink]="['/login']" class="btn btn-outline-light">Entrar</a>
 
       </ng-container>
+      <ng-container *ngIf="user === undefined;">
+        <a [routerLink]="['/register']" class=" btn btn-outline-light ms-2">registre-se</a>
+
+      </ng-container>
       <ng-template #showLogout>
         <div class="d-flex align-items-center gap-2">
           <div class="text-white ">{{ user?.email }}</div>

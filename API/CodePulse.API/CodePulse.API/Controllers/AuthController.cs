@@ -1,6 +1,6 @@
 using CodePulse.API.Models.Dto;
 using CodePulse.API.Repositories.Interface;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +40,8 @@ namespace CodePulse.API.Controllers
           {
             Email = request.Email,
             Roles = roles.ToList(),
-            Token = jwtToken
+            Token = jwtToken,
+            UserName = user.UserName ?? string.Empty
 
           };
           return Ok(response);
@@ -57,7 +58,7 @@ namespace CodePulse.API.Controllers
     {
       var user = new IdentityUser
       {
-        UserName = register.Email.Trim(),
+        UserName = register.UserName.Trim(),
         Email = register.Email.Trim(),
       };
 

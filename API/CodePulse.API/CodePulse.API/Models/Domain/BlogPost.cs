@@ -14,5 +14,7 @@ namespace CodePulse.API.Models.Domain
 
     public List<Category> Categories { get; set; } = new List<Category>();
 
+    public ICollection<BlogPostComment> Comments { get; set; }
+
   }
 }

@@ -11,6 +11,7 @@ import { HomeComponent } from './Features/public/home/home.component';
 import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.component';
 import { LoginComponent } from './Features/auth/login/login.component';
 import { authGuard } from './Features/auth/guards/auth.guard';
+import { RegisterComponent } from './Features/auth/register/register.component';
 
 
 const routes: Routes = [
@@ -23,7 +24,8 @@ const routes: Routes = [
   {path: 'admin/blogpost/details/:id', component:BlogPostDetailsComponent, canActivate:[authGuard]},
   {path: '', component:HomeComponent},
   {path: 'blog/:url', component:BlogdetailsComponent},
-  {path: 'login', component:LoginComponent}
+  {path: 'login', component:LoginComponent},
+  {path: 'register', component:RegisterComponent}
 
 ];
 
