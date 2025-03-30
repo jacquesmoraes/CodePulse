@@ -1,0 +1,35 @@
+.sort-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .sort-button:hover {
+    color: #f26522;
+  }
+  .pagination-container .page-link {
+    color: #f26522;
+    border: none;
+    margin: 0 4px;
+  }
+  
+  .pagination-container .page-item.active .page-link {
+    background-color: #f26522;
+    color: white;
+    border-radius: 0.375rem;
+  }
+  
+  .pagination-container .page-link:hover {
+    background-color: #e9ecef;
+  }
+  .page-link {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .page-link:hover {
+    background-color: #e9ecef;
+  }
+  

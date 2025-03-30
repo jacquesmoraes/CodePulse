@@ -11,3 +11,58 @@
 .btn {
     font-size: 0.9rem;
 }
+button.sort-button {
+    background-color: #f1f3f5;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 1rem;
+    color: #343a40;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s;
+  }
+  
+  button.sort-button:hover {
+    background-color: #e2e6ea;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #f26522;
+  }
+  
+  button.sort-button i {
+    vertical-align: middle;
+  }
+  .pagination-container {
+    margin-top: 2rem;
+  }
+  
+  .pagination .page-item {
+    margin: 0 4px;
+  }
+  
+  .pagination .page-link {
+    color: #495057;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, color 0.2s;
+    cursor: pointer;
+  }
+  
+  .pagination .page-link:hover {
+    background-color: #f1f3f5;
+    color: #f26522;
+  }
+  
+  .pagination .page-item.active .page-link {
+    background-color: #f26522;
+    color: white;
+    border-color: #f26522;
+  }
+  
+  .pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+  }
+  

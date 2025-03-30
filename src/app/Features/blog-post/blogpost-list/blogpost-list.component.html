@@ -4,7 +4,7 @@
     <!-- Botão de Adicionar Post -->
     <div class="d-flex justify-content-end mb-3">
         <a [routerLink]="['/admin/blogpost/add']" class="btn btn-primary">
-            ➕ Add Blog Post
+             Add Blog Post
         </a>
     </div>
 
@@ -15,8 +15,33 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Title</th>
+                        <th>Date published
+                            <span>
+                                <span>
+                                    <button class="sort-button" (click)="sort('date', 'asc')">
+                                        <i class="bi bi-arrow-up-short"></i></button>
+                                </span>
+                               
+                                <span> <button class="sort-button" (click)="sort('date', 'desc')">
+                                    <i class="bi bi-arrow-down-short"></i></button></span>
+                            </span>
+                        </th>
                         <th>Short Description</th>
                         <th>Categories</th>
+                        <th>Author
+                            <span>
+                                <span>
+                                    <button class="sort-button" (click)="sort('author', 'asc')">
+                                        <i class="bi bi-arrow-up-short"></i></button>
+                                </span>
+                               
+                                <span>
+                                    <button class="sort-button" (click)="sort('author', 'dedsc')">
+                                        <i class="bi bi-arrow-down-short"></i>
+                                    </button>
+                                </span>
+                            </span>
+                        </th>
                         <th class="text-center">Visibility</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -24,6 +49,7 @@
                 <tbody>
                     <tr *ngFor="let post of blogPosts">
                         <td>{{ post.title }}</td>
+                        <td>{{post.publishedDate | date: 'dd/MM/yyyy'}}</td>
                         <td>{{ post.shortDescription }}</td>
                         <td >
                             <span *ngFor="let category of post.categories">
@@ -31,6 +57,7 @@
 
                             </span>
                         </td>
+                        <td>{{post.author}}</td>
                         <td class="text-center"> <span *ngIf="post.isVisible; else hiddenIcon">   ✅ Visible   </span>
                             <ng-template #hiddenIcon>❌ Hidden</ng-template>
                         </td>
@@ -50,6 +77,27 @@
                     </tr>
                 </tbody>
             </table>
+            <nav aria-label="Page navigation" class="pagination-container mt-4">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" [class.disabled]="pageNumber === 1">
+                    <a class="page-link" (click)="previousPage()">←</a>
+                  </li>
+              
+                  <li
+                    *ngFor="let page of totalPagesList"
+                    class="page-item"
+                    [class.active]="page === pageNumber"
+                  >
+                    <a class="page-link" (click)="getPage(page)">
+                      {{ page }}
+                    </a>
+                  </li>
+              
+                  <li class="page-item" [class.disabled]="pageNumber === totalPagesList.length">
+                    <a class="page-link" (click)="nextPage()">→</a>
+                  </li>
+                </ul>
+              </nav>
         </ng-container>
     </div>
 

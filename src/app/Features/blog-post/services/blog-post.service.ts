@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AddBlogPost } from '../models/add-blog-post.model';
 import { Observable } from 'rxjs';
 import { BlogPost } from '../models/blog-post.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { UpdateBlogPost } from '../models/update-blog-post.model';
 
@@ -18,22 +18,52 @@ export class BlogPostService {
 
   }
 
-  GetAllBlogPosts() : Observable<BlogPost[]>{
-      return this.http.get<BlogPost[]>(`${environment.apiBaseUrl}/api/blogpost`);
+  GetAllBlogPosts(query?: string,
+    sortBy?: string,
+    sortDirection?: string,
+    pageSize?: number,
+    pageNumber?: number,
+
+  ): Observable<BlogPost[]> {
+    let params = new HttpParams();
+
+    if (query) {
+      params = params.set('query', query);
+    }
+    if (sortBy) {
+      params = params.set('sortBy', sortBy);
+    }
+    if (sortDirection) {
+      params = params.set('sortDirection', sortDirection);
+    }
+    if (pageSize) {
+      params = params.set('pageSize', pageSize);
+    }
+    if (pageNumber) {
+      params = params.set('pageNumber', pageNumber);
+    }
+    return this.http.get<BlogPost[]>(`${environment.apiBaseUrl}/api/blogpost`, {
+      params: params
+    });
   }
-  GetBlogPostById(id: string) : Observable<BlogPost>{
+  GetBlogPostById(id: string): Observable<BlogPost> {
     return this.http.get<BlogPost>(`${environment.apiBaseUrl}/api/blogpost/${id}`);
   }
-  GetBlogPostByUrlHandle(urlHandle: string) : Observable<BlogPost>{
+  GetBlogPostByUrlHandle(urlHandle: string): Observable<BlogPost> {
     return this.http.get<BlogPost>(`${environment.apiBaseUrl}/api/blogpost/${urlHandle}`);
   }
 
-  updateBlogPost(id: string, updateblogpost: UpdateBlogPost): Observable<BlogPost>{
-      return this.http.put<BlogPost>(`${environment.apiBaseUrl}/api/blogpost/${id}?addAuth=true`, updateblogpost);
+  updateBlogPost(id: string, updateblogpost: UpdateBlogPost): Observable<BlogPost> {
+    return this.http.put<BlogPost>(`${environment.apiBaseUrl}/api/blogpost/${id}?addAuth=true`, updateblogpost);
   }
 
-  deleteBlogPost(id:string):Observable<BlogPost>{
+  deleteBlogPost(id: string): Observable<BlogPost> {
     return this.http.delete<BlogPost>(`${environment.apiBaseUrl}/api/blogpost/${id}?addAuth=true`);
 
+  }
+
+
+  getBlogPostsCount(): Observable<number>{
+    return this.http.get<number>(`${environment.apiBaseUrl}/api/blogpost/count`)
   }
 }

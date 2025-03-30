@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BlogPost } from '../models/blog-post.model';
 import { BlogPostService } from '../services/blog-post.service';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-details-blogpost',
@@ -15,11 +16,13 @@ export class BlogPostDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private blogPostService: BlogPostService
+    private blogPostService: BlogPostService,
+    private viewportScroller: ViewportScroller
   ) {}
 
   ngOnInit(): void {
     // Busca o post pelo parâmetro "id" na rota
+    this.viewportScroller.scrollToPosition([0, 0]);
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.blogPostService.GetBlogPostById(id).subscribe({

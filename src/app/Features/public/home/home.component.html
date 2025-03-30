@@ -12,41 +12,41 @@
   
               <div class="container" data-aos="fade-up" data-aos-delay="100">
                 
-                <ng-container *ngIf="blogs$ | async as blogs">
-
-                    <div class="row gy-4">
-                    <div class=" col-md-6" *ngFor="let blog of filteredBlogposts">
-                      
-                      <article>
-    
-                        <div class="post-img">
-                          <img [src]="blog.featuredImageUrl" [alt]="blog.title" class="img-fluid">
-                        </div>
-    
-                        <span *ngFor="let category of blog.categories">
-                          <span class="badge bg-secondary me-1">{{category.name}}
-
-                          </span>
-
-                      </span>
-                        <h2 class="title">
-                          <a [routerLink]="['/blog', blog.urlHandle]">{{blog.title}}</a>
-                        </h2>
-    
-                        <div class="d-flex align-items-center">
-                          
-                          <div class="post-meta">
-                            <p class="post-author">{{blog.author}}</p>
-                            <p class="post-date">
-                              <time >{{blog.publishedDate | date: 'mediumDate'}}</time>
-                            </p>
+                
+                  <div class="row gy-4">
+                    <div class="col-12" *ngFor="let blog of filteredBlogposts">
+                      <div class="card blog-card mb-4">
+                        <img [src]="blog.featuredImageUrl" class="card-img-top img-fluid" [alt]="blog.title" />
+                  
+                        <div class="card-body">
+                          <div class="mb-2">
+                            <span *ngFor="let category of blog.categories" class="badge bg-secondary me-1">
+                              {{ category.name }}
+                            </span>
+                          </div>
+                  
+                          <h2 class="card-title ">
+                            <a [routerLink]="['/blog', blog.urlHandle]" class="text-decoration-none">
+                              {{ blog.title }}
+                            </a>
+                          </h2>
+                          <p class="text-muted mb-2">
+                            {{ blog.shortDescription }}
+                          </p>
+                  
+                          <div class="d-flex align-items-center mb-1">
+                            <div class="author-avatar me-2"></div>
+                            <div class="post-meta">
+                              <p class="post-author mb-0"><strong>{{ blog.author }}</strong></p>
+                              <p class="post-date mb-0">
+                                <time>{{ blog.publishedDate | date: 'mediumDate' }}</time>
+                              </p>
+                            </div>
                           </div>
                         </div>
-    
-                        <hr>
-                      </article>
-
+                      </div>
                     </div>
+                  
                     <div class="col-12" *ngIf="filteredBlogposts.length === 0">
                       <div class="alert alert-warning text-center">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -54,9 +54,29 @@
                       </div>
                     </div>
                   </div>
-                  </ng-container><!-- End post list item -->
+                  
+                  <!-- End post list item -->
   
-                
+                  <nav aria-label="Page navigation" class="pagination-container mt-4">
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item" [class.disabled]="pageNumber === 1">
+                        <a class="page-link" (click)="previousPage()">←</a>
+                      </li>
+                  
+                      <li
+                        *ngFor="let item of totalPagesList; let i = index"
+                        class="page-item"
+                        [class.active]="pageNumber === i + 1"
+                      >
+                        <a class="page-link" (click)="getPage(i + 1)">{{ i + 1 }}</a>
+                      </li>
+                  
+                      <li class="page-item" [class.disabled]="pageNumber === totalPagesList.length">
+                        <a class="page-link" (click)="nextPage()">→</a>
+                      </li>
+                    </ul>
+                  </nav>
+                  
               </div>
   
             </section><!-- /Category Postst Section -->
@@ -73,10 +93,12 @@
               <div class="search-widget widget-item">
   
                 <h3 class="widget-title">Search</h3>
-                <form action="">
-                  <input type="text">
-                  <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-                </form>
+                <form (submit)="onSearch(queryText.value); $event.preventDefault()">
+  <input type="text" #queryText>
+  <button type="submit" title="Search">
+    <i class="bi bi-search"></i>
+  </button>
+</form>
   
               </div><!--/Search Widget -->
   
@@ -84,22 +106,38 @@
               <ng-container *ngIf="categories$ | async as categories">
                 <div class="categories-widget widget-item">
                   <h3 class="widget-title">Categories</h3>
-                  <div class="badge-grid">
-                    <span *ngFor="let category of categories" 
-                    class="category-badge"
-                    [ngClass]="{'active' : selectedCategoryIds.includes(category.id)}"
-                    (click)="onCategoryClick(category.id)"
+              
+                  <!-- Lista de seleção -->
+                  <div class="badge-grid mb-2">
+                    <span
+                      *ngFor="let category of categories"
+                      class="category-badge"
+                      (click)="onCategoryClick(category.id)"
+                      [class.disabled]="selectedCategoryIds.includes(category.id)"
                     >
                       {{ category.name }}
                     </span>
                   </div>
-                  <button
-      *ngIf="selectedCategoryIds.length > 0"
-      class="btn btn-sm btn-outline-secondary mt-3"
-      (click)="clearCategoryFilter()"
-    >
-      Limpar filtro
-    </button>
+              
+                  <!-- Filtros ativos -->
+                  <div *ngIf="selectedCategoryIds.length > 0" class="selected-categories mt-2">
+                    <small class="text-muted">Filtros aplicados:</small>
+                    <div class="selected-category-badges mt-1">
+                      <span
+                        *ngFor="let id of selectedCategoryIds"
+                        class="selected-badge"
+                      >
+                        {{ getCategoryNameById(id) }}
+                        <button (click)="removeCategory(id)" class="remove-btn">&times;</button>
+                      </span>
+                    </div>
+                    <button
+                      class="btn btn-sm btn-outline-secondary mt-2"
+                      (click)="clearCategoryFilter()"
+                    >
+                      Limpar todos
+                    </button>
+                  </div>
                 </div>
               </ng-container>
   

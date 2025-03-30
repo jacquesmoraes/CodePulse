@@ -7,7 +7,14 @@ namespace CodePulse.API.Repositories.Interface
   public interface IBlogPostRepository
   {
     Task<BlogPost> CreateBlogPostAsync(BlogPost blogPost);
-    Task<IEnumerable<BlogPost>> GetAllAsync();
+    Task<IEnumerable<BlogPost>> GetAllAsync(string? query = null,
+      string? sortBy = null,
+      string? sortDirection = null,
+      int? pageNumber = 1,
+      int? pageSize = 100
+
+      );
+    Task<int> GetBlogPostsCountAsync();
     Task<BlogPost?> GetBlogPostByIdAsync ( Guid id );
     Task<BlogPost?> GetBlogPostByUrlHandle ( string urlhandle );
     Task<BlogPost?> UpdateBlogPostAsync (BlogPost UpdateBlogPost );

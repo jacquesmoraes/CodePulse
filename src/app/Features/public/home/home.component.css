@@ -253,7 +253,7 @@
 }
 
 .categories-grid li a:hover {
-  color: #007bff;
+  color: #f26522;
 }
 
 
@@ -281,4 +281,92 @@
   background-color: #f26522;
   color: white;
 }
+.selected-category-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 
+.selected-badge {
+  background-color: #dee2e6;
+  color: #343a40;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.selected-badge .remove-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  line-height: 1;
+  margin-left: 6px;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.selected-badge .remove-btn:hover {
+  color: #dc3545;
+}
+
+/* Desativa clique nas que já estão ativas */
+.category-badge.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.blog-card {
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.blog-card .card-img-top {
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.blog-card .card-body {
+  padding: 20px;
+}
+.pagination-container .page-link {
+  color: #343a40;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.pagination-container .page-link:hover {
+  background-color: #f26522;
+  color: #fff;
+}
+
+.pagination-container .page-item.active .page-link {
+  background-color: #f26522;
+  border-color: #f26522;
+  color: white;
+}
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #ddd;
+  border-radius: 50%;
+  background-image: url('https://via.placeholder.com/40');
+  background-size: cover;
+  background-position: center;
+}
+.card-title a.text-decoration-none {
+  color: #2c3e50;
+  text-decoration: none;
+}
+
+.card-title a.text-decoration-none:hover {
+  color: #f26522;
+}

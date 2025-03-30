@@ -40,9 +40,13 @@ namespace CodePulse.API.Controllers
 
     [HttpGet]
     
-    public async Task<IActionResult> GetCategories ( [FromQuery] string? query = null)
+    public async Task<IActionResult> GetCategories ( [FromQuery] string? query, 
+      [FromQuery] string? sortBy ,
+      [FromQuery] string? sortDirection,
+      [FromQuery] int? pageNumber,
+      [FromQuery] int? pageSize)
     {
-      var categories = await _categoryRepository.GetAllCategories(query);
+      var categories = await _categoryRepository.GetAllCategories(query, sortBy, sortDirection, pageNumber, pageSize);
       return Ok(_mapper.Map<IEnumerable<CategoryDto>>(categories));
 
     }
@@ -61,6 +65,14 @@ namespace CodePulse.API.Controllers
       
       return Ok(_mapper.Map<CategoryDto>(categoryId));
 
+    }
+
+    [HttpGet]
+    [Route("count")]
+    public async Task<IActionResult> GetCategoriesCount ( )
+    {
+      var result = await _categoryRepository.GetCategoriesCountAsync();
+      return Ok(result);
     }
 
     [HttpPut]

@@ -55,9 +55,15 @@ namespace CodePulse.API.Controllers
 
     [HttpGet]
     
-    public async Task<IActionResult> GetAllBlogPosts ( ) {
+    public async Task<IActionResult> GetAllBlogPosts (
+      [FromQuery] string? query,
+      [FromQuery] string? sortBy,
+      [FromQuery] string? sortDirection,
+      [FromQuery] int? pageNumber,
+      [FromQuery] int? pageSize
+      ) {
 
-      var blogPosts = await _postRepository.GetAllAsync();
+      var blogPosts = await _postRepository.GetAllAsync(query, sortBy, sortDirection,pageNumber, pageSize);
       return Ok ( _mapper.Map<IEnumerable<BlogPostDto>> ( blogPosts ) );
       }
 
@@ -106,6 +112,18 @@ namespace CodePulse.API.Controllers
       if ( deletePost == null ) return NotFound();
       return Ok (_mapper.Map<BlogPostDto>(deletePost ));
       }
+
+      [HttpGet]
+    [Route("count")]
+    public async Task<IActionResult> GetBlogPostsCount ( )
+    {
+      var result = await _postRepository.GetBlogPostsCountAsync();
+      return Ok(result);
     }
+
+
+    }
+
+
   }
 

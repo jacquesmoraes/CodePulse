@@ -17,8 +17,17 @@
         <table class="table table-hover table-striped shadow-sm rounded">
             <thead class="table-dark">
                 <tr>
-                    <th class="text-center">#</th>
-                    <th>Name</th>
+                    <th class="text-center">id</th>
+                    <th>
+                        Name
+                    <span>
+                        <span>
+                            <button class="sort-button" (click)="sort('name', 'asc')"><i class="bi bi-arrow-up-short"></i></button>
+                        </span>
+                       
+                        <span> <button class="sort-button ms-2" (click)="sort('name', 'desc')"><i class="bi bi-arrow-down-short"></i></button></span>
+                    </span>
+                    </th>
                     <th>URL Handle</th>
                     <th class="text-center">Action</th>
                 </tr>
@@ -39,11 +48,35 @@
                 </tr>
             </tbody>
         </table>
-
+        <nav aria-label="Page navigation" class="pagination-container">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="pageNumber === 1">
+                <a class="page-link" (click)="previousPage()" title="Página anterior">
+                  <i class="bi bi-chevron-left"></i>
+                </a>
+              </li>
+          
+              <li
+                *ngFor="let item of totalPagesList; let i = index"
+                class="page-item"
+                [class.active]="pageNumber === i + 1"
+              >
+                <a class="page-link" (click)="getPage(i + 1)">{{ i + 1 }}</a>
+              </li>
+          
+              <li class="page-item" [class.disabled]="pageNumber === totalPagesList.length">
+                <a class="page-link" (click)="nextPage()" title="Próxima página">
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          
         <div *ngIf="categories.length === 0" class="alert alert-warning text-center mt-3">
             No cateogries on database.
         </div>
     </ng-container>
+
 
     <!-- Loader enquanto carrega -->
     <ng-template #loading>

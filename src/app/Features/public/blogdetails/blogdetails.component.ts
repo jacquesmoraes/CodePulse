@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { Observable } from 'rxjs';
 import { BlogPostService } from '../../blog-post/services/blog-post.service';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-blogdetails',
@@ -15,11 +16,11 @@ url: string | null = null;
 blogposts$? : Observable<BlogPost>
 error: string | null = null;
 
-  constructor(private route:ActivatedRoute, private blogpost : BlogPostService){
+  constructor(private route:ActivatedRoute, private blogpost : BlogPostService,private viewportScroller: ViewportScroller){
 
   }
   ngOnInit(): void {
-   
+    this.viewportScroller.scrollToPosition([0, 0]);
    this.route.paramMap.subscribe({
     next: (params) => {
       this.url =  params.get('url')

@@ -22,7 +22,9 @@ namespace CodePulse.API.Repositories.Implementation
     }
 
 
-    public async Task<IEnumerable<Category>> GetAllCategories( string? query = null )
+
+    public async Task<IEnumerable<Category>> GetAllCategories(string? query = null
+      , string? sortBy = null, string? sortDirection = null, int? pageNumber = 1, int? pageSize = 100 )
     {
       //query
       var categories = _dbContext.Categories.AsQueryable();
@@ -35,12 +37,32 @@ namespace CodePulse.API.Repositories.Implementation
       }
 
       //sort
-
+      if(string.IsNullOrEmpty(sortBy)== false )
+      {
+        if(string.Equals(sortBy, "Name", StringComparison.OrdinalIgnoreCase ) )
+        {
+           var isAsc =  string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase) ;
+          categories = isAsc ? categories.OrderBy(x => x.Name) :
+            categories.OrderByDescending(x => x.Name);
+        }
+      }
 
       //pagination
+      //pagenumber 1 pagesize 5 - skip 0, take 5
+      //pagenumber 2 pagesize 5 - skip 5, take 5
+      //pagenumber 3 pagesize 5 - skip 10, take 5
+      var skipResults = (pageNumber - 1) * pageSize;
+      categories = categories.Skip(skipResults ?? 0).Take(pageSize ?? 100);
+
+
+
+
 
       return await categories.ToListAsync();
     }
+
+
+
 
     public async Task<Category?> GetCategoryByIdAsync(Guid id)
     {
@@ -75,6 +97,12 @@ namespace CodePulse.API.Repositories.Implementation
        await _dbContext.SaveChangesAsync();
       return category;
 
+    }
+
+    public async Task<int> GetCategoriesCountAsync ( )
+    {
+      return await _dbContext.Categories.CountAsync();
+       
     }
   }
 }

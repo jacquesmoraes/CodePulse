@@ -25,8 +25,52 @@ namespace CodePulse.API.Repositories.Implementation
       return blogPost;
       }
 
-    public async Task<IEnumerable<BlogPost>> GetAllAsync ( ) {
-      return await _context.BlogPosts.Include ( x => x.Categories ).ToListAsync ( );
+    public async Task<IEnumerable<BlogPost>> GetAllAsync (string? query = null,
+      string? sortBy = null,
+      string? sortDirection = null,
+      int? pageNumber = 1,
+      int? pageSize = 100 ) {
+
+      //query
+      var blogPost = _context.BlogPosts.AsQueryable();
+      //filter
+      if(string.IsNullOrEmpty(query)== false )
+      {
+        blogPost = blogPost.Where(x =>
+        x.Title.Contains(query) ||
+        x.Content.Contains(query) ||
+        x.ShortDescription.Contains(query) ||
+        x.Author.Contains(query));
+
+        }
+
+      //sort
+      if(string.IsNullOrEmpty(sortBy) == false )
+      {
+        if(string.Equals(sortBy, "Author", StringComparison.OrdinalIgnoreCase ) )
+        {
+          var isAsc = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase);
+          blogPost = isAsc ? blogPost.OrderBy(x => x.Author) :
+            blogPost.OrderByDescending(x => x.Author);
+        }
+        if(string.Equals(sortBy, "PublishedDate", StringComparison.OrdinalIgnoreCase ) )
+        {
+          var isAsc = string.Equals(sortDirection, "asc", StringComparison.OrdinalIgnoreCase);
+          blogPost = isAsc ? blogPost.OrderBy(x => x.PublishedDate) :
+            blogPost.OrderByDescending(x => x.PublishedDate);
+        }
+      }
+
+
+
+      //pagination
+      var skipResults = (pageNumber - 1) * pageSize;
+      blogPost = blogPost.Skip(skipResults ?? 0).Take(pageSize ?? 100);
+
+
+
+
+      return await blogPost.Include(x => x.Categories).ToListAsync();
 
       }
 
@@ -71,5 +115,10 @@ namespace CodePulse.API.Repositories.Implementation
       return await _context.BlogPosts.Include ( x => x.Categories )
       .FirstOrDefaultAsync ( bp => bp.UrlHandle == urlhandle );
       }
+
+    public async Task<int> GetBlogPostsCountAsync ( )
+    {
+      return await _context.BlogPosts.CountAsync();
     }
+  }
     }
