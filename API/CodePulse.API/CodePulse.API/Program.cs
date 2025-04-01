@@ -1,6 +1,9 @@
 
 
+using CodePulse.API.Data;
 using CodePulse.API.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,5 +36,24 @@ app.UseAuthorization();
 app.UseStaticFiles ( );
 
 app.MapControllers();
+
+
+using var scopes = app.Services.CreateScope();
+var services = scopes.ServiceProvider;
+var context = services.GetRequiredService<ApplicationContext>();
+var identity = services.GetRequiredService<AuthContext>();
+var logger = services.GetRequiredService<ILogger<Program>>();
+try
+{
+  await context.Database.MigrateAsync();
+  await ApplicationContextSeed.SeedAsync(context);
+
+}
+catch(Exception err )
+{
+  logger.LogError(err, "an error occured during migration");
+}
+
+
 
 app.Run();

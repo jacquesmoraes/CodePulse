@@ -44,7 +44,7 @@ namespace CodePulse.API.Data
       var adminUser = new IdentityUser
       {
         Id = adminUserId,
-        UserName = "admin@codepulse.com",
+        UserName = "Admin",
         Email = "admin@codepulse.com",
         NormalizedEmail = "ADMIN@CODEPULSE.COM",
         NormalizedUserName = "ADMIN@CODEPULSE.COM",

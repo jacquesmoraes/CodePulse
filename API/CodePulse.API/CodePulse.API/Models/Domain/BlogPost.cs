@@ -12,9 +12,9 @@ namespace CodePulse.API.Models.Domain
         public string Author { get; set; }
         public bool IsVisible { get; set; }
 
-    public List<Category> Categories { get; set; } = new List<Category>();
+    public List<Category> Categories { get; set; } 
 
-    public ICollection<BlogPostComment> Comments { get; set; }
+    
 
   }
 }

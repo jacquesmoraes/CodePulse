@@ -8,63 +8,40 @@
           <p class="blog-post-meta text-muted">
             {{ blogpost.publishedDate | date: 'mediumDate' }} por <strong>{{ blogpost.author }}</strong>
           </p>
-          <img
-            *ngIf="blogpost.featuredImageUrl"
-            [src]="blogpost.featuredImageUrl"
-            alt="Imagem do post"
-            class="img-fluid rounded mb-4 shadow-sm"
-          />
+          <img *ngIf="blogpost.featuredImageUrl" [src]="blogpost.featuredImageUrl" alt="Imagem do post"
+            class="img-fluid rounded mb-4 shadow-sm" />
 
           <div class="blog-post-content markdown-container">
             <markdown [data]="blogpost.content"></markdown>
           </div>
+          <div>
+            
+          </div>
         </article>
 
         <!-- Comentários -->
-        <section class="comments-section mt-5">
-          <h3 class="mb-4 border-bottom pb-2">Comentários</h3>
+        <div id="disqus_thread"></div>
+        <script>
+          /**
+           *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+           *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+          /*
+          var disqus_config = function () {
+          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          */
+          (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document,
+              s = d.createElement('script');
+            s.src = 'https://codepulse-blog.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+          })();
 
-          <!-- Botão de fazer comentário -->
-          <div class="mb-4" *ngIf="!showCommentForm">
-            <button
-              class="btn btn-outline-primary"
-              (click)="canComment ? showCommentForm = true : promptLogin()"
-            >
-              Faça um comentário
-            </button>
-          </div>
-
-          <!-- Formulário para comentar -->
-          <div *ngIf="showCommentForm">
-            <form (ngSubmit)="submitComment()" class="comment-form mt-3">
-              <textarea
-                class="form-control mb-2"
-                rows="4"
-                placeholder="Escreva seu comentário..."
-                [(ngModel)]="newComment"
-                name="comment"
-                required
-              ></textarea>
-              <button type="submit" class="btn btn-primary">Enviar Comentário</button>
-            </form>
-          </div>
-
-          <!-- Lista de comentários -->
-          <div *ngIf="comments.length > 0; else noComments">
-            <div *ngFor="let comment of comments" class="comment-box mb-3 p-3 border rounded bg-white shadow-sm">
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <strong>{{ comment.author }}</strong>
-                <small class="text-muted">{{ comment.createdAt | date: 'short' }}</small>
-              </div>
-              <p class="mb-0">{{ comment.content }}</p>
-            </div>
-          </div>
-
-          <!-- Caso não haja comentários -->
-          <ng-template #noComments>
-            <p class="text-muted fst-italic">Ainda não há comentários. Seja o primeiro a comentar!</p>
-          </ng-template>
-        </section>
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
       </ng-container>
     </div>
 

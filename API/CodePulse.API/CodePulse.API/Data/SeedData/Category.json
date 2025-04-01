@@ -1,0 +1,12 @@
+[
+  { "Name": "Programação", "UrlHandle": "programacao" },
+  { "Name": "Tecnologia", "UrlHandle": "tecnologia" },
+  { "Name": "Inteligência Artificial", "UrlHandle": "inteligencia-artificial" },
+  { "Name": "Cultura Digital", "UrlHandle": "cultura-digital" },
+  { "Name": "Futuro do Trabalho", "UrlHandle": "futuro-do-trabalho" },
+  { "Name": "Desenvolvimento Web", "UrlHandle": "desenvolvimento-web" },
+  { "Name": "Privacidade e Dados", "UrlHandle": "privacidade-e-dados" },
+  { "Name": "Cyberpunk", "UrlHandle": "cyberpunk" },
+  { "Name": "Linguagens de Programação", "UrlHandle": "linguagens-de-programacao" },
+  { "Name": "Software Livre", "UrlHandle": "software-livre" }
+]

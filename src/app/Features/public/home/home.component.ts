@@ -3,6 +3,8 @@ import { BlogPostService } from '../../blog-post/services/blog-post.service';
 import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { Category } from '../../Categories/models/category.model';
 import { CategoryService } from '../../Categories/services/category.service';
+import { Router } from '@angular/router';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +27,9 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private blogpostservice: BlogPostService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private viewportScroller: ViewportScroller,
+    private router:Router
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +46,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // 🔄 Atualiza os posts mostrados conforme filtros e página
   updatePagination(): void {
     let filtered = [...this.allPosts];
 
@@ -74,6 +77,7 @@ export class HomeComponent implements OnInit {
 
     this.pageNumber = 1;
     this.updatePagination();
+    this.viewportScroller.scrollToPosition([0, 0]);
   }
 
   getCategoryNameById(id: string): string {
@@ -122,4 +126,7 @@ export class HomeComponent implements OnInit {
       this.updatePagination();
     });
   }
+
+  
+  
 }
