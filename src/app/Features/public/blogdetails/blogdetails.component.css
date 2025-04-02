@@ -56,19 +56,7 @@
   .sidebar a:hover {
     color: #f26522;
   }
-  .comment-form textarea {
-    resize: vertical;
-    border-radius: 8px;
-  }
-  
-  .comment-box {
-    background-color: #f8f9fa;
-  }
-  
-  .comments-section h4 {
-    font-weight: 600;
-    color: #2c3e50;
-  }
+ 
   /* Garante que o conteúdo de markdown fique dentro da largura da coluna */
 .markdown-container {
   max-width: 100%;

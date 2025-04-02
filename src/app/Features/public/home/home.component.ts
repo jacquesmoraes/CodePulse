@@ -3,8 +3,9 @@ import { BlogPostService } from '../../blog-post/services/blog-post.service';
 import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { Category } from '../../Categories/models/category.model';
 import { CategoryService } from '../../Categories/services/category.service';
-import { Router } from '@angular/router';
+
 import { ViewportScroller } from '@angular/common';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -29,10 +30,11 @@ export class HomeComponent implements OnInit {
     private blogpostservice: BlogPostService,
     private categoryService: CategoryService,
     private viewportScroller: ViewportScroller,
-    private router:Router
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
     this.categoryService.loadAllCategories();
     this.categories$.subscribe(cats => (this.categoryList = cats));
 
@@ -44,6 +46,7 @@ export class HomeComponent implements OnInit {
       this.recentPosts = sorted.slice(0, 5);
       this.updatePagination();
     });
+  
   }
 
   updatePagination(): void {
@@ -86,12 +89,15 @@ export class HomeComponent implements OnInit {
   }
 
   removeCategory(id: string): void {
+    
     this.selectedCategoryIds = this.selectedCategoryIds.filter(catId => catId !== id);
     this.pageNumber = 1;
     this.updatePagination();
+    
   }
 
   clearCategoryFilter(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
     this.selectedCategoryIds = [];
     this.pageNumber = 1;
     this.updatePagination();

@@ -1,12 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { Observable } from 'rxjs';
 import { BlogPostService } from '../../blog-post/services/blog-post.service';
 import { ViewportScroller } from '@angular/common';
-import { AuthService } from '../../auth/services/auth.service';
+
 import { User } from '../../auth/models/user.model';
-import Swal from 'sweetalert2';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-blogdetails',
@@ -29,11 +30,12 @@ export class BlogdetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private blogpost: BlogPostService,
     private viewportScroller: ViewportScroller,
-    
+    private spinner: NgxSpinnerService
     
   ) {}
 
   ngOnInit(): void {
+    this.spinner.show();
     this.viewportScroller.scrollToPosition([0, 0]);
 
     this.route.paramMap.subscribe({
@@ -47,6 +49,7 @@ export class BlogdetailsComponent implements OnInit {
                 observer.complete();
               });
               this.blogPostId = post.id;
+              this.loadDisqus(this.blogPostId, post.urlHandle)
              
             },
             error: () => {
@@ -70,7 +73,7 @@ export class BlogdetailsComponent implements OnInit {
   
     const d = document;
     const s = d.createElement('script');
-    s.src = 'https://.disqus.com/embed.js';
+    s.src = 'https://codepulse-blog.disqus.com/embed.js';
     s.setAttribute('data-timestamp', Date.now().toString());
     (d.head || d.body).appendChild(s);
   }

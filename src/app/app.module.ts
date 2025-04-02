@@ -21,6 +21,9 @@ import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.
 import { LoginComponent } from './Features/auth/login/login.component';
 import { AuthInterceptor } from './Core/interceptors/auth.interceptor';
 import { RegisterComponent } from './Features/auth/register/register.component';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -47,7 +50,9 @@ import { RegisterComponent } from './Features/auth/register/register.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    NgxSpinnerModule,
+    BrowserAnimationsModule
   ],
   exports:[
 
@@ -56,6 +61,11 @@ import { RegisterComponent } from './Features/auth/register/register.component';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true
     }
   ],

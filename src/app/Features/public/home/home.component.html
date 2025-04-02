@@ -1,181 +1,171 @@
 <!DOCTYPE html>
-  <html lang="pt-br">
-   <body class="category-page">
-      <main class="main">
-      <div class="container">
-        <div class="row">
-  
-          <div class="col-lg-8">
-  
-            <!-- Category Postst Section -->
-            <section id="category-postst" class="category-postst section">
-  
-              <div class="container" data-aos="fade-up" data-aos-delay="100">
-                
-                
-                  <div class="row gy-4">
-                    <div class="col-12" *ngFor="let blog of filteredBlogposts">
-                      <div class="card blog-card mb-4">
-                        <img [src]="blog.featuredImageUrl" class="card-img-top img-fluid" [alt]="blog.title" />
-                  
-                        <div class="card-body">
-                          <div class="mb-2">
-                            <span *ngFor="let category of blog.categories" 
-                            class="badge bg-secondary me-1"
-                            (click)="onCategoryClick(category.id)"
-                            style="cursor: pointer;"
-                            >
-                              {{ category.name }}
-                            </span>
-                          </div>
-                  
-                          <h2 class="card-title ">
-                            <a [routerLink]="['/blog', blog.urlHandle]" class="text-decoration-none">
-                              {{ blog.title }}
-                            </a>
-                          </h2>
-                          <p class="text-muted mb-2">
-                            {{ blog.shortDescription }}
+<html lang="pt-br">
+
+<body class="category-page">
+  <main class="main">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-8">
+
+          <!-- Category Postst Section -->
+          <section id="category-postst" class="category-postst section">
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+
+              <div class="row gy-4">
+                <div class="col-12" *ngFor="let blog of filteredBlogposts">
+                  <div class="card blog-card mb-4">
+                    <img [src]="blog.featuredImageUrl" class="card-img-top img-fluid" [alt]="blog.title" />
+
+                    <div class="card-body">
+                      <div class="mb-2">
+                        <span *ngFor="let category of blog.categories" class="badge bg-secondary me-1"
+                          (click)="onCategoryClick(category.id)" style="cursor: pointer;">
+                          {{ category.name }}
+                        </span>
+                      </div>
+
+                      <h2 class="card-title ">
+                        <a [routerLink]="['/blog', blog.urlHandle]" class="text-decoration-none">
+                          {{ blog.title }}
+                        </a>
+                      </h2>
+                      <p class="text-muted mb-2">
+                        {{ blog.shortDescription }}
+                      </p>
+
+                      <div class="d-flex align-items-center mb-1">
+                        <div class="author-avatar me-2"></div>
+                        <div class="post-meta">
+                          <p class="post-author mb-0"><strong>{{ blog.author }}</strong></p>
+                          <p class="post-date mb-0">
+                            <time>{{ blog.publishedDate | date: 'mediumDate' }}</time>
                           </p>
-                  
-                          <div class="d-flex align-items-center mb-1">
-                            <div class="author-avatar me-2"></div>
-                            <div class="post-meta">
-                              <p class="post-author mb-0"><strong>{{ blog.author }}</strong></p>
-                              <p class="post-date mb-0">
-                                <time>{{ blog.publishedDate | date: 'mediumDate' }}</time>
-                              </p>
-                            </div>
-                          </div>
                         </div>
                       </div>
                     </div>
-                  
-                    <div class="col-12" *ngIf="filteredBlogposts.length === 0">
-                      <div class="alert alert-warning text-center">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        Nenhum post encontrado com as categorias selecionadas.
-                      </div>
-                    </div>
                   </div>
-                  
-                  <!-- End post list item -->
-  
-                  <nav aria-label="Page navigation" class="pagination-container mt-4">
-                    <ul class="pagination justify-content-center">
-                      <li class="page-item" [class.disabled]="pageNumber === 1">
-                        <a class="page-link" (click)="previousPage()">←</a>
-                      </li>
-                  
-                      <li
-                        *ngFor="let item of totalPagesList; let i = index"
-                        class="page-item"
-                        [class.active]="pageNumber === i + 1"
-                      >
-                        <a class="page-link" (click)="getPage(i + 1)">{{ i + 1 }}</a>
-                      </li>
-                  
-                      <li class="page-item" [class.disabled]="pageNumber === totalPagesList.length">
-                        <a class="page-link" (click)="nextPage()">→</a>
-                      </li>
-                    </ul>
-                  </nav>
-                  
+                </div>
+
+                <div class="col-12" *ngIf="filteredBlogposts.length === 0">
+                  <div class="alert alert-warning text-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Nenhum post encontrado com as categorias selecionadas.
+                  </div>
+                </div>
               </div>
-  
-            </section><!-- /Category Postst Section -->
-  
-        
-  
-          </div>
-  
-          <div class="col-lg-4 sidebar">
-  
-            <div class="widgets-container" data-aos="fade-up" data-aos-delay="200">
-  
-              <!-- Search Widget -->
-              <div class="search-widget widget-item">
-  
-                <h3 class="widget-title">Search</h3>
-                <form (submit)="onSearch(queryText.value); $event.preventDefault()">
-  <input type="text" #queryText>
-  <button type="submit" title="Search">
-    <i class="bi bi-search"></i>
-  </button>
-</form>
-  
-              </div><!--/Search Widget -->
-  
-              <!-- Categories Widget -->
-              <ng-container *ngIf="categories$ | async as categories">
-                <div class="categories-widget widget-item">
-                  <h3 class="widget-title">Categories</h3>
-              
-                  <!-- Lista de seleção -->
-                  <div class="badge-grid mb-2">
-                    <span
-                      *ngFor="let category of categories"
-                      class="category-badge"
-                      (click)="onCategoryClick(category.id)"
-                      [class.disabled]="selectedCategoryIds.includes(category.id)"
-                    >
-                      {{ category.name }}
+
+              <!-- End post list item -->
+
+              <nav aria-label="Page navigation" class="pagination-container mt-4">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" [class.disabled]="pageNumber === 1">
+                    <a class="page-link" (click)="previousPage()">←</a>
+                  </li>
+
+                  <li *ngFor="let item of totalPagesList; let i = index" class="page-item"
+                    [class.active]="pageNumber === i + 1">
+                    <a class="page-link" (click)="getPage(i + 1)">{{ i + 1 }}</a>
+                  </li>
+
+                  <li class="page-item" [class.disabled]="pageNumber === totalPagesList.length">
+                    <a class="page-link" (click)="nextPage()">→</a>
+                  </li>
+                </ul>
+              </nav>
+
+            </div>
+
+          </section><!-- /Category Postst Section -->
+
+
+
+        </div>
+
+        <div class="col-lg-4 sidebar">
+
+          <div class="widgets-container" data-aos="fade-up" data-aos-delay="200">
+
+            <!-- Search Widget -->
+            <div class="search-widget widget-item">
+
+              <h3 class="widget-title">Search</h3>
+              <form (submit)="onSearch(queryText.value); $event.preventDefault()">
+                <input type="text" #queryText>
+                <button type="submit" title="Search">
+                  <i class="bi bi-search"></i>
+                </button>
+              </form>
+
+            </div>
+            <!--/Search Widget -->
+
+            <!-- Categories Widget -->
+            <ng-container *ngIf="categories$ | async as categories">
+              <div class="categories-widget widget-item">
+                <h3 class="widget-title">Categories</h3>
+
+                <!-- Lista de seleção -->
+                <div class="badge-grid mb-2">
+                  <span *ngFor="let category of categories" class="category-badge"
+                    (click)="onCategoryClick(category.id)" [class.disabled]="selectedCategoryIds.includes(category.id)">
+                    {{ category.name }}
+                  </span>
+                </div>
+
+                <!-- Filtros ativos -->
+                <div *ngIf="selectedCategoryIds.length > 0" class="selected-categories mt-2">
+                  <small class="text-muted">Filtros aplicados:</small>
+                  <div class="selected-category-badges mt-1">
+                    <span *ngFor="let id of selectedCategoryIds" class="selected-badge">
+                      {{ getCategoryNameById(id) }}
+                      <button (click)="removeCategory(id)" class="remove-btn">&times;</button>
                     </span>
                   </div>
-              
-                  <!-- Filtros ativos -->
-                  <div *ngIf="selectedCategoryIds.length > 0" class="selected-categories mt-2">
-                    <small class="text-muted">Filtros aplicados:</small>
-                    <div class="selected-category-badges mt-1">
-                      <span
-                        *ngFor="let id of selectedCategoryIds"
-                        class="selected-badge"
-                      >
-                        {{ getCategoryNameById(id) }}
-                        <button (click)="removeCategory(id)" class="remove-btn">&times;</button>
-                      </span>
-                    </div>
-                    <button
-                      class="btn btn-sm btn-outline-secondary mt-2"
-                      (click)="clearCategoryFilter()"
-                    >
-                      Limpar todos
-                    </button>
-                  </div>
+                  <button class="btn btn-sm btn-outline-secondary mt-2" (click)="clearCategoryFilter()">
+                    Limpar todos
+                  </button>
                 </div>
-              </ng-container>
-  
-              <!-- Recent Posts Widget -->
-              <div class="recent-posts-widget widget-item">
-                <h3 class="widget-title">Recent Posts</h3>
-              
-                <div *ngFor="let post of recentPosts" class="post-item">
-                  <img [src]="post.featuredImageUrl" alt="{{ post.title }}" class="flex-shrink-0">
-                  <div>
-                    <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
-                    <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
-                  </div>
+              </div>
+            </ng-container>
+
+            <!-- Recent Posts Widget -->
+            <div class="recent-posts-widget widget-item">
+              <h3 class="widget-title">Recent Posts</h3>
+
+              <div *ngFor="let post of recentPosts" class="post-item">
+                <img [src]="post.featuredImageUrl" alt="{{ post.title }}" class="flex-shrink-0">
+                <div>
+                  <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+                  <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
                 </div>
-              </div><!--/Recent Posts Widget -->
-  
-              <!-- Tags Widget -->
-             
-  
+              </div>
             </div>
-  
+            <!--/Recent Posts Widget -->
+            <!--popular-->
+            
+              <div class="widget-item p-4 mb-4 border rounded shadow-sm bg-light">
+                <h4 class="widget-title mb-3">most popular</h4>
+                <ul class="list-unstyled small">
+                  <li><a href="#">popular 1</a></li>
+                  <li><a href="#">popular 2</a></li>
+                  <li><a href="#">popular 3</a></li>
+                </ul>
+              </div>
+           
+              <!-- Tags Widget -->
+
+
+            </div>
+
           </div>
-  
+
         </div>
       </div>
-  
-    </main>
-    </body>
-  
-  </html>
 
+  </main>
+</body>
 
-
-
-
-
-
+</html>
