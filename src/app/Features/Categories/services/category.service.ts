@@ -18,12 +18,13 @@ export class CategoryService {
 
 
 
-  loadAllCategories(): void {
-    this.http
+  loadAllCategories(): Observable<Category[]> {
+    return this.http
       .get<Category[]>(`${environment.apiBaseUrl}/api/categories`)
-      .subscribe(categories => {
+      .pipe(
+        tap(categories => {
         this.categorySubject.next(categories);
-      });
+      }));
   }
 
 getAllCategories(query?: string, sortBy?: string, sortDirection?: string,

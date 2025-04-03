@@ -41,6 +41,7 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
     if (this.id) {
       this.subscription = this.blogPostService.GetBlogPostById(this.id).subscribe({
         next: (response) => {
+          console.log(this.blogPost?.featuredImageUrl);
           this.blogPost = response;
           this.selectedCategories = response.categories.map(x => x.id);
         }
@@ -59,12 +60,19 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
 
   // Método chamado quando o ImageSelectorComponent emite o objeto SelectedImage
   onImageSelected(selectedImage: SelectedImage): void {
-    console.log("Imagem selecionada recebida:", selectedImage);
-    
+    this.pendingImage = selectedImage;
+
+    // Atualiza o campo da imagem para mostrar o preview
+    if (typeof selectedImage.preview === 'string' && this.blogPost) {
+      this.blogPost.featuredImageUrl = selectedImage.preview; 
+    }
+  
     this.closeImageSelector();
+    this.cdr.detectChanges();
   }
 
   onSubmit(): void {
+    console.log("enviou");
     if (this.blogPost && this.id) {
       if (this.pendingImage) {
         // Se houver imagem pendente, faz o upload primeiro

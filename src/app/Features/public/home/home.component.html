@@ -11,13 +11,14 @@
           <!-- Category Postst Section -->
           <section id="category-postst" class="category-postst section">
 
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="container" *ngIf="!loading" data-aos="fade-up" data-aos-delay="100">
 
 
               <div class="row gy-4">
                 <div class="col-12" *ngFor="let blog of filteredBlogposts">
                   <div class="card blog-card mb-4">
-                    <img [src]="blog.featuredImageUrl" class="card-img-top img-fluid" [alt]="blog.title" />
+                    <img [src]="blog.featuredImageUrl" loading="lazy" class="card-img-top img-fluid"
+                      [alt]="blog.title" />
 
                     <div class="card-body">
                       <div class="mb-2">
@@ -136,7 +137,7 @@
               <h3 class="widget-title">Recent Posts</h3>
 
               <div *ngFor="let post of recentPosts" class="post-item">
-                <img [src]="post.featuredImageUrl" alt="{{ post.title }}" class="flex-shrink-0">
+                <img [src]="post.featuredImageUrl" loading="lazy" alt="{{ post.title }}" class="flex-shrink-0">
                 <div>
                   <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
                   <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
@@ -145,25 +146,27 @@
             </div>
             <!--/Recent Posts Widget -->
             <!--popular-->
-            
-              <div class="widget-item p-4 mb-4 border rounded shadow-sm bg-light">
-                <h4 class="widget-title mb-3">most popular</h4>
-                <ul class="list-unstyled small">
-                  <li><a href="#">popular 1</a></li>
-                  <li><a href="#">popular 2</a></li>
-                  <li><a href="#">popular 3</a></li>
-                </ul>
+            <div class="recent-posts-widget widget-item">
+              <h3 class="widget-title">Most Popular posts</h3>
+
+              <div *ngFor="let post of popularPosts" class="post-item">
+                <img [src]="post.featuredImageUrl" loading="lazy" alt="{{ post.title }}" class="flex-shrink-0">
+                <div>
+                  <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+                  <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+                </div>
               </div>
-           
-              <!-- Tags Widget -->
-
-
             </div>
+
+            <!-- Tags Widget -->
+
 
           </div>
 
         </div>
+
       </div>
+    </div>
 
   </main>
 </body>

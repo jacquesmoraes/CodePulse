@@ -47,14 +47,18 @@
 
     <!-- Sidebar -->
     <div class="col-lg-4 sidebar">
-      <div class="widget-item p-4 mb-4 border rounded shadow-sm bg-light">
-        <h4 class="widget-title mb-3">Mais do blog</h4>
-        <ul class="list-unstyled small">
-          <li><a href="#">Post relacionado 1</a></li>
-          <li><a href="#">Post relacionado 2</a></li>
-          <li><a href="#">Post relacionado 3</a></li>
-        </ul>
-      </div>
+
+      <div class="recent-posts-widget widget-item">
+        <h3 class="widget-title">Most Popular posts</h3>
+
+        <div *ngFor="let post of mostViewedPosts" class="post-item">
+          <img [src]="post.featuredImageUrl" loading="lazy" alt="{{ post.title }}" class="flex-shrink-0">
+          <div>
+            <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+            <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+          </div>
+        </div>
+     
 
       <div class="widget-item p-4 mb-4 border rounded shadow-sm bg-light">
         <h4 class="widget-title mb-3">Outros conteúdos</h4>

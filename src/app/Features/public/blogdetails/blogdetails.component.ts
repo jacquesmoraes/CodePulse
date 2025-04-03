@@ -19,7 +19,7 @@ export class BlogdetailsComponent implements OnInit {
   url: string | null = null;
   blogposts$?: Observable<BlogPost>;
   error: string | null = null;
-
+  mostViewedPosts: BlogPost[] = [];
   showCommentForm: boolean = false;
   newComment: string = '';
   blogPostId: string | undefined;
@@ -49,7 +49,10 @@ export class BlogdetailsComponent implements OnInit {
                 observer.complete();
               });
               this.blogPostId = post.id;
-              this.loadDisqus(this.blogPostId, post.urlHandle)
+              this.loadDisqus(this.blogPostId, post.urlHandle);
+              this.blogpost.getMostViewedPosts(5).subscribe((posts: BlogPost[]) => {
+                this.mostViewedPosts = posts;
+              })
              
             },
             error: () => {

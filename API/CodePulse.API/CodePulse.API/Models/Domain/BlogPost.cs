@@ -11,7 +11,7 @@ namespace CodePulse.API.Models.Domain
         public DateTime PublishedDate { get; set; }
         public string Author { get; set; }
         public bool IsVisible { get; set; }
-
+    public int ViewCount { get; set; } 
     public List<Category> Categories { get; set; } 
 
     
