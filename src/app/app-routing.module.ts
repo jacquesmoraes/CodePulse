@@ -12,6 +12,7 @@ import { BlogdetailsComponent } from './Features/public/blogdetails/blogdetails.
 import { LoginComponent } from './Features/auth/login/login.component';
 import { authGuard } from './Features/auth/guards/auth.guard';
 import { RegisterComponent } from './Features/auth/register/register.component';
+import { UserProfileComponent } from './profile/user-profile/user-profile.component';
 
 
 const routes: Routes = [
@@ -25,7 +26,8 @@ const routes: Routes = [
   {path: '', component:HomeComponent},
   {path: 'blog/:url', component:BlogdetailsComponent},
   {path: 'login', component:LoginComponent},
-  {path: 'register', component:RegisterComponent}
+  {path: 'register', component:RegisterComponent},
+  {path: 'aboutme', component:UserProfileComponent}
 
 ];
 

@@ -39,6 +39,7 @@
         <div class="d-flex align-items-center gap-2">
           <div class="text-white ">{{ user?.email }}</div>
           <button class="btn btn-outline-light ms-2" (click)="onLogout()">Sair</button>
+          <button class="btn btn-outline-light ms-2" [routerLink]="['/aboutme']">My profile</button>
         </div>
       </ng-template>
     </div>

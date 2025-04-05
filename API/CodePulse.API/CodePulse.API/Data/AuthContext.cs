@@ -5,74 +5,87 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CodePulse.API.Data
 {
-  public class AuthContext : IdentityDbContext
-  {
-    public AuthContext ( DbContextOptions<AuthContext> options ) : base ( options )
+    public class AuthContext : IdentityDbContext
     {
-    }
-
-    public DbSet<UserProfile>  UsersProfiles { get; set; }
-
-    protected override void OnModelCreating ( ModelBuilder builder )
-    {
-      base.OnModelCreating ( builder );
-
-      var readerRoleId = "a8e07f31-c8e6-4738-9d78-5b6d0765ff16";
-      var writerRoleId = "e2f16115-1c6c-494c-9416-17af701714a3";
-
-      // Criação dos roles
-      var roles = new List<IdentityRole>
-    {
-        new IdentityRole
+        public AuthContext(DbContextOptions<AuthContext> options) : base(options)
         {
-            Id = readerRoleId,
-            Name = "Reader",
-            NormalizedName = "READER",
-            ConcurrencyStamp = readerRoleId
-        },
-        new IdentityRole
-        {
-            Id = writerRoleId,
-            Name = "Writer",
-            NormalizedName = "WRITER",
-            ConcurrencyStamp = writerRoleId
         }
-    };
 
-      // Seed dos roles
-      builder.Entity<IdentityRole> ( ).HasData ( roles );
+        public DbSet<UserProfile> UsersProfiles { get; set; }
 
-      // Usuário admin
-      var adminUserId = "6350ca1c-7461-43c1-b058-02ac44f88f79";
-      var adminUser = new IdentityUser
-      {
-        Id = adminUserId,
-        UserName = "Admin",
-        Email = "admin@codepulse.com",
-        NormalizedEmail = "ADMIN@CODEPULSE.COM",
-        NormalizedUserName = "ADMIN@CODEPULSE.COM",
-        EmailConfirmed = true
-      };
-
-      adminUser.PasswordHash = new PasswordHasher<IdentityUser> ( ).HashPassword ( adminUser, "Admin@123" );
-      builder.Entity<IdentityUser> ( ).HasData ( adminUser );
-
-      // Associação do admin com os roles
-      var adminRoles = new List<IdentityUserRole<string>>
-    {
-        new IdentityUserRole<string>
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            UserId = adminUserId,
-            RoleId = readerRoleId
-        },
-        new IdentityUserRole<string>
-        {
-            UserId = adminUserId,
-            RoleId = writerRoleId
+            base.OnModelCreating(builder);
+
+            var readerRoleId = "a8e07f31-c8e6-4738-9d78-5b6d0765ff16";
+            var writerRoleId = "e2f16115-1c6c-494c-9416-17af701714a3";
+
+            var roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Id = readerRoleId,
+                    Name = "Reader",
+                    NormalizedName = "READER",
+                    ConcurrencyStamp = readerRoleId
+                },
+                new IdentityRole
+                {
+                    Id = writerRoleId,
+                    Name = "Writer",
+                    NormalizedName = "WRITER",
+                    ConcurrencyStamp = writerRoleId
+                }
+            };
+
+            builder.Entity<IdentityRole>().HasData(roles);
+
+            var adminUserId = "6350ca1c-7461-43c1-b058-02ac44f88f79";
+            var adminProfileId = Guid.Parse("b9b29770-6a67-4c21-bbf2-e1c8dfcde122");
+
+            var adminUser = new IdentityUser
+            {
+                Id = adminUserId,
+                UserName = "Admin",
+                Email = "admin@codepulse.com",
+                NormalizedEmail = "ADMIN@CODEPULSE.COM",
+                NormalizedUserName = "ADMIN@CODEPULSE.COM",
+                EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            };
+
+            adminUser.PasswordHash = new PasswordHasher<IdentityUser>()
+                .HashPassword(adminUser, "Admin@123");
+
+            builder.Entity<IdentityUser>().HasData(adminUser);
+
+            var adminRoles = new List<IdentityUserRole<string>>
+            {
+                new IdentityUserRole<string>
+                {
+                    UserId = adminUserId,
+                    RoleId = readerRoleId
+                },
+                new IdentityUserRole<string>
+                {
+                    UserId = adminUserId,
+                    RoleId = writerRoleId
+                }
+            };
+
+            builder.Entity<IdentityUserRole<string>>().HasData(adminRoles);
+
+            builder.Entity<UserProfile>().HasData(
+                new UserProfile
+                {
+                    Id = adminProfileId,
+                    UserId = adminUserId,
+                    FullName = "Administrador",
+                    Bio = "Administrador do sistema",
+                    PhotoUrl = "https://via.placeholder.com/150?text=Admin"
+                }
+            );
         }
-    };
-
-      builder.Entity<IdentityUserRole<string>> ( ).HasData ( adminRoles );
     }
-  }
 }

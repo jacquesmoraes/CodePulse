@@ -26,6 +26,7 @@ import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { LazyLoadDirective } from './shared/directives/lazy-load.directive';
+import { UserProfileComponent } from './profile/user-profile/user-profile.component';
 
 
 @NgModule({
@@ -45,8 +46,8 @@ import { LazyLoadDirective } from './shared/directives/lazy-load.directive';
     BlogdetailsComponent,
     LoginComponent,
     RegisterComponent,
-    LazyLoadDirective
-    
+    LazyLoadDirective,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,

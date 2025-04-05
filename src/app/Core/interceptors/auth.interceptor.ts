@@ -13,24 +13,19 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private cookieService: CookieService) {}
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if(this.shouldInterceptRequest(request)){
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.cookieService.get('Authorization');
 
+    // Só adiciona o token se a URL for da sua API
+    if (token && request.url.startsWith('https://localhost:7167')) {
       const authRequest = request.clone({
-        setHeaders:{
-          'Authorization': this.cookieService.get('Authorization')
+        setHeaders: {
+          Authorization: token
         }
       });
       return next.handle(authRequest);
     }
-    
+
     return next.handle(request);
   }
-
-
-    private shouldInterceptRequest(request: HttpRequest<any>): boolean{
-      return request.urlWithParams.indexOf('addAuth=true', 0) > -1? true: false
-    }
-
-
 }
