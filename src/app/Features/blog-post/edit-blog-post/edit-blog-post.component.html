@@ -40,7 +40,11 @@
             Featured Image URL
             <button type="button" class="btn btn-light" (click)="openImageSelector()">select image</button>
           </label>
-          <input type="text" class="form-control" [(ngModel)]="blogPost.featuredImageUrl" name="featuredImageUrl">
+          <input type="text" class="form-control" [(ngModel)]="displayImageUrl" name="featuredImageUrl" readonly>
+          <!-- Mensagem de imagem pendente -->
+          <div *ngIf="pendingImageMessage" class="alert alert-info mt-2">
+            {{ pendingImageMessage }}
+          </div>
           <!-- Preview da imagem -->
           <ng-container *ngIf="blogPost.featuredImageUrl">
             <div class="text-center mb-3 mt-4">

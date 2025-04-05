@@ -5,127 +5,121 @@
   <main class="main">
     <div class="container">
       <div class="row">
-
         <div class="col-lg-8">
-
-          <!-- Category Postst Section -->
           <section id="category-postst" class="category-postst section">
-
-            <div class="container" *ngIf="!loading" data-aos="fade-up" data-aos-delay="100">
-
-
-              <div class="row gy-4">
-                <div class="col-12" *ngFor="let blog of filteredBlogposts">
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+              <!-- Skeletons enquanto carrega -->
+              <ng-container *ngIf="loading">
+                <div class="col-12" *ngFor="let skeleton of [1,2,3,4]; trackBy: trackByFn">
                   <div class="card blog-card mb-4">
-                    <img [src]="blog.featuredImageUrl" loading="lazy" class="card-img-top img-fluid"
-                      [alt]="blog.title" />
-
+                    <div class="skeleton skeleton-image" aria-hidden="true"></div>
                     <div class="card-body">
-                      <div class="mb-2">
-                        <span *ngFor="let category of blog.categories" class="badge bg-secondary me-1"
-                          (click)="onCategoryClick(category.id)" style="cursor: pointer;">
-                          {{ category.name }}
-                        </span>
-                      </div>
+                      <div class="skeleton skeleton-title" aria-hidden="true"></div>
+                      <div class="skeleton skeleton-text" aria-hidden="true"></div>
+                      <div class="skeleton skeleton-text" style="width: 60%" aria-hidden="true"></div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
 
-                      <h2 class="card-title ">
-                        <a [routerLink]="['/blog', blog.urlHandle]" class="text-decoration-none">
-                          {{ blog.title }}
-                        </a>
-                      </h2>
-                      <p class="text-muted mb-2">
-                        {{ blog.shortDescription }}
-                      </p>
-
-                      <div class="d-flex align-items-center mb-1">
-                        <div class="author-avatar me-2"></div>
-                        <div class="post-meta">
-                          <p class="post-author mb-0"><strong>{{ blog.author }}</strong></p>
-                          <p class="post-date mb-0">
-                            <time>{{ blog.publishedDate | date: 'mediumDate' }}</time>
-                          </p>
+              <!-- Posts reais -->
+              <ng-container *ngIf="!loading">
+                <div class="row gy-4">
+                  <div class="col-12" *ngFor="let blog of filteredBlogposts; trackBy: trackByFn">
+                    <div class="card blog-card mb-4">
+                      <img [src]="blog.featuredImageUrl" loading="lazy" class="card-img-top img-fluid"
+                        [alt]="blog.title" width="800" height="450" loading="lazy" appLazyLoad decoding="async" />
+                      <div class="card-body">
+                        <div class="mb-2">
+                          <span *ngFor="let category of blog.categories; trackBy: trackByFn"
+                            class="badge bg-secondary me-1" (click)="onCategoryClick(category.id)"
+                            style="cursor: pointer;">
+                            {{ category.name }}
+                          </span>
+                        </div>
+                        <h2 class="card-title">
+                          <a [routerLink]="['/blog', blog.urlHandle]" class="text-decoration-none"
+                            [attr.aria-label]="'Ler artigo: ' + blog.title">
+                            {{ blog.title }}
+                          </a>
+                        </h2>
+                        <p class="text-muted mb-2">{{ blog.shortDescription }}</p>
+                        <div class="d-flex align-items-center mb-1">
+                          <div class="author-avatar me-2" aria-hidden="true"></div>
+                          <div class="post-meta">
+                            <p class="post-author mb-0"><strong>{{ blog.author }}</strong></p>
+                            <p class="post-date mb-0"><time>{{ blog.publishedDate | date: 'mediumDate' }}</time></p>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="col-12" *ngIf="filteredBlogposts.length === 0">
-                  <div class="alert alert-warning text-center">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    Nenhum post encontrado com as categorias selecionadas.
+                  <!-- Nenhum post encontrado -->
+                  <div class="col-12" *ngIf="filteredBlogposts.length === 0">
+                    <div class="alert alert-warning text-center" role="alert">
+                      <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+                      Nenhum post encontrado com as categorias selecionadas.
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- End post list item -->
-
-              <nav aria-label="Page navigation" class="pagination-container mt-4">
-                <ul class="pagination justify-content-center">
-                  <li class="page-item" [class.disabled]="pageNumber === 1">
-                    <a class="page-link" (click)="previousPage()">←</a>
-                  </li>
-
-                  <li *ngFor="let item of totalPagesList; let i = index" class="page-item"
-                    [class.active]="pageNumber === i + 1">
-                    <a class="page-link" (click)="getPage(i + 1)">{{ i + 1 }}</a>
-                  </li>
-
-                  <li class="page-item" [class.disabled]="pageNumber === totalPagesList.length">
-                    <a class="page-link" (click)="nextPage()">→</a>
-                  </li>
-                </ul>
-              </nav>
-
+                <!-- Paginação -->
+                <nav aria-label="Navegação de páginas" class="pagination-container mt-4">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item" [class.disabled]="pageNumber === 1">
+                      <a class="page-link" (click)="previousPage()" role="button" tabindex="0">←</a>
+                    </li>
+                    <li *ngFor="let item of totalPagesList; let i = index; trackBy: trackByFn" class="page-item"
+                      [class.active]="pageNumber === i + 1">
+                      <a class="page-link" (click)="getPage(i + 1)" role="button" tabindex="0">{{ i + 1 }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="pageNumber === totalPagesList.length">
+                      <a class="page-link" (click)="nextPage()" role="button" tabindex="0">→</a>
+                    </li>
+                  </ul>
+                </nav>
+              </ng-container>
             </div>
-
-          </section><!-- /Category Postst Section -->
-
-
-
+          </section>
         </div>
 
         <div class="col-lg-4 sidebar">
-
           <div class="widgets-container" data-aos="fade-up" data-aos-delay="200">
-
             <!-- Search Widget -->
             <div class="search-widget widget-item">
-
               <h3 class="widget-title">Search</h3>
               <form (submit)="onSearch(queryText.value); $event.preventDefault()">
-                <input type="text" #queryText>
-                <button type="submit" title="Search">
-                  <i class="bi bi-search"></i>
+                <input type="text" #queryText aria-label="Pesquisar posts" autocomplete="off">
+                <button type="submit" title="Search" aria-label="Pesquisar">
+                  <i class="bi bi-search" aria-hidden="true"></i>
                 </button>
               </form>
-
             </div>
-            <!--/Search Widget -->
 
             <!-- Categories Widget -->
             <ng-container *ngIf="categories$ | async as categories">
               <div class="categories-widget widget-item">
                 <h3 class="widget-title">Categories</h3>
-
-                <!-- Lista de seleção -->
                 <div class="badge-grid mb-2">
-                  <span *ngFor="let category of categories" class="category-badge"
-                    (click)="onCategoryClick(category.id)" [class.disabled]="selectedCategoryIds.includes(category.id)">
+                  <span *ngFor="let category of categories; trackBy: trackByFn" class="category-badge"
+                    (click)="onCategoryClick(category.id)" [class.disabled]="selectedCategoryIds.includes(category.id)"
+                    role="button" tabindex="0">
                     {{ category.name }}
                   </span>
                 </div>
 
-                <!-- Filtros ativos -->
                 <div *ngIf="selectedCategoryIds.length > 0" class="selected-categories mt-2">
                   <small class="text-muted">Filtros aplicados:</small>
                   <div class="selected-category-badges mt-1">
-                    <span *ngFor="let id of selectedCategoryIds" class="selected-badge">
+                    <span *ngFor="let id of selectedCategoryIds; trackBy: trackByFn" class="selected-badge">
                       {{ getCategoryNameById(id) }}
-                      <button (click)="removeCategory(id)" class="remove-btn">&times;</button>
+                      <button (click)="removeCategory(id)" class="remove-btn"
+                        aria-label="Remover categoria">&times;</button>
                     </span>
                   </div>
-                  <button class="btn btn-sm btn-outline-secondary mt-2" (click)="clearCategoryFilter()">
+                  <button class="btn btn-sm btn-outline-secondary mt-2" (click)="clearCategoryFilter()"
+                    aria-label="Limpar todos os filtros">
                     Limpar todos
                   </button>
                 </div>
@@ -135,39 +129,56 @@
             <!-- Recent Posts Widget -->
             <div class="recent-posts-widget widget-item">
               <h3 class="widget-title">Recent Posts</h3>
-
-              <div *ngFor="let post of recentPosts" class="post-item">
-                <img [src]="post.featuredImageUrl" loading="lazy" alt="{{ post.title }}" class="flex-shrink-0">
-                <div>
-                  <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
-                  <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+              <ng-container *ngIf="!sidebarLoading; else skeletonSidebar">
+                <div *ngFor="let post of recentPosts; trackBy: trackByFn" class="post-item">
+                  <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
+                    height="60" decoding="async">
+                  <div>
+                    <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+                    <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+                  </div>
                 </div>
-              </div>
+              </ng-container>
+
+              <ng-template #skeletonSidebar>
+                <div class="post-item" *ngFor="let s of [1,2,3,4,5]; trackBy: trackByFn">
+                  <div class="skeleton skeleton-image" style="width: 80px; height: 60px;" aria-hidden="true"></div>
+                  <div class="ms-2" style="flex: 1;">
+                    <div class="skeleton skeleton-title" style="width: 100%; height: 16px;" aria-hidden="true"></div>
+                    <div class="skeleton skeleton-text" style="width: 60%; height: 12px;" aria-hidden="true"></div>
+                  </div>
+                </div>
+              </ng-template>
             </div>
-            <!--/Recent Posts Widget -->
-            <!--popular-->
+
+            <!-- Popular Posts Widget -->
             <div class="recent-posts-widget widget-item">
               <h3 class="widget-title">Most Popular posts</h3>
-
-              <div *ngFor="let post of popularPosts" class="post-item">
-                <img [src]="post.featuredImageUrl" loading="lazy" alt="{{ post.title }}" class="flex-shrink-0">
-                <div>
-                  <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
-                  <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+              <ng-container *ngIf="!popularLoading; else skeletonPopular">
+                <div *ngFor="let post of popularPosts; trackBy: trackByFn" class="post-item">
+                  <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
+                    height="60" decoding="async">
+                  <div>
+                    <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+                    <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+                  </div>
                 </div>
-              </div>
+              </ng-container>
+
+              <ng-template #skeletonPopular>
+                <div class="post-item" *ngFor="let s of [1,2,3,4]; trackBy: trackByFn">
+                  <div class="skeleton skeleton-image" style="width: 80px; height: 60px;" aria-hidden="true"></div>
+                  <div class="ms-2" style="flex: 1;">
+                    <div class="skeleton skeleton-title" style="width: 100%; height: 16px;" aria-hidden="true"></div>
+                    <div class="skeleton skeleton-text" style="width: 60%; height: 12px;" aria-hidden="true"></div>
+                  </div>
+                </div>
+              </ng-template>
             </div>
-
-            <!-- Tags Widget -->
-
-
           </div>
-
         </div>
-
       </div>
     </div>
-
   </main>
 </body>
 

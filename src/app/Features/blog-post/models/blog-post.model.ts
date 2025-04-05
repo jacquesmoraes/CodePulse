@@ -11,4 +11,5 @@ export interface BlogPost{
     author:string;
     isVisible:boolean;
     categories: Category[];
+    excerpt?: string;
 }

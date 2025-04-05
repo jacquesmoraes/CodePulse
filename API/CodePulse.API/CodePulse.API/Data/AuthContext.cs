@@ -1,3 +1,4 @@
+using CodePulse.API.Models.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,8 @@ namespace CodePulse.API.Data
     public AuthContext ( DbContextOptions<AuthContext> options ) : base ( options )
     {
     }
+
+    public DbSet<UserProfile>  UsersProfiles { get; set; }
 
     protected override void OnModelCreating ( ModelBuilder builder )
     {

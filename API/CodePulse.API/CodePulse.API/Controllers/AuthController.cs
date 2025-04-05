@@ -1,4 +1,6 @@
+using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.Dto;
+using CodePulse.API.Repositories.Implementation;
 using CodePulse.API.Repositories.Interface;
 
 using Microsoft.AspNetCore.Identity;
@@ -11,22 +13,25 @@ namespace CodePulse.API.Controllers
   public class AuthController : ControllerBase
   {
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly IUserRepository _userRepository;
     private readonly ITokenRepository _tokenRepository;
 
-    public AuthController ( UserManager<IdentityUser> userManager, ITokenRepository tokenRepository )
+    public AuthController ( UserManager<IdentityUser> userManager,
+      IUserRepository userRepository,ITokenRepository tokenRepository )
     {
       _userManager = userManager;
+      _userRepository = userRepository;
       _tokenRepository = tokenRepository;
     }
 
 
     [HttpPost]
-    [Route("login")]
+    [Route ( "login" )]
     public async Task<IActionResult> login ( [FromBody] LoginRequestDto request )
     {
       //check email
       var user = await _userManager.FindByEmailAsync(request.Email);
-      if(user is not null )
+      if ( user is not null )
       {
         //check password
         var password = await _userManager.CheckPasswordAsync(user, request.Password);
@@ -44,61 +49,67 @@ namespace CodePulse.API.Controllers
             UserName = user.UserName ?? string.Empty
 
           };
-          return Ok(response);
+          return Ok ( response );
         }
       }
-      ModelState.AddModelError("","email or password incorrect");
-      return ValidationProblem(ModelState);
+      ModelState.AddModelError ( "", "email or password incorrect" );
+      return ValidationProblem ( ModelState );
     }
 
 
-    [HttpPost]
-    [Route ( "register" )]
-    public async Task<IActionResult> Register ( [FromBody] RegisterRequestDto register )
+    [HttpPost("register")]
+public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerDto)
+{
+    // Verifica se o e-mail ou nome de usuário já estão sendo usados
+    var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
+    if (existingUser != null)
     {
-      var user = new IdentityUser
-      {
-        UserName = register.UserName.Trim(),
-        Email = register.Email.Trim(),
-      };
-
-      var identityUser = await _userManager.CreateAsync(user, register.Password);
-
-      if ( identityUser.Succeeded )
-      {
-        var IdentityResult = await _userManager.AddToRoleAsync(user, "Reader");
-
-        if ( IdentityResult.Succeeded )
-        {
-          return Ok ( );
-        }
-        else
-        {
-          if ( identityUser.Errors.Any ( ) )
-          {
-            AddMOdelErrors ( identityUser.Errors );
-          }
-        }
-      }
-      else
-      {
-        if ( identityUser.Errors.Any ( ) )
-        {
-          AddMOdelErrors ( identityUser.Errors );
-        }
-      }
-
-      return ValidationProblem(ModelState);
-
+        return BadRequest("E-mail já está em uso.");
     }
 
-    private void AddMOdelErrors ( IEnumerable<IdentityError> errors )
+    var existingUsername = await _userManager.FindByNameAsync(registerDto.UserName);
+    if (existingUsername != null)
     {
-      foreach ( var error in errors )
-      {
-        ModelState.AddModelError ( "", error.Description );
-      }
+        return BadRequest("Nome de usuário já está em uso.");
     }
+
+    // Cria o novo usuário
+    var newUser = new IdentityUser
+    {
+        UserName = registerDto.UserName,
+        Email = registerDto.Email
+    };
+
+    var result = await _userManager.CreateAsync(newUser, registerDto.Password);
+
+    if (!result.Succeeded)
+    {
+        return BadRequest(result.Errors);
+    }
+
+    // Adiciona o papel Reader
+    await _userManager.AddToRoleAsync(newUser, "Reader");
+
+    // Cria o perfil do usuário automaticamente
+    var userProfile = new UserProfile
+{
+    Id = Guid.NewGuid(), 
+    UserId = newUser.Id,
+    FullName = registerDto.FullName,
+    Bio = registerDto.Bio,
+    PhotoUrl = registerDto.PhotoUrl
+};
+
+    await _userRepository.CreateUserProfileAsync(userProfile);
+
+    return Ok(new
+    {
+        message = "Usuário registrado com sucesso e perfil criado.",
+        username = newUser.UserName,
+        email = newUser.Email
+    });
+}
+    
   }
 
 }

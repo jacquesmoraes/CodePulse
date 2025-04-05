@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { NavBarComponent } from './Core/Components/nav-bar/nav-bar.component';
 import { CategoriesListComponent } from './Features/Categories/categories-list/categories-list.component';
 import { AddCategoryComponent } from './Features/Categories/add-category/add-category.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { EditCategoryComponent } from './Features/Categories/edit-category/edit-category.component';
 import { BlogpostListComponent } from './Features/blog-post/blogpost-list/blogpost-list.component';
@@ -24,6 +24,8 @@ import { RegisterComponent } from './Features/auth/register/register.component';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { LazyLoadDirective } from './shared/directives/lazy-load.directive';
 
 
 @NgModule({
@@ -42,7 +44,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HomeComponent,
     BlogdetailsComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    LazyLoadDirective
     
   ],
   imports: [
@@ -52,7 +55,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     MarkdownModule.forRoot(),
     NgxSpinnerModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-center', 
+      preventDuplicates: true,
+      closeButton: true,
+      timeOut: 4000
+    }),
   ],
   exports:[
 

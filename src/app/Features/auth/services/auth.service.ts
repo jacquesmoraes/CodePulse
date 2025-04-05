@@ -38,11 +38,7 @@ export class AuthService {
   }
  
   register(request: RegisterRequest): Observable<void>{
-    return this.http.post<void>(`${environment.apiBaseUrl}/api/auth/register`, {
-      userName: request.userName,
-      email : request.email,
-      password: request.password
-    });
+    return this.http.post<void>(`${environment.apiBaseUrl}/api/auth/register`, request);
   }
   
   setUser(user: User): void{

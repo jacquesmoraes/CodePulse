@@ -3,7 +3,7 @@ import { LoginRequest } from '../models/login-request-model';
 import { AuthService } from '../services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import {  Router } from '@angular/router';
-import { User } from '../models/user.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -13,10 +13,12 @@ import { User } from '../models/user.model';
 export class LoginComponent {
 
   model: LoginRequest;
-
+  message: string = '';
+  success: boolean = true;
+  
 
   constructor(private authService : AuthService, private cookieService: CookieService,
-    private router: Router){
+    private router: Router, private toastr:ToastrService){
     this.model = {
       userName: '',
       email : '',
@@ -36,10 +38,17 @@ export class LoginComponent {
             email: response.email,
             roles: response.roles
           });
-
-          //redirect back home
+      
           this.router.navigateByUrl('/')
           
+        },
+        error: (error) => {
+          this.success = false;
+          if (error.status === 400 || error.status === 401) {
+            this.toastr.error('Usuário ou senha incorretos.');
+          } else {
+            this.toastr.error('Erro inesperado. Tente novamente mais tarde.');
+          }
         }
 
       })

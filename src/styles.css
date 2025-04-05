@@ -24,3 +24,44 @@ body {
   font-weight: 600;
   color: #2c3e50;
 }
+ /* 🍊 Estilo customizado para Toastr */
+ .toast-success {
+  background-color: #f26522 !important;
+  color: #fff !important;
+  border-left: 5px solid #e04e0b;
+  font-weight: 500;
+}
+
+.toast-error {
+  background-color: #c0392b !important;
+  color: #fff !important;
+  border-left: 5px solid #a93226;
+  font-weight: 500;
+}
+
+.toast-info {
+  background-color: #2980b9 !important;
+  color: #fff !important;
+  border-left: 5px solid #2471a3;
+}
+
+.toast-warning {
+  background-color: #f39c12 !important;
+  color: #fff !important;
+  border-left: 5px solid #e67e22;
+}
+
+.toast-title {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.toast-message {
+  font-size: 0.95rem;
+}
+
+.toast-close-button {
+  color: #fff !important;
+  text-shadow: none !important;
+}

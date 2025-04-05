@@ -1,51 +1,70 @@
 <div class="auth-container">
-    <div class="auth-box">
-      <h2 class="auth-title">Registrar</h2>
-      <form #registerForm="ngForm" (ngSubmit)="onRegister()" class="auth-form">
-        
-        <div class="form-grou">
-          <label for="userName" class="form-label">Nome de Usuário</label>
-          <input
-            [(ngModel)]="userName"
-            name="userName"
-            id="userName"
-            type="text"
-            class="form-control"
-            required
-          />
-        </div>
-        
-        
-        <div class="form-group">
-          <label for="register-email">E-mail</label>
-          <input
-            id="register-email"
-            type="email"
-            name="email"
-            placeholder="Seu e-mail"
-            [(ngModel)]="email"
-           >
-        </div>
-  
-        <div class="form-group">
-          <label for="register-password">Senha</label>
-          <input
-            id="register-password"
-            type="password"
-            name="password"
-            placeholder="Sua senha"
-            [(ngModel)]="password"
-            
-          >
-        </div>
-  
-        <button type="submit" class="auth-btn mt-3">Registrar</button>
-  
-        <p class="auth-link">
-          Já tem uma conta?
-          <a routerLink="/login">Entrar</a>
-        </p>
-      </form>
+  <div class="auth-box">
+    <h2 class="auth-title">Criar Conta</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form" novalidate>
+      
+      <div class="form-group">
+        <label for="userName">Nome de Usuário</label>
+        <input id="userName" type="text" formControlName="userName" [ngClass]="{ 'invalid': f['userName'].invalid && f['userName'].touched }">
+        <small *ngIf="f['userName'].errors?.['required'] && f['userName'].touched" class="text-danger">Obrigatório.</small>
+        <small *ngIf="f['userName'].errors?.['minlength'] && f['userName'].touched" class="text-danger">Mínimo 3 caracteres.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="fullName">Nome Completo</label>
+        <input id="fullName" type="text" formControlName="fullName" [ngClass]="{ 'invalid': f['fullName'].invalid && f['fullName'].touched }">
+        <small *ngIf="f['fullName'].errors?.['required'] && f['fullName'].touched" class="text-danger">Obrigatório.</small>
+        <small *ngIf="f['fullName'].errors?.['minlength'] && f['fullName'].touched" class="text-danger">Mínimo 3 caracteres.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" [ngClass]="{ 'invalid': f['email'].invalid && f['email'].touched }">
+        <small *ngIf="f['email'].errors?.['required'] && f['email'].touched" class="text-danger">Obrigatório.</small>
+        <small *ngIf="f['email'].errors?.['email'] && f['email'].touched" class="text-danger">insira um email valido</small>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          [ngClass]="{ 'invalid': f['password'].invalid && f['password'].touched }"
+          (focus)="passwordFocused = true"
+          (input)="validatePassword(f['password'].value)"
+        >
+      
+        <ul class="password-criteria" *ngIf="passwordFocused">
+          <li *ngFor="let item of criteriaList" [ngClass]="{ 'valid': item.valid }">
+            <span
+              class="check-icon"
+              [ngClass]="{
+                'loading': item.loading,
+                'valid': item.valid
+              }"
+            ></span>
+            {{ item.label }}
+          </li>
+        </ul>
+      </div>
+      
+
+      
+
+      <button class="auth-btn" type="submit" [disabled]="registerForm.invalid">
+        Registrar
+      </button>
+    </form>
+
+    <div class="auth-link mt-3">
+      Já tem conta?
+      <a routerLink="/login">Entrar</a>
+    </div>
+
+    <div *ngIf="message" class="text-center mt-3" [ngClass]="{ 'text-success': success, 'text-danger': !success }">
+      {{ message }}
     </div>
   </div>
-  
+</div>

@@ -9,6 +9,7 @@ import { UpdateBlogPost } from '../models/update-blog-post.model';
 import { SelectedImage } from 'src/app/shared/models/selected-images.model';
 import { ImageSelectorService } from 'src/app/shared/components/image-selector.service';
 import { BlogImage } from 'src/app/shared/models/blog-image.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-edit-blog-post',
@@ -25,6 +26,9 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
   selectedCategories?: string[];
   isImageSelectorVisible: boolean = false;
   pendingImage: SelectedImage | null = null;
+  pendingImageMessage: string = '';
+  displayImageUrl: string = '';
+  baseUrl: string = environment.apiBaseUrl;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,6 +48,7 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
           console.log(this.blogPost?.featuredImageUrl);
           this.blogPost = response;
           this.selectedCategories = response.categories.map(x => x.id);
+          this.displayImageUrl = this.blogPost.featuredImageUrl || '';
         }
       });
     }
@@ -61,6 +66,12 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
   // Método chamado quando o ImageSelectorComponent emite o objeto SelectedImage
   onImageSelected(selectedImage: SelectedImage): void {
     this.pendingImage = selectedImage;
+    this.pendingImageMessage = `Imagem "${selectedImage.fileName}" selecionada. Será enviada ao salvar.`;
+    
+    // Mostra o caminho completo da imagem no input
+    // Assumindo que a URL será no formato: {Request.Scheme}://{Request.Host}/{savedImage.Url}
+    // Vamos usar o baseUrl do ambiente como aproximação
+    this.displayImageUrl = `${this.baseUrl}/images/${selectedImage.fileName}`;
 
     // Atualiza o campo da imagem para mostrar o preview
     if (typeof selectedImage.preview === 'string' && this.blogPost) {
@@ -81,10 +92,13 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
             next: (response: BlogImage) => {
               // Atualiza a URL da imagem com a resposta definitiva do backend
               this.blogPost!.featuredImageUrl = response.url;
+              this.displayImageUrl = response.url;
+              this.pendingImageMessage = '';
               this.updatePost();
             },
             error: (error) => {
               console.error("Erro ao fazer upload da imagem", error);
+              this.pendingImageMessage = 'Erro ao fazer upload da imagem. Tente novamente.';
             }
           });
       } else {

@@ -18,6 +18,8 @@ export class HomeComponent implements OnInit {
   allPosts: BlogPost[] = [];
   filteredBlogposts: BlogPost[] = [];
   recentPosts: BlogPost[] = [];
+  sidebarLoading= true;
+  popularLoading = true;
   loading = true;
   blogsPerPage = 4;
   pageNumber = 1;
@@ -34,33 +36,34 @@ export class HomeComponent implements OnInit {
     private viewportScroller: ViewportScroller,
     private spinner: NgxSpinnerService
   ) { }
-
   ngOnInit(): void {
     this.viewportScroller.scrollToPosition([0, 0]);
+  
     forkJoin({
       posts: this.blogpostservice.GetAllBlogPosts(),
-      categories: this.categoryService.loadAllCategories() 
+      categories: this.categoryService.loadAllCategories()
     }).subscribe(({ posts, categories }) => {
       const sorted = posts.sort((a, b) =>
         new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()
       );
-      this.blogpostservice.getMostViewedPosts(10).subscribe(posts => {
-        this.popularPosts= posts;
-      })
+  
       this.allPosts = sorted;
       this.recentPosts = sorted.slice(0, 5);
       this.categoryList = categories;
       this.selectedCategoryIds = [];
-
       this.pageNumber = 1;
+  
       this.updatePagination();
-
       this.loading = false;
-      this.spinner.hide();
-
+      this.sidebarLoading = false;
     });
-
+  
+    this.blogpostservice.getMostViewedPosts(10).subscribe(posts => {
+      this.popularPosts = posts;
+      this.popularLoading = false;
+    });
   }
+  
 
 
 
@@ -176,7 +179,9 @@ export class HomeComponent implements OnInit {
     });
   }
   
+  trackByFn(index: number, item: any): number {
+    return index;
+  }
 
-
-
+  
 }

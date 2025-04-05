@@ -57,6 +57,7 @@ namespace CodePulse.API.Extensions
       services.AddScoped<IBlogPostRepository, BlogPostRepository> ( );
       services.AddScoped<IImageRepository, ImageRepository> ( );
       services.AddScoped<ITokenRepository, TokenRepository> ( );
+      services.AddScoped<IUserRepository, UserRepository>();
       
 
       return services;
