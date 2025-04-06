@@ -4,6 +4,7 @@ using CodePulse.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodePulse.API.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    partial class AuthContextModelSnapshot : ModelSnapshot
+    [Migration("20250405162128_UserImageProfile")]
+    partial class UserImageProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,20 +61,14 @@ namespace CodePulse.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("ImageId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageId");
 
                     b.HasIndex("UserId");
 
@@ -83,8 +80,8 @@ namespace CodePulse.API.Migrations
                             Id = new Guid("b9b29770-6a67-4c21-bbf2-e1c8dfcde122"),
                             Bio = "Administrador do sistema",
                             FullName = "Administrador",
-                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79",
-                            UserName = "admin"
+                            PhotoUrl = "https://via.placeholder.com/150?text=Admin",
+                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79"
                         });
                 });
 
@@ -225,15 +222,15 @@ namespace CodePulse.API.Migrations
                         {
                             Id = "6350ca1c-7461-43c1-b058-02ac44f88f79",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c81db164-5161-46fb-9d91-a03e80c2e6ec",
+                            ConcurrencyStamp = "b0779186-ec2e-4398-a605-df611ea1519d",
                             Email = "admin@codepulse.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CODEPULSE.COM",
                             NormalizedUserName = "ADMIN@CODEPULSE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJqfY5IpgrocrMOgX0KYB6IWv3cNwZ8SetO6kHXVe9zWeQ60oUNyb0dTqQbLRVosnw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMipFVllSAEX7KS2d2lbzvwemt9UEKffrwYNx23Nlw4iSfrSdqBpYzjwS7I7GuPujA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "55b2b64f-69ae-496e-b4c4-153f50f96111",
+                            SecurityStamp = "7b0e6478-9033-4a1f-9d03-2a8ce7d9d89c",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -334,17 +331,11 @@ namespace CodePulse.API.Migrations
 
             modelBuilder.Entity("CodePulse.API.Models.Domain.UserProfile", b =>
                 {
-                    b.HasOne("CodePulse.API.Models.Domain.UserImageProfile", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Image");
 
                     b.Navigation("User");
                 });

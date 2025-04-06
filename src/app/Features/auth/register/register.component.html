@@ -6,6 +6,10 @@
       
       <div class="form-group">
         <label for="userName">Nome de Usuário</label>
+        <small *ngIf="userNameExists" class="text-danger">
+          Esse nome de usuário já está em uso.
+        </small>
+        
         <input id="userName" type="text" formControlName="userName" [ngClass]="{ 'invalid': f['userName'].invalid && f['userName'].touched }">
         <small *ngIf="f['userName'].errors?.['required'] && f['userName'].touched" class="text-danger">Obrigatório.</small>
         <small *ngIf="f['userName'].errors?.['minlength'] && f['userName'].touched" class="text-danger">Mínimo 3 caracteres.</small>

@@ -21,12 +21,12 @@ namespace CodePulse.API.Mapping
        src.Categories.Select ( guidId => new Category { Id = guidId } ) ) );
       CreateMap<BlogImage, BlogImageDto> ( );
 
-      
+      CreateMap<UserImageProfileDto, UserImageProfile>();
 
 
       // Domain -> DTO (Retornando um post com categorias)
       CreateMap<Category, CategoryDto> ( );
-      
+      CreateMap<UserImageProfile, UserImageProfileDto>();
       CreateMap<BlogPost, BlogPostDto> ( )
           .ForMember ( dest => dest.Categories, opt => opt.MapFrom ( src => src.Categories ) ); //  Converte Categorias corretamente
       }

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { UserProfile } from '../models/user-profile.model';
-import { UpdateProfile } from '../models/update-profile.model';
 import { UserProfileService } from '../user-profile.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,6 +15,11 @@ export class UserProfileComponent implements OnInit {
   profile?: UserProfile;
   isEditing = false;
   loading = true;
+  selectedImageFile?: File;
+  displayImageUrl: string = '';
+  baseUrl: string = environment.apiBaseUrl;
+  imageJustUpdated = false;
+  userNameExists = false;
 
   constructor(
     private fb: FormBuilder,
@@ -23,15 +28,30 @@ export class UserProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadProfile();
+  }
+
+  loadProfile(): void {
+    this.loading = true;
+
     this.userProfileService.GetMyProfile().subscribe({
       next: (profile) => {
         this.profile = profile;
         this.profileForm = this.fb.group({
           fullName: [profile.fullName, [Validators.required, Validators.minLength(3)]],
+          userName: [profile.userName, [Validators.required, Validators.minLength(3)]],
           bio: [profile.bio],
-          photoUrl: [profile.photoUrl]
         });
+
+        this.displayImageUrl = profile.imageUrl
+          ? `${this.baseUrl}/${profile.imageUrl}?t=${new Date().getTime()}`
+          : 'assets/default-avatar.png';
+
         this.loading = false;
+
+        this.f['userName'].valueChanges.subscribe(() => {
+          this.userNameExists = false;
+        });
       },
       error: () => {
         this.toastr.error('Erro ao carregar o perfil.');
@@ -40,18 +60,28 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  enableEdit() {
+  enableEdit(): void {
     this.isEditing = true;
   }
 
-  cancelEdit() {
+  cancelEdit(): void {
     this.isEditing = false;
+    this.selectedImageFile = undefined;
+    this.userNameExists = false;
+
     if (this.profile) {
       this.profileForm.patchValue({
         fullName: this.profile.fullName,
-        bio: this.profile.bio,
-        photoUrl: this.profile.photoUrl
+        userName: this.profile.userName,
+        bio: this.profile.bio
       });
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedImageFile = input.files[0];
     }
   }
 
@@ -61,21 +91,59 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
-    const data: UpdateProfile = this.profileForm.value;
+    this.sendProfileUpdateRequest();
+  }
 
-    this.userProfileService.UpdateMyProfile(data).subscribe({
-      next: (updated:UserProfile) => {
-        this.profile = updated;
-        this.toastr.success('Perfil atualizado com sucesso!');
-        this.isEditing = false;
+  updateProfileImage(): void {
+    if (!this.selectedImageFile) return;
+
+    this.sendProfileUpdateRequest(true);
+  }
+
+  private sendProfileUpdateRequest(onlyImageUpdate: boolean = false): void {
+    const formValues = this.profileForm.value;
+    const formData = new FormData();
+
+    formData.append('fullName', formValues.fullName);
+    formData.append('bio', formValues.bio || '');
+    formData.append('userName', formValues.userName);
+
+    if (this.selectedImageFile) {
+      formData.append('imageFile', this.selectedImageFile);
+    }
+
+    this.userProfileService.UpdateMyProfile(formData).subscribe({
+      next: (updated) => {
+        const msg = onlyImageUpdate ? 'Foto de perfil atualizada!' : 'Perfil atualizado com sucesso!';
+        this.toastr.success(msg);
+
+        this.selectedImageFile = undefined;
+        this.imageJustUpdated = true;
+
+        if (!onlyImageUpdate) {
+          this.isEditing = false;
+        }
+
+        this.loadProfile();
       },
-      error: () => {
-        this.toastr.error('Erro ao atualizar perfil.');
+      error: (error) => {
+        if (error.status === 400 && error.error === 'Nome de usuário já está em uso.') {
+          this.userNameExists = true;
+        } else {
+          const msg = onlyImageUpdate ? 'Erro ao atualizar foto de perfil.' : 'Erro ao atualizar perfil.';
+          this.toastr.error(msg);
+        }
       }
     });
   }
 
   get f() {
     return this.profileForm.controls;
+  }
+
+  onImageLoaded(): void {
+    setTimeout(() => {
+      this.imageJustUpdated = false;
+    }, 500);
   }
 }

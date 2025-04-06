@@ -17,7 +17,7 @@ namespace CodePulse.API.Controllers
     private readonly ITokenRepository _tokenRepository;
 
     public AuthController ( UserManager<IdentityUser> userManager,
-      IUserRepository userRepository,ITokenRepository tokenRepository )
+      IUserRepository userRepository, ITokenRepository tokenRepository )
     {
       _userManager = userManager;
       _userRepository = userRepository;
@@ -57,59 +57,68 @@ namespace CodePulse.API.Controllers
     }
 
 
-    [HttpPost("register")]
-public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerDto)
-{
-    // Verifica se o e-mail ou nome de usuário já estão sendo usados
-    var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
-    if (existingUser != null)
+    [HttpPost ( "register" )]
+    public async Task<IActionResult> Register ( [FromBody] RegisterRequestDto registerDto )
     {
-        return BadRequest("E-mail já está em uso.");
-    }
+      // Verifica se o e-mail ou nome de usuário já estão sendo usados
+      var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
+      if ( existingUser != null )
+      {
+        return BadRequest ( "E-mail já está em uso." );
+      }
 
-    var existingUsername = await _userManager.FindByNameAsync(registerDto.UserName);
-    if (existingUsername != null)
-    {
-        return BadRequest("Nome de usuário já está em uso.");
-    }
+      var existingUsername = await _userManager.FindByNameAsync(registerDto.UserName);
+      if ( existingUsername != null )
+      {
+        return BadRequest ( "Nome de usuário já está em uso." );
+      }
 
-    // Cria o novo usuário
-    var newUser = new IdentityUser
-    {
+      // Cria o novo usuário
+      var newUser = new IdentityUser
+      {
         UserName = registerDto.UserName,
         Email = registerDto.Email
-    };
+      };
 
-    var result = await _userManager.CreateAsync(newUser, registerDto.Password);
+      var result = await _userManager.CreateAsync(newUser, registerDto.Password);
 
-    if (!result.Succeeded)
-    {
-        return BadRequest(result.Errors);
-    }
+      if ( !result.Succeeded )
+      {
+        return BadRequest ( result.Errors );
+      }
 
-    // Adiciona o papel Reader
-    await _userManager.AddToRoleAsync(newUser, "Reader");
+      // Adiciona o papel Reader
+      await _userManager.AddToRoleAsync ( newUser, "Reader" );
 
-    // Cria o perfil do usuário automaticamente
-    var userProfile = new UserProfile
-{
-    Id = Guid.NewGuid(), 
-    UserId = newUser.Id,
-    FullName = registerDto.FullName,
-    Bio = registerDto.Bio,
-    PhotoUrl = registerDto.PhotoUrl
-};
+      // Cria o perfil do usuário automaticamente
+      var userProfile = new UserProfile
+      {
+        Id = Guid.NewGuid(),
+        UserId = newUser.Id,
+        FullName = registerDto.FullName,
+        Bio = registerDto.Bio,
+        UserName = registerDto.UserName
 
-    await _userRepository.CreateUserProfileAsync(userProfile);
+      };
+      try
+      {
+        await _userRepository.CreateUserProfileAsync ( userProfile );
 
-    return Ok(new
-    {
+      }
+      catch ( Exception e )
+      {
+        await _userManager.DeleteAsync ( newUser );
+        return StatusCode ( 500, "Erro ao criar o perfil de usuário: " + e.Message );
+      }
+
+      return Ok ( new
+      {
         message = "Usuário registrado com sucesso e perfil criado.",
         username = newUser.UserName,
         email = newUser.Email
-    });
-}
-    
+      } );
+    }
+
   }
 
 }

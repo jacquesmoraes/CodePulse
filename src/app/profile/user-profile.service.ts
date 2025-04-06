@@ -17,7 +17,7 @@ export class UserProfileService {
     return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/me`);
   }
 
-  UpdateMyProfile(data: UpdateProfile): Observable<UserProfile>{
+  UpdateMyProfile(data: FormData): Observable<UserProfile>{
     return this.http.put<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/me`, data)
   }
 

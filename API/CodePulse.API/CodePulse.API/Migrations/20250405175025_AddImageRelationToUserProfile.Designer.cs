@@ -4,6 +4,7 @@ using CodePulse.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodePulse.API.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    partial class AuthContextModelSnapshot : ModelSnapshot
+    [Migration("20250405175025_AddImageRelationToUserProfile")]
+    partial class AddImageRelationToUserProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,10 +68,6 @@ namespace CodePulse.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ImageId");
@@ -83,8 +82,7 @@ namespace CodePulse.API.Migrations
                             Id = new Guid("b9b29770-6a67-4c21-bbf2-e1c8dfcde122"),
                             Bio = "Administrador do sistema",
                             FullName = "Administrador",
-                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79",
-                            UserName = "admin"
+                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79"
                         });
                 });
 
@@ -225,15 +223,15 @@ namespace CodePulse.API.Migrations
                         {
                             Id = "6350ca1c-7461-43c1-b058-02ac44f88f79",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c81db164-5161-46fb-9d91-a03e80c2e6ec",
+                            ConcurrencyStamp = "053f5366-c912-45e6-9a51-e851af589743",
                             Email = "admin@codepulse.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CODEPULSE.COM",
                             NormalizedUserName = "ADMIN@CODEPULSE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJqfY5IpgrocrMOgX0KYB6IWv3cNwZ8SetO6kHXVe9zWeQ60oUNyb0dTqQbLRVosnw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOpi3QftzS96g58RACS1cYcbelX/Uiu2QCskk9LJg/C7PJq8UGNA/kEvXHLH8EXlkA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "55b2b64f-69ae-496e-b4c4-153f50f96111",
+                            SecurityStamp = "4073f8cd-8308-4052-a311-38142722bd1e",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });

@@ -27,6 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { LazyLoadDirective } from './shared/directives/lazy-load.directive';
 import { UserProfileComponent } from './profile/user-profile/user-profile.component';
+import { SidebarComponent } from './Features/public/sidebar/sidebar.component';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import { UserProfileComponent } from './profile/user-profile/user-profile.compon
     RegisterComponent,
     LazyLoadDirective,
     UserProfileComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,

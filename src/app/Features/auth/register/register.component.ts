@@ -13,6 +13,8 @@ export class RegisterComponent implements OnInit {
   success: boolean = false;
   message: string = '';
   passwordFocused = false;
+  userNameExists: boolean = false;
+
 
   criteriaList = [
     { key: 'hasUpperCase', label: 'Pelo menos uma letra maiúscula', valid: false, loading: false },
@@ -39,6 +41,10 @@ export class RegisterComponent implements OnInit {
       bio: [''],
       photoUrl: ['', [Validators.pattern(/https?:\/\/.+\.(jpg|jpeg|png)/)]]
     });
+    this.registerForm.get('userName')?.valueChanges.subscribe(() => {
+      this.userNameExists = false;
+    });
+    
   }
 
   onRegister(): void {
@@ -54,12 +60,26 @@ export class RegisterComponent implements OnInit {
         this.router.navigateByUrl('/login');
       },
       error: (error) => {
-        this.message = 'Erro ao registrar. Verifique os dados.';
+        this.message = error?.error || 'Erro ao registrar. Verifique os dados.';
         this.success = false;
+      
+        if (error.status === 400 && error.error === 'Nome de usuário já está em uso.') {
+          this.userNameExists = true;
+          this.message = 'Esse nome de usuário já está em uso.';
+        } else if (error.status === 400 && error.error === 'E-mail já está em uso.') {
+          this.message = 'Esse e-mail já está em uso.';
+        } else {
+          this.message = 'Erro ao registrar. Verifique os dados.';
+        }
+      
         console.error('Erro detalhado:', error.error);
       }
     });
   }
+
+
+
+
   validatePassword(password: string): void {
     const validations = {
       hasUpperCase: /[A-Z]/.test(password),
@@ -84,6 +104,9 @@ export class RegisterComponent implements OnInit {
       }
     });
   }
+
+
+
   get f() {
     return this.registerForm.controls;
   }

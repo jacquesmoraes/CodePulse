@@ -12,8 +12,9 @@ namespace CodePulse.API.Data
         }
 
         public DbSet<UserProfile> UsersProfiles { get; set; }
+    public DbSet<UserImageProfile> userImageProfiles { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
@@ -83,7 +84,9 @@ namespace CodePulse.API.Data
                     UserId = adminUserId,
                     FullName = "Administrador",
                     Bio = "Administrador do sistema",
-                    PhotoUrl = "https://via.placeholder.com/150?text=Admin"
+                    UserName = "admin"
+
+                    
                 }
             );
         }

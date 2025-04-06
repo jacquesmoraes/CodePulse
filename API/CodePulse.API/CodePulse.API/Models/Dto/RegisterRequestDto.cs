@@ -8,6 +8,6 @@ namespace CodePulse.API.Models.Dto
 
         public required string FullName { get; set; }
         public string? Bio { get; set; }
-        public string? PhotoUrl { get; set; }
+        
     }
 }

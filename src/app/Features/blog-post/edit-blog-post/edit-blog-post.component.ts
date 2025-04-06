@@ -21,7 +21,7 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
   blogPost?: BlogPost;
   private subscription?: Subscription;
   private updateBlogPostSubscription?: Subscription;
-  private imageSelectSubscription?: Subscription;
+  
   categories$?: Observable<Category[]>;
   selectedCategories?: string[];
   isImageSelectorVisible: boolean = false;

@@ -14,7 +14,8 @@ namespace CodePulse.API.Data
         
       
     protected override void OnModelCreating ( ModelBuilder modelBuilder ) {
-      modelBuilder.Entity<BlogImage> ( ).HasIndex ( b => b.FileName ).IsUnique ( );                                                    
+      modelBuilder.Entity<BlogImage> ( ).HasIndex ( b => b.FileName ).IsUnique ( );
+       
       }
     }
 }

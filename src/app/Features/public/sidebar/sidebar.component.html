@@ -1,0 +1,82 @@
+<div class="widgets-container" data-aos="fade-up" data-aos-delay="200">
+   
+
+    <!-- Categories Widget -->
+    <ng-container *ngIf="categories$ | async as categories">
+      <div class="categories-widget widget-item">
+        <h3 class="widget-title">Categories</h3>
+        <div class="badge-grid mb-2">
+          <span *ngFor="let category of categories; trackBy: trackByFn" class="category-badge"
+          (click)="categoryClicked.emit(category.id)" [class.disabled]="selectedCategoryIds.includes(category.id)"
+            role="button" tabindex="0">
+            {{ category.name }}
+          </span>
+        </div>
+
+        <div *ngIf="selectedCategoryIds.length > 0 && categories?.length" class="selected-categories mt-2">
+          <small class="text-muted">Filtros aplicados:</small>
+          <div class="selected-category-badges mt-1">
+            <span *ngFor="let id of selectedCategoryIds; trackBy: trackByFn" class="selected-badge">
+              {{ getCategoryName(id) }}
+              <button (click)="categoryRemoved.emit(id)" class="remove-btn"
+                aria-label="Remover categoria">&times;</button>
+            </span>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary mt-2"  (click)="clearCategories.emit()">
+            
+            Limpar todos
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Recent Posts Widget -->
+    <div class="recent-posts-widget widget-item">
+      <h3 class="widget-title">Recent Posts</h3>
+      <ng-container *ngIf="!sidebarLoading; else skeletonSidebar">
+        <div *ngFor="let post of recentPosts; trackBy: trackByFn" class="post-item">
+          <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
+            height="60" decoding="async">
+          <div>
+            <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+            <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #skeletonSidebar>
+        <div class="post-item" *ngFor="let s of [1,2,3,4,5]; trackBy: trackByFn">
+          <div class="skeleton skeleton-image" style="width: 80px; height: 60px;" aria-hidden="true"></div>
+          <div class="ms-2" style="flex: 1;">
+            <div class="skeleton skeleton-title" style="width: 100%; height: 16px;" aria-hidden="true"></div>
+            <div class="skeleton skeleton-text" style="width: 60%; height: 12px;" aria-hidden="true"></div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Popular Posts Widget -->
+    <div class="recent-posts-widget widget-item">
+      <h3 class="widget-title">Most Popular posts</h3>
+      <ng-container *ngIf="!popularLoading; else skeletonPopular">
+        <div *ngFor="let post of popularPosts; trackBy: trackByFn" class="post-item">
+          <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
+            height="60" decoding="async">
+          <div>
+            <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+            <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #skeletonPopular>
+        <div class="post-item" *ngFor="let s of [1,2,3,4]; trackBy: trackByFn">
+          <div class="skeleton skeleton-image" style="width: 80px; height: 60px;" aria-hidden="true"></div>
+          <div class="ms-2" style="flex: 1;">
+            <div class="skeleton skeleton-title" style="width: 100%; height: 16px;" aria-hidden="true"></div>
+            <div class="skeleton skeleton-text" style="width: 60%; height: 12px;" aria-hidden="true"></div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>

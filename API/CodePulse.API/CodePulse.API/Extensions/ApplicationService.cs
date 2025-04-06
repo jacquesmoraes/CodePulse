@@ -58,7 +58,7 @@ namespace CodePulse.API.Extensions
       services.AddScoped<IImageRepository, ImageRepository> ( );
       services.AddScoped<ITokenRepository, TokenRepository> ( );
       services.AddScoped<IUserRepository, UserRepository>();
-      
+      services.AddScoped<IUserImageProfileRepository, UserImageProfileRepository>();
 
       return services;
     }
