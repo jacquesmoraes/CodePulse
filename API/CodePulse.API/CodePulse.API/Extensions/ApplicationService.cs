@@ -16,7 +16,8 @@ namespace CodePulse.API.Extensions
       services.AddControllers ( );
       // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
       services.AddEndpointsApiExplorer ( );
-      services.AddSwaggerGen ( );
+
+      
       
       services.AddAutoMapper ( AppDomain.CurrentDomain.GetAssemblies ( ) );
 
@@ -59,6 +60,7 @@ namespace CodePulse.API.Extensions
       services.AddScoped<ITokenRepository, TokenRepository> ( );
       services.AddScoped<IUserRepository, UserRepository>();
       services.AddScoped<IUserImageProfileRepository, UserImageProfileRepository>();
+      services.AddScoped<IUserManagmentRepository, UserManagementRepository>();
 
       return services;
     }

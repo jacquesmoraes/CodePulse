@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CodePulse.API.Migrations
+namespace CodePulse.API.Migrations.Auth
 {
     [DbContext(typeof(AuthContext))]
-    [Migration("20250405175025_AddImageRelationToUserProfile")]
-    partial class AddImageRelationToUserProfile
+    [Migration("20250406230442_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace CodePulse.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("userImageProfiles");
+                    b.ToTable("UserImageProfiles");
                 });
 
             modelBuilder.Entity("CodePulse.API.Models.Domain.UserProfile", b =>
@@ -68,11 +68,18 @@ namespace CodePulse.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ImageId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("UsersProfiles");
 
@@ -82,7 +89,8 @@ namespace CodePulse.API.Migrations
                             Id = new Guid("b9b29770-6a67-4c21-bbf2-e1c8dfcde122"),
                             Bio = "Administrador do sistema",
                             FullName = "Administrador",
-                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79"
+                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79",
+                            UserName = "admin"
                         });
                 });
 
@@ -126,6 +134,13 @@ namespace CodePulse.API.Migrations
                             ConcurrencyStamp = "e2f16115-1c6c-494c-9416-17af701714a3",
                             Name = "Writer",
                             NormalizedName = "WRITER"
+                        },
+                        new
+                        {
+                            Id = "d2fb80a2-bf43-4287-95dd-f64719e2f6c7",
+                            ConcurrencyStamp = "d2fb80a2-bf43-4287-95dd-f64719e2f6c7",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         });
                 });
 
@@ -223,15 +238,15 @@ namespace CodePulse.API.Migrations
                         {
                             Id = "6350ca1c-7461-43c1-b058-02ac44f88f79",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "053f5366-c912-45e6-9a51-e851af589743",
+                            ConcurrencyStamp = "c600ff89-c68c-4745-a342-8231831dd0b7",
                             Email = "admin@codepulse.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CODEPULSE.COM",
                             NormalizedUserName = "ADMIN@CODEPULSE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOpi3QftzS96g58RACS1cYcbelX/Uiu2QCskk9LJg/C7PJq8UGNA/kEvXHLH8EXlkA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAgSvXRMWwDB1wP3pEavAL/xbzMbXBWryrNQc620oa7TPIQxJdzzIEbohoEF67YalA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4073f8cd-8308-4052-a311-38142722bd1e",
+                            SecurityStamp = "5dcf9ddf-16c1-4298-ae2c-73b7818e47a8",
                             TwoFactorEnabled = false,
                             UserName = "Admin"
                         });
@@ -308,6 +323,11 @@ namespace CodePulse.API.Migrations
                         {
                             UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79",
                             RoleId = "e2f16115-1c6c-494c-9416-17af701714a3"
+                        },
+                        new
+                        {
+                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79",
+                            RoleId = "d2fb80a2-bf43-4287-95dd-f64719e2f6c7"
                         });
                 });
 

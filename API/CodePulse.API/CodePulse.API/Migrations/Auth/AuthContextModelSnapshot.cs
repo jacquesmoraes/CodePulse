@@ -4,19 +4,16 @@ using CodePulse.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CodePulse.API.Migrations
+namespace CodePulse.API.Migrations.Auth
 {
     [DbContext(typeof(AuthContext))]
-    [Migration("20250324235941_First Authentication")]
-    partial class FirstAuthentication
+    partial class AuthContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,6 +21,75 @@ namespace CodePulse.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CodePulse.API.Models.Domain.UserImageProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserImageProfiles");
+                });
+
+            modelBuilder.Entity("CodePulse.API.Models.Domain.UserProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
+                    b.ToTable("UsersProfiles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("b9b29770-6a67-4c21-bbf2-e1c8dfcde122"),
+                            Bio = "Administrador do sistema",
+                            FullName = "Administrador",
+                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79",
+                            UserName = "admin"
+                        });
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -65,6 +131,13 @@ namespace CodePulse.API.Migrations
                             ConcurrencyStamp = "e2f16115-1c6c-494c-9416-17af701714a3",
                             Name = "Writer",
                             NormalizedName = "WRITER"
+                        },
+                        new
+                        {
+                            Id = "d2fb80a2-bf43-4287-95dd-f64719e2f6c7",
+                            ConcurrencyStamp = "d2fb80a2-bf43-4287-95dd-f64719e2f6c7",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         });
                 });
 
@@ -162,17 +235,17 @@ namespace CodePulse.API.Migrations
                         {
                             Id = "6350ca1c-7461-43c1-b058-02ac44f88f79",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a7ce4d86-9b82-4fd9-b2fc-39dc0636d828",
+                            ConcurrencyStamp = "c600ff89-c68c-4745-a342-8231831dd0b7",
                             Email = "admin@codepulse.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@CODEPULSE.COM",
                             NormalizedUserName = "ADMIN@CODEPULSE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDqYeZ4e87pl+xknxPIHRxoRIfP2Egmobrf6C4+dPLaNALWCxHTi9RD60ls9UNzCIA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAgSvXRMWwDB1wP3pEavAL/xbzMbXBWryrNQc620oa7TPIQxJdzzIEbohoEF67YalA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "671d6952-53a2-48a8-a109-5fa31b29b284",
+                            SecurityStamp = "5dcf9ddf-16c1-4298-ae2c-73b7818e47a8",
                             TwoFactorEnabled = false,
-                            UserName = "admin@codepulse.com"
+                            UserName = "Admin"
                         });
                 });
 
@@ -247,6 +320,11 @@ namespace CodePulse.API.Migrations
                         {
                             UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79",
                             RoleId = "e2f16115-1c6c-494c-9416-17af701714a3"
+                        },
+                        new
+                        {
+                            UserId = "6350ca1c-7461-43c1-b058-02ac44f88f79",
+                            RoleId = "d2fb80a2-bf43-4287-95dd-f64719e2f6c7"
                         });
                 });
 
@@ -267,6 +345,23 @@ namespace CodePulse.API.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("CodePulse.API.Models.Domain.UserProfile", b =>
+                {
+                    b.HasOne("CodePulse.API.Models.Domain.UserImageProfile", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

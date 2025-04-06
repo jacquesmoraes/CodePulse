@@ -50,7 +50,7 @@ namespace CodePulse.API.Repositories.Implementation
           FileExtension = extension,
           Url = relPath.Replace("\\", "/")
         };
-         _authContext.userImageProfiles.Add(image);
+         _authContext.UserImageProfiles.Add(image);
         await _authContext.SaveChangesAsync();
         return image;
 

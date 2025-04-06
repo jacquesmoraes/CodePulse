@@ -10,9 +10,13 @@ namespace CodePulse.API.Repositories.Interface
         Task<bool> AssignRoleAsync(IdentityUser user, string role);
         Task CreateUserProfileAsync(UserProfile profile);
         Task<UserProfileDto?> GetUserProfileByUserIdAsync(string userId);
-        Task<UserProfile> UpdateUserProfileAsync(string userId, UpdateUserProfileRequestDto request);
+       Task<UpdateUserProfileResponseDto?> UpdateUserProfileAsync(string userId, UpdateUserProfileRequestDto request);
         Task DeleteUserProfileAsync(string userId);
+    Task<UserProfileDto?> GetUserProfileByUserNameAsync(string username);
+
         Task<List<UserProfileDto>> GetAllProfilesAsync();
+    Task<UserProfile> GetUserProfileByIdentityUserIdAsync(string userId);
+
    
     }
 }

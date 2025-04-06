@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CodePulse.API.Migrations.Application
+namespace CodePulse.API.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
     partial class ApplicationContextModelSnapshot : ModelSnapshot
@@ -67,7 +67,7 @@ namespace CodePulse.API.Migrations.Application
                     b.HasIndex("FileName")
                         .IsUnique();
 
-                    b.ToTable("blogImages", (string)null);
+                    b.ToTable("blogImages");
                 });
 
             modelBuilder.Entity("CodePulse.API.Models.Domain.BlogPost", b =>
@@ -111,7 +111,7 @@ namespace CodePulse.API.Migrations.Application
 
                     b.HasKey("Id");
 
-                    b.ToTable("BlogPosts", (string)null);
+                    b.ToTable("BlogPosts");
                 });
 
             modelBuilder.Entity("CodePulse.API.Models.Domain.Category", b =>
@@ -130,7 +130,7 @@ namespace CodePulse.API.Migrations.Application
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BlogPostCategory", b =>

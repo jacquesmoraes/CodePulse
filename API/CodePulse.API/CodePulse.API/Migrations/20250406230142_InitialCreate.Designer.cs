@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CodePulse.API.Migrations.Application
+namespace CodePulse.API.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250403002410_Popular Posts")]
-    partial class PopularPosts
+    [Migration("20250406230142_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,7 @@ namespace CodePulse.API.Migrations.Application
 
                     b.HasIndex("CategoriesId");
 
-                    b.ToTable("BlogPostCategory");
+                    b.ToTable("BlogPostCategory", (string)null);
                 });
 
             modelBuilder.Entity("CodePulse.API.Models.Domain.BlogImage", b =>

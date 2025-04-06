@@ -14,8 +14,14 @@ namespace CodePulse.API.Data
         
       
     protected override void OnModelCreating ( ModelBuilder modelBuilder ) {
+      base.OnModelCreating ( modelBuilder );
       modelBuilder.Entity<BlogImage> ( ).HasIndex ( b => b.FileName ).IsUnique ( );
-       
-      }
+
+      // Configuração do relacionamento N:N entre BlogPost e Category
+      modelBuilder.Entity<BlogPost>()
+        .HasMany(b => b.Categories)
+        .WithMany(c => c.BlogPosts)
+        .UsingEntity(j => j.ToTable("BlogPostCategory"));
+    }
     }
 }

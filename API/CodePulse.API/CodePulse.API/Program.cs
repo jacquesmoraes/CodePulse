@@ -1,5 +1,3 @@
-
-
 using CodePulse.API.Data;
 using CodePulse.API.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityService(builder.Configuration);
 builder.WebHost.UseWebRoot ( "wwwroot" );
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 
 var app = builder.Build();
@@ -18,6 +19,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -26,9 +28,9 @@ app.UseHttpsRedirection();
 app.UseCors(options =>
 {
     options.AllowAnyHeader();
-    options.WithOrigins("http://localhost:4200");
+    options.WithOrigins("http://localhost:4200", "https://localhost:7167");
     options.AllowAnyMethod();
-  options.AllowCredentials();
+    options.AllowCredentials();
 });
 
 app.UseAuthentication();

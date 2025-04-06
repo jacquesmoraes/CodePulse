@@ -8,6 +8,7 @@ import { Category } from '../../Categories/models/category.model';
 import { SelectedImage } from 'src/app/shared/models/selected-images.model';
 import { ImageSelectorService } from 'src/app/shared/components/image-selector.service';
 import { BlogImage } from 'src/app/shared/models/blog-image.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-add-blogpost',
@@ -19,7 +20,9 @@ export class AddBlogpostComponent implements OnInit {
   category$?: Observable<Category[]>;
   isImageSelectorVisible: boolean = false;
   pendingImage: SelectedImage | null = null;
-
+  pendingImageMessage: string = '';
+  displayImageUrl: string = '';
+    baseUrl: string = environment.apiBaseUrl;
   constructor(
     private blogPostService: BlogPostService,
     private router: Router,
@@ -51,10 +54,16 @@ export class AddBlogpostComponent implements OnInit {
     this.isImageSelectorVisible = false;
   }
 
-  // Recebe o objeto SelectedImage emitido pelo ImageSelectorComponent
+  
   onImageSelected(selectedImage: SelectedImage): void {
-  console.log("Imagem selecionada recebida:", selectedImage);
-  this.pendingImage = selectedImage;
+    this.pendingImage = selectedImage;
+    this.pendingImageMessage = `Imagem "${selectedImage.fileName}" selecionada. Será enviada ao salvar.`;
+    
+    // Mostra o caminho completo da imagem no input
+    // Assumindo que a URL será no formato: {Request.Scheme}://{Request.Host}/{savedImage.Url}
+    // Vamos usar o baseUrl do ambiente como aproximação
+    this.displayImageUrl = `${this.baseUrl}/images/${selectedImage.fileName}`;
+
 
   // Atualiza o preview da imagem corretamente
    if (selectedImage.preview) {
