@@ -11,8 +11,7 @@ public class BlogPostDto
     public DateTime PublishedDate { get; set; }
     public bool IsVisible { get; set; }
     public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
+    public string Author { get; set; }
 
-    // Novas propriedades
-    public string AuthorUserName { get; set; }
-    public string AuthorImageUrl { get; set; }
+   
 }

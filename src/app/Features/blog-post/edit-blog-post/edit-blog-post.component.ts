@@ -116,7 +116,7 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
       featuredImageUrl: this.blogPost!.featuredImageUrl,
       urlHandle: this.blogPost!.urlHandle,
       publishedDate: this.blogPost!.publishedDate,
-      author: this.blogPost!.author,
+      
       isVisible: this.blogPost!.isVisible,
       categories: this.selectedCategories ?? []
     };

@@ -24,9 +24,8 @@ namespace CodePulse.API.Mapping
       CreateMap<UserImageProfile, UserImageProfileDto>();
 
       CreateMap<BlogPost, BlogPostDto>()
-        .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
-        .ForMember(dest => dest.AuthorUserName, opt => opt.MapFrom(src => src.Author))
-        .ForMember(dest => dest.AuthorImageUrl, opt => opt.MapFrom(src => src.FeaturedImageUrl));
+    .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
+    .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author));
     }
   }
 }
