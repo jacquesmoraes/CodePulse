@@ -50,7 +50,7 @@ namespace CodePulse.API.Repositories.Implementation
           Url = relPath.Replace("\\", "/"),
           DateCreated = DateTime.UtcNow
           };
-         _context.blogImages.Add ( image );
+         _context.BlogImages.Add ( image );
         await _context.SaveChangesAsync ( );
         return image;
         }

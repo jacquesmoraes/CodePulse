@@ -6,55 +6,42 @@ using Microsoft.EntityFrameworkCore;
 
 public class UserManagementRepository : IUserManagmentRepository
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<UserProfile> _userManager;
     private readonly AuthContext _context;
 
     public UserManagementRepository(
-        UserManager<IdentityUser> userManager,
+        UserManager<UserProfile> userManager,
         AuthContext context)
     {
         _userManager = userManager;
         _context = context;
     }
 
-    public async Task<UserProfile> CreateWriterAsync(UserProfile userProfile, string password, string email)
+    public async Task<UserProfile> CreateWriterAsync(UserProfile userProfile, string password, string email, string role)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
             userProfile.UserName = userProfile.UserName.Replace(" ", "");
-        
-            var user = new IdentityUser
-            {
-                UserName = userProfile.UserName,
-                Email = email,
-                EmailConfirmed = true,
-                NormalizedUserName = userProfile.UserName.ToUpper(),
-                NormalizedEmail = email.ToUpper()
-            };
+            userProfile.Email = email;
+            userProfile.EmailConfirmed = true;
+            userProfile.NormalizedUserName = userProfile.UserName.ToUpper();
+            userProfile.NormalizedEmail = email.ToUpper();
 
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(userProfile, password);
             if (!result.Succeeded)
                 throw new ApplicationException("Falha ao criar usuário: " + string.Join(", ", result.Errors.Select(e => e.Description)));
 
-            var roleResult = await _userManager.AddToRoleAsync(user, "Writer");
+            var roleResult = await _userManager.AddToRoleAsync(userProfile, role);
             if (!roleResult.Succeeded)
             {
-                await _userManager.DeleteAsync(user);
-                throw new ApplicationException("Falha ao atribuir papel de Writer");
+                await _userManager.DeleteAsync(userProfile);
+                throw new ApplicationException($"Falha ao atribuir papel de {role}");
             }
-
-            userProfile.UserId = user.Id;
-
-            await _context.UsersProfiles.AddAsync(userProfile);
-            await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
 
-            return await _context.UsersProfiles
-                .Include(p => p.User)
-                .Include(p => p.Image)
-                .FirstAsync(p => p.Id == userProfile.Id);
+            return await _userManager.FindByIdAsync(userProfile.Id);
         }
         catch
         {
@@ -65,13 +52,7 @@ public class UserManagementRepository : IUserManagmentRepository
 
     public async Task<List<UserProfile>> GetAllWritersAsync()
     {
-        var writers = await _userManager.GetUsersInRoleAsync("Writer");
-        
-        return await _context.UsersProfiles
-            .Include(p => p.User)
-            .Include(p => p.Image)
-            .Where(p => writers.Select(w => w.Id).Contains(p.UserId))
-            .ToListAsync();
+        return (await _userManager.GetUsersInRoleAsync("Writer")).ToList();
     }
 
     public async Task<UserProfile?> GetWriterByIdAsync(string userId)
@@ -79,47 +60,37 @@ public class UserManagementRepository : IUserManagmentRepository
         if (!await IsUserWriterAsync(userId))
             return null;
 
-        return await _context.UsersProfiles
-            .Include(p => p.User)
-            .Include(p => p.Image)
-            .FirstOrDefaultAsync(p => p.UserId == userId);
+        return await _userManager.FindByIdAsync(userId);
     }
 
-    public async Task<UserProfile?> UpdateWriterAsync(string userId, UserProfile updatedProfile)
+    public async Task<UserProfile?> UpdateUserRoleAsync(string userId, string newRole)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            var existingProfile = await _context.UsersProfiles
-                .Include(p => p.User)
-                .Include(p => p.Image)
-                .FirstOrDefaultAsync(p => p.UserId == userId);
-
-            if (existingProfile == null || !await IsUserWriterAsync(userId))
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
                 return null;
 
-            existingProfile.FullName = updatedProfile.FullName;
-            existingProfile.UserName = updatedProfile.UserName;
-            existingProfile.Bio = updatedProfile.Bio;
-            existingProfile.ImageId = updatedProfile.ImageId;
+            // Verificar se o novo role é válido
+            if (newRole != "Writer" && newRole != "User")
+                throw new ApplicationException("Role inválido. Use 'Writer' ou 'User'.");
 
-            var identityUser = await _userManager.FindByIdAsync(userId);
-            if (identityUser != null && updatedProfile.User?.Email != null)
-            {
-                identityUser.Email = updatedProfile.User.Email;
-                identityUser.UserName = updatedProfile.UserName;
-                identityUser.NormalizedEmail = updatedProfile.User.Email.ToUpper();
-                identityUser.NormalizedUserName = updatedProfile.UserName.ToUpper();
+            // Obter os roles atuais do usuário
+            var currentRoles = await _userManager.GetRolesAsync(user);
 
-                var userUpdateResult = await _userManager.UpdateAsync(identityUser);
-                if (!userUpdateResult.Succeeded)
-                    throw new ApplicationException("Falha ao atualizar dados do usuário");
-            }
+            // Remover todos os roles atuais
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            if (!removeResult.Succeeded)
+                throw new ApplicationException("Falha ao remover roles atuais: " + string.Join(", ", removeResult.Errors.Select(e => e.Description)));
 
-            await _context.SaveChangesAsync();
+            // Adicionar o novo role
+            var addResult = await _userManager.AddToRoleAsync(user, newRole);
+            if (!addResult.Succeeded)
+                throw new ApplicationException("Falha ao adicionar novo role: " + string.Join(", ", addResult.Errors.Select(e => e.Description)));
+
             await transaction.CommitAsync();
-
-            return existingProfile;
+            return user;
         }
         catch
         {
@@ -133,39 +104,16 @@ public class UserManagementRepository : IUserManagmentRepository
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            var profile = await _context.UsersProfiles
-                .Include(p => p.User)
-                .Include(p => p.Image)
-                .FirstOrDefaultAsync(p => p.UserId == userId);
-
-            if (profile == null || !await IsUserWriterAsync(userId))
-                return null;
-
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            if (user == null || !await IsUserWriterAsync(userId))
                 return null;
 
-            var roleResult = await _userManager.RemoveFromRoleAsync(user, "Writer");
-            if (!roleResult.Succeeded)
+            var result = await _userManager.RemoveFromRoleAsync(user, "Writer");
+            if (!result.Succeeded)
                 throw new ApplicationException("Falha ao remover papel de Writer");
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-            if (!userRoles.Any())
-            {
-                _context.UsersProfiles.Remove(profile);
-
-                if (profile.Image != null)
-                    _context.UserImageProfiles.Remove(profile.Image);
-
-                var deleteResult = await _userManager.DeleteAsync(user);
-                if (!deleteResult.Succeeded)
-                    throw new ApplicationException("Falha ao deletar usuário");
-            }
-
-            await _context.SaveChangesAsync();
             await transaction.CommitAsync();
-
-            return profile;
+            return user;
         }
         catch
         {

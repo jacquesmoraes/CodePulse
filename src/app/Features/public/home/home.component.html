@@ -47,8 +47,16 @@
                         <div class="d-flex align-items-center mb-1">
                           <div class="author-avatar me-2" aria-hidden="true"></div>
                           <div class="post-meta">
-                            <p class="post-author mb-0"><strong>{{ blog.author }}</strong></p>
-                            <p class="post-date mb-0"><time>{{ blog.publishedDate | date: 'mediumDate' }}</time></p>
+                            <p class="post-date mb-0">
+                             
+                              <a [routerLink]="['/profile', blog.author.userName]">
+                                {{ '@' + blog.author.userName }}
+                              </a>
+                              
+                             
+                              <span >Unknown</span>
+                              <time>{{ blog.publishedDate | date: 'mediumDate' }}</time>
+                            </p>
                           </div>
                         </div>
                       </div>

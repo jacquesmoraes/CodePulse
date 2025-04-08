@@ -6,17 +6,14 @@ namespace CodePulse.API.Repositories.Interface
 {
     public interface IUserRepository
     {
-        Task<IdentityResult> CreateUserAsync(IdentityUser user, string password);
-        Task<bool> AssignRoleAsync(IdentityUser user, string role);
+        Task<IdentityResult> CreateUserAsync(UserProfile user, string password);
+        Task<bool> AssignRoleAsync(UserProfile user, string role);
         Task CreateUserProfileAsync(UserProfile profile);
         Task<UserProfileDto?> GetUserProfileByUserIdAsync(string userId);
-       Task<UpdateUserProfileResponseDto?> UpdateUserProfileAsync(string userId, UpdateUserProfileRequestDto request);
+        Task<UpdateUserProfileResponseDto?> UpdateUserProfileAsync(string userId, UpdateUserProfileRequestDto request);
         Task DeleteUserProfileAsync(string userId);
-    Task<UserProfileDto?> GetUserProfileByUserNameAsync(string username);
-
+        Task<UserProfileDto?> GetUserProfileByUserNameAsync(string username);
         Task<List<UserProfileDto>> GetAllProfilesAsync();
-    Task<UserProfile> GetUserProfileByIdentityUserIdAsync(string userId);
-
-   
+        Task<UserProfile?> GetUserProfileByIdentityUserIdAsync(string userId);
     }
 }

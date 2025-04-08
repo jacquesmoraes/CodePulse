@@ -1,4 +1,5 @@
 using CodePulse.API.Data;
+using CodePulse.API.Models.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,12 @@ namespace CodePulse.API.Extensions
     {
       services.AddDbContext<AuthContext> ( opt =>
       {
-        opt.UseSqlServer ( configuration.GetConnectionString ( "CdePulseConnectionString" ) );
+        opt.UseSqlServer ( configuration.GetConnectionString ( "CodePulseConnectionString" ) );
       } );
 
-      services.AddIdentityCore<IdentityUser> ( )
+      services.AddIdentityCore<UserProfile> ( )
         .AddRoles<IdentityRole> ( )
-        .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>> ( "CodePulse" )
+        .AddTokenProvider<DataProtectorTokenProvider<UserProfile>> ( "CodePulse" )
         .AddEntityFrameworkStores<AuthContext> ( )
         .AddDefaultTokenProviders ( );
       services.Configure<IdentityOptions> ( opt =>
@@ -30,12 +31,12 @@ namespace CodePulse.API.Extensions
         opt.Password.RequireNonAlphanumeric = false;
         opt.Password.RequireUppercase = false;
         opt.Password.RequiredUniqueChars = 1;
-
+        opt.User.RequireUniqueEmail = true;
       } );
       services.AddAuthentication ( JwtBearerDefaults.AuthenticationScheme )
         .AddJwtBearer ( opt =>
         {
-          opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+          opt.TokenValidationParameters = new TokenValidationParameters
           {
             AuthenticationType = "Jwt",
             ValidateIssuer = true,

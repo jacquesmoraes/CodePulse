@@ -15,6 +15,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Title</th>
+                        <th>Author</th>
                         <th>Date published
                             <span>
                                 <span>
@@ -28,20 +29,6 @@
                         </th>
                         <th>Short Description</th>
                         <th>Categories</th>
-                        <th>Author
-                            <span>
-                                <span>
-                                    <button class="sort-button" (click)="sort('author', 'asc')">
-                                        <i class="bi bi-arrow-up-short"></i></button>
-                                </span>
-                               
-                                <span>
-                                    <button class="sort-button" (click)="sort('author', 'dedsc')">
-                                        <i class="bi bi-arrow-down-short"></i>
-                                    </button>
-                                </span>
-                            </span>
-                        </th>
                         <th class="text-center">Visibility</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -49,6 +36,10 @@
                 <tbody>
                     <tr *ngFor="let post of blogPosts">
                         <td>{{ post.title }}</td>
+                        <td>
+                            <span *ngIf="post.author">{{ '@' + post.author.userName }}</span>
+                            <span *ngIf="!post.author">Unknown</span>
+                        </td>
                         <td>{{post.publishedDate | date: 'dd/MM/yyyy'}}</td>
                         <td>{{ post.shortDescription }}</td>
                         <td >
@@ -57,7 +48,6 @@
 
                             </span>
                         </td>
-                        <td>{{post.author}}</td>
                         <td class="text-center"> <span *ngIf="post.isVisible; else hiddenIcon">   ✅ Visible   </span>
                             <ng-template #hiddenIcon>❌ Hidden</ng-template>
                         </td>

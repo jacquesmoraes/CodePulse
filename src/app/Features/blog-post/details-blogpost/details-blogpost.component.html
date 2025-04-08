@@ -14,7 +14,9 @@
       <article class="blog-post">
         <h1 class="blog-post-title">{{ blogPost.title }}</h1>
         <p class="blog-post-meta">
-          {{ blogPost.publishedDate| date:'mediumDate' }} por {{ blogPost.author }}
+          <span *ngIf="blogPost.author">{{ '@' + blogPost.author.userName }}</span>
+<span *ngIf="!blogPost.author">Unknown</span>
+          {{ blogPost.publishedDate| date:'mediumDate' }}
         </p>
         <img *ngIf="blogPost.featuredImageUrl" [src]="blogPost.featuredImageUrl" alt="Imagem do post" class="img-fluid mb-4 post-image">
         <div class="blog-post-content">

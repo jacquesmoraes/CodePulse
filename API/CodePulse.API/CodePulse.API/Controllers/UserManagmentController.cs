@@ -16,15 +16,18 @@ public class UserManagementController : ControllerBase
     private readonly IUserManagmentRepository _userManagementRepository;
     private readonly IMapper _mapper;
     private readonly AuthContext _context;
+    private readonly UserManager<UserProfile> _userManager;
 
     public UserManagementController(
         IUserManagmentRepository userManagementRepository,
         IMapper mapper,
-        AuthContext context)
+        AuthContext context,
+        UserManager<UserProfile> userManager)
     {
         _userManagementRepository = userManagementRepository;
         _mapper = mapper;
         _context = context;
+        _userManager = userManager;
     }
 
     [HttpPost("writers")]
@@ -42,17 +45,22 @@ public class UserManagementController : ControllerBase
             {
                 return BadRequest($"Username '{request.UserName}' já está em uso.");
             }
+
+            // Verificar se a role é válida (apenas Writer ou User são permitidos)
+            if (request.Role != "Writer" && request.Role != "User")
+            {
+                return BadRequest("Role inválido. Use 'Writer' ou 'User'.");
+            }
         
             var userProfile = new UserProfile
             {
-                Id = Guid.NewGuid(),
-                UserId = "temp", // Será substituído no repositório
                 FullName = request.FullName,
                 UserName = request.UserName,
+                Email = request.Email,
                 Bio = request.Bio
             };
 
-            var createdProfile = await _userManagementRepository.CreateWriterAsync(userProfile, request.Password, request.Email);
+            var createdProfile = await _userManagementRepository.CreateWriterAsync(userProfile, request.Password, request.Email, request.Role);
             return Ok(_mapper.Map<UserProfileDto>(createdProfile));
         }
         catch (ApplicationException ex)
@@ -78,25 +86,14 @@ public class UserManagementController : ControllerBase
         return Ok(_mapper.Map<UserProfileDto>(writer));
     }
 
-    [HttpPut("writers/{userId}")]
-    public async Task<IActionResult> UpdateWriter(string userId, [FromBody] UpdateUserRequestDto request)
+    [HttpPut("writers/{userId}/role")]
+    public async Task<IActionResult> UpdateUserRole(string userId, [FromBody] UpdateUserRoleRequestDto request)
     {
         try
         {
-            var userProfile = new UserProfile
-            {
-                Id = Guid.NewGuid(), // Definir o Id do perfil
-            UserId = userId, // Usar o userId fornecido
-            FullName = request.FullName,
-            UserName = request.UserName,
-            Bio = request.Bio,
-            ImageId = request.ImageId,
-            User = new IdentityUser { Email = request.Email }
-            };
-
-            var updatedProfile = await _userManagementRepository.UpdateWriterAsync(userId, userProfile);
+            var updatedProfile = await _userManagementRepository.UpdateUserRoleAsync(userId, request.NewRole);
             if (updatedProfile == null)
-                return NotFound("Writer não encontrado");
+                return NotFound("Usuário não encontrado");
 
             return Ok(_mapper.Map<UserProfileDto>(updatedProfile));
         }
@@ -109,17 +106,10 @@ public class UserManagementController : ControllerBase
     [HttpDelete("writers/{userId}")]
     public async Task<IActionResult> RemoveWriter(string userId)
     {
-        try
-        {
-            var removedProfile = await _userManagementRepository.RemoveWriterAsync(userId);
-            if (removedProfile == null)
-                return NotFound("Writer não encontrado");
+        var removedProfile = await _userManagementRepository.RemoveWriterAsync(userId);
+        if (removedProfile == null)
+            return NotFound("Writer não encontrado");
 
-            return Ok(_mapper.Map<UserProfileDto>(removedProfile));
-        }
-        catch (ApplicationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(_mapper.Map<UserProfileDto>(removedProfile));
     }
 }

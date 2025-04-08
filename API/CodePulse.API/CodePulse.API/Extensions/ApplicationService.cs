@@ -1,4 +1,5 @@
 using CodePulse.API.Data;
+using CodePulse.API.Mapping;
 using CodePulse.API.Repositories.Implementation;
 using CodePulse.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -19,40 +20,46 @@ namespace CodePulse.API.Extensions
 
       
       
-      services.AddAutoMapper ( AppDomain.CurrentDomain.GetAssemblies ( ) );
+      services.AddAutoMapper(typeof(BlogPostMappingProfile));
+
 
       services.AddDbContext<ApplicationContext> ( opt =>
       {
-        opt.UseSqlServer(config.GetConnectionString ( "CdePulseConnectionString" ) );
+        opt.UseSqlServer(config.GetConnectionString ( "CodePulseConnectionString" ) );
       } );
       services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "CodePulse API", Version = "v1" });
+      {
+          options.SwaggerDoc("v1", new OpenApiInfo { Title = "CodePulse API", Version = "v1" });
 
-    // Adiciona suporte ao JWT
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "Insira o token JWT no formato: Bearer {seu token}",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
+          // Adiciona suporte ao JWT
+          options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+          {
+              Description = "Insira o token JWT no formato: Bearer {seu token}",
+              Name = "Authorization",
+              In = ParameterLocation.Header,
+              Type = SecuritySchemeType.ApiKey,
+              Scheme = "Bearer"
+          });
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header,
-            },
-            new List<string>()
-        }
-    });
-});
+          options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+          {
+              {
+                  new OpenApiSecurityScheme
+                  {
+                      Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" },
+                      Scheme = "oauth2",
+                      Name = "Bearer",
+                      In = ParameterLocation.Header,
+                  },
+                  new List<string>()
+              }
+          });
+
+          // Adiciona suporte a XML comments
+          var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+          var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+          options.IncludeXmlComments(xmlPath);
+      });
       
       services.AddScoped<ICategoryRepository, CategoryRepository> ( );
       services.AddScoped<IBlogPostRepository, BlogPostRepository> ( );

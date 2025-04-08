@@ -15,14 +15,14 @@ public class UserProfileController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
     private readonly AuthContext _authContext;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<UserProfile> _userManager;
     private readonly ILogger<UserProfileController> _logger;
     private readonly IMapper _mapper;
 
     public UserProfileController(
         IUserRepository userRepository,
         AuthContext authContext,
-        UserManager<IdentityUser> userManager,
+        UserManager<UserProfile> userManager,
         ILogger<UserProfileController> logger,
         IMapper mapper)
     {
@@ -59,8 +59,7 @@ public class UserProfileController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetMyProfile()
     {
-        _logger.LogInformation("Iniciando GetMyProfile");
-        
+               
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         _logger.LogInformation($"UserId extraído do token: {userId}");
         
@@ -93,10 +92,9 @@ public class UserProfileController : ControllerBase
 
                 var newProfile = new UserProfile
                 {
-                    Id = Guid.NewGuid(),
-                    UserId = userId,
                     FullName = user.UserName, // Pode ser atualizado depois
                     UserName = user.UserName,
+                    Email = user.Email,
                     Bio = null
                 };
 
@@ -158,8 +156,6 @@ public class UserProfileController : ControllerBase
                 // Criar novo perfil
                 var newProfile = new UserProfile
                 {
-                    Id = Guid.NewGuid(),
-                    UserId = userId,
                     FullName = request.FullName,
                     UserName = request.UserName,
                     Bio = request.Bio
@@ -222,14 +218,13 @@ public class UserProfileController : ControllerBase
         var writerIds = writers.Select(w => w.Id).ToList();
 
         var writerProfiles = await _authContext.UsersProfiles
-            .Include(p => p.User)
             .Include(p => p.Image)
-            .Where(p => writerIds.Contains(p.UserId))
+            .Where(p => writerIds.Contains(p.Id))
             .Select(p => new UserProfileDto
             {
-                UserId = p.UserId,
+                Id = p.Id,
                 UserName = p.UserName,
-                Email = p.User.Email,
+                Email = p.Email,
                 FullName = p.FullName,
                 Bio = p.Bio,
                 ImageUrl = p.Image != null ? p.Image.Url : null

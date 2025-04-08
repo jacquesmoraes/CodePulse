@@ -21,5 +21,11 @@ export class UserProfileService {
     return this.http.put<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/me`, data)
   }
 
+  GetPublicProfile(username: string): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/public/${username}`);
+
+  }
+  
+
 
 }

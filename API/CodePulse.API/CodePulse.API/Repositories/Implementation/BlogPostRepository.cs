@@ -3,16 +3,19 @@ using CodePulse.API.Data;
 using CodePulse.API.Models.Domain;
 using CodePulse.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CodePulse.API.Repositories.Implementation
 {
   public class BlogPostRepository : IBlogPostRepository
   {
     private readonly ApplicationContext _context;
+    private readonly ILogger<BlogPostRepository> _logger;
 
-    public BlogPostRepository(ApplicationContext context)
+    public BlogPostRepository(ApplicationContext context, ILogger<BlogPostRepository> logger)
     {
       _context = context;
+      _logger = logger;
     }
 
     public async Task<BlogPost> CreateBlogPostAsync(BlogPost blogPost)
@@ -31,6 +34,7 @@ namespace CodePulse.API.Repositories.Implementation
     {
       var blogPosts = _context.BlogPosts
         .Include(bp => bp.Categories)
+        .Include(bp => bp.AuthorProfile)
         .AsQueryable();
 
       if (!string.IsNullOrEmpty(query))
@@ -39,7 +43,7 @@ namespace CodePulse.API.Repositories.Implementation
             x.Title.Contains(query) ||
             x.Content.Contains(query) ||
             x.ShortDescription.Contains(query) ||
-            x.Author.Contains(query));
+            x.AuthorProfile.UserName.Contains(query));
       }
 
       if (!string.IsNullOrEmpty(sortBy))
@@ -49,8 +53,8 @@ namespace CodePulse.API.Repositories.Implementation
         if (string.Equals(sortBy, "Author", StringComparison.OrdinalIgnoreCase))
         {
           blogPosts = isAsc
-              ? blogPosts.OrderBy(x => x.Author)
-              : blogPosts.OrderByDescending(x => x.Author);
+              ? blogPosts.OrderBy(x => x.AuthorProfile.UserName)
+              : blogPosts.OrderByDescending(x => x.AuthorProfile.UserName);
         }
         else if (string.Equals(sortBy, "PublishedDate", StringComparison.OrdinalIgnoreCase))
         {
@@ -70,6 +74,7 @@ namespace CodePulse.API.Repositories.Implementation
     {
       return await _context.BlogPosts
         .Include(x => x.Categories)
+        .Include(x => x.AuthorProfile)
         .FirstOrDefaultAsync(bp => bp.Id == id);
     }
 
@@ -77,6 +82,7 @@ namespace CodePulse.API.Repositories.Implementation
     {
       var existingPost = await _context.BlogPosts
         .Include(bp => bp.Categories)
+        .Include(bp => bp.AuthorProfile)
         .FirstOrDefaultAsync(bp => bp.Id == blogPost.Id);
 
       if (existingPost == null)
@@ -98,25 +104,21 @@ namespace CodePulse.API.Repositories.Implementation
 
     public async Task<BlogPost?> DeleteBlogPostAsync(Guid id)
     {
-      var blogPostToDelete = await _context.BlogPosts.FindAsync(id);
-      if (blogPostToDelete != null)
-      {
-        _context.BlogPosts.Remove(blogPostToDelete);
-        await _context.SaveChangesAsync();
-        return blogPostToDelete;
-      }
-      return null;
+      var blogPost = await _context.BlogPosts.FirstOrDefaultAsync(bp => bp.Id == id);
+      if (blogPost == null)
+        return null;
+
+      _context.BlogPosts.Remove(blogPost);
+      await _context.SaveChangesAsync();
+      return blogPost;
     }
 
     public async Task<BlogPost?> GetBlogPostByUrlHandle(string urlhandle)
     {
-      var posts = await _context.BlogPosts
+      return await _context.BlogPosts
         .Include(x => x.Categories)
+        .Include(x => x.AuthorProfile)
         .FirstOrDefaultAsync(bp => bp.UrlHandle == urlhandle);
-      if (posts == null) return null;
-      posts.ViewCount++;
-      await _context.SaveChangesAsync();
-      return posts;
     }
 
     public async Task<int> GetBlogPostsCountAsync()
@@ -127,6 +129,36 @@ namespace CodePulse.API.Repositories.Implementation
     public async Task<List<BlogPost>> GetPopularPosts(int count = 5)
     {
       return await _context.BlogPosts
+        .Include(x => x.Categories)
+        .Include(x => x.AuthorProfile)
+        .Where(x => x.IsVisible && x.AuthorProfile != null)
+        .Select(x => new BlogPost
+        {
+            Id = x.Id,
+            Title = x.Title,
+            ShortDescription = x.ShortDescription,
+            Content = x.Content,
+            FeaturedImageUrl = x.FeaturedImageUrl,
+            UrlHandle = x.UrlHandle,
+            PublishedDate = x.PublishedDate,
+            IsVisible = x.IsVisible,
+            ViewCount = x.ViewCount,
+            AuthorId = x.AuthorId,
+            AuthorProfile = new UserProfile
+            {
+                Id = x.AuthorProfile.Id,
+                UserName = x.AuthorProfile.UserName,
+                FullName = x.AuthorProfile.FullName,
+                Bio = x.AuthorProfile.Bio,
+                Interests = x.AuthorProfile.Interests
+            },
+            Categories = x.Categories.Select(c => new Category
+            {
+                Id = c.Id,
+                Name = c.Name,
+                UrlHandle = c.UrlHandle
+            }).ToList()
+        })
         .OrderByDescending(x => x.ViewCount)
         .Take(count)
         .ToListAsync();
@@ -135,9 +167,9 @@ namespace CodePulse.API.Repositories.Implementation
     public async Task<List<BlogPost>> GetPostByAuthorAsync(string authorName)
     {
       return await _context.BlogPosts
-        .Where(post => post.Author == authorName)
-        .Include(post => post.Categories)
-        .OrderByDescending(post => post.PublishedDate)
+        .Include(x => x.Categories)
+        .Include(x => x.AuthorProfile)
+        .Where(x => x.AuthorProfile.UserName == authorName)
         .ToListAsync();
     }
   }

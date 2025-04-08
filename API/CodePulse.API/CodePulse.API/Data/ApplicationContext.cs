@@ -1,27 +1,34 @@
 using CodePulse.API.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace CodePulse.API.Data
+public class ApplicationContext : DbContext
 {
-    public class ApplicationContext : DbContext
-    {
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
-        {
-        }
-        public DbSet<BlogPost> BlogPosts { get; set; }
-        public DbSet<Category> Categories { get; set; }
-         public DbSet<BlogImage> blogImages { get; set; }
-        
-      
-    protected override void OnModelCreating ( ModelBuilder modelBuilder ) {
-      base.OnModelCreating ( modelBuilder );
-      modelBuilder.Entity<BlogImage> ( ).HasIndex ( b => b.FileName ).IsUnique ( );
+    public DbSet<BlogPost> BlogPosts { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<BlogImage> BlogImages { get; set; }
 
-      // Configuração do relacionamento N:N entre BlogPost e Category
-      modelBuilder.Entity<BlogPost>()
-        .HasMany(b => b.Categories)
-        .WithMany(c => c.BlogPosts)
-        .UsingEntity(j => j.ToTable("BlogPostCategory"));
-    }
+    public DbSet<UserProfile> UsersProfiles { get; set; } // <-- Adicione isso aqui
+
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<UserProfile>().ToTable("AspNetUsers", t => t.ExcludeFromMigrations());
+
+        // Relacionamentos
+        modelBuilder.Entity<BlogPost>()
+            .HasOne(b => b.AuthorProfile)
+            .WithMany()
+            .HasForeignKey(b => b.AuthorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<BlogImage>().HasIndex(b => b.FileName).IsUnique();
+
+        modelBuilder.Entity<BlogPost>()
+            .HasMany(b => b.Categories)
+            .WithMany(c => c.BlogPosts)
+            .UsingEntity(j => j.ToTable("BlogPostCategory"));
     }
 }

@@ -5,31 +5,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace CodePulse.API.Models.Domain
 {
   [Index(nameof(UserName), IsUnique = true)]
-  public class UserProfile
+  public class UserProfile : IdentityUser
   {
-    public UserProfile ( )
+    public required string FullName { get; set; }
+    public string? Bio { get; set; }
+    public string? Interests { get; set; }
+    public Guid? ImageId { get; set; }
+
+    [ForeignKey("ImageId")]
+    public UserImageProfile? Image { get; set; }
+
+    public UserProfile()
     {
     }
 
-    public Guid Id { get; set; } = Guid.NewGuid ( );
-
-    public required string UserId { get; set; }
-    public required string FullName { get; set; }
-    public required string UserName { get; set; }
-    public string? Bio { get; set; }
-    public Guid? ImageId { get; set; }
-
-    [ForeignKey ( "ImageId" )]
-    public UserImageProfile? Image { get; set; }
-
-    [ForeignKey ( nameof ( UserId ) )]
-    public IdentityUser? User { get; set; }
-
-    public UserProfile ( Guid id, string userId, string fullName, string userName )
+    public UserProfile(string fullName, string userName, string email) : base(userName)
     {
-      Id = id;
-      UserId = userId;
       FullName = fullName;
+      Email = email;
       UserName = userName;
     }
   }

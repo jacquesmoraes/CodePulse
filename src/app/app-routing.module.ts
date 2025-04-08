@@ -27,7 +27,8 @@ const routes: Routes = [
   {path: 'blog/:url', component:BlogdetailsComponent},
   {path: 'login', component:LoginComponent},
   {path: 'register', component:RegisterComponent},
-  {path: 'aboutme', component:UserProfileComponent}
+  {path: 'aboutme', component:UserProfileComponent},
+  { path: 'profile/:username', component: UserProfileComponent }
 
 ];
 

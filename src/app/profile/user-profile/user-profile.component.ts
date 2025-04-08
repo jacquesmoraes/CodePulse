@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserProfile } from '../models/user-profile.model';
 import { UserProfileService } from '../user-profile.service';
 import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -20,39 +21,31 @@ export class UserProfileComponent implements OnInit {
   baseUrl: string = environment.apiBaseUrl;
   imageJustUpdated = false;
   userNameExists = false;
+  isOwnProfile = false;
 
   constructor(
     private fb: FormBuilder,
     private userProfileService: UserProfileService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadProfile();
+    const username = this.route.snapshot.paramMap.get('username');
+
+    if (username) {
+      this.loadPublicProfile(username);
+    } else {
+      this.loadOwnProfile();
+    }
   }
 
-  loadProfile(): void {
+  loadOwnProfile(): void {
     this.loading = true;
+    this.isOwnProfile = true;
 
     this.userProfileService.GetMyProfile().subscribe({
-      next: (profile) => {
-        this.profile = profile;
-        this.profileForm = this.fb.group({
-          fullName: [profile.fullName, [Validators.required, Validators.minLength(3)]],
-          userName: [profile.userName, [Validators.required, Validators.minLength(3)]],
-          bio: [profile.bio],
-        });
-
-        this.displayImageUrl = profile.imageUrl
-          ? `${this.baseUrl}/${profile.imageUrl}?t=${new Date().getTime()}`
-          : 'assets/default-avatar.png';
-
-        this.loading = false;
-
-        this.f['userName'].valueChanges.subscribe(() => {
-          this.userNameExists = false;
-        });
-      },
+      next: (profile) => this.initProfileForm(profile),
       error: () => {
         this.toastr.error('Erro ao carregar o perfil.');
         this.loading = false;
@@ -60,25 +53,67 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  loadPublicProfile(username: string): void {
+    this.loading = true;
+    this.isOwnProfile = false;
+
+    this.userProfileService.GetPublicProfile(username).subscribe({
+      next: (profile) => {
+        this.profile = profile;
+        this.displayImageUrl = profile.imageUrl
+          ? `${this.baseUrl}/${profile.imageUrl}`
+          : 'assets/default-avatar.png';
+        this.loading = false;
+      },
+      error: () => {
+        this.toastr.error('Erro ao carregar perfil público.');
+        this.loading = false;
+      }
+    });
+  }
+
+  private initProfileForm(profile: UserProfile): void {
+    this.profile = profile;
+
+    this.profileForm = this.fb.group({
+      fullName: [profile.fullName, [Validators.required, Validators.minLength(3)]],
+      userName: [profile.userName, [Validators.required, Validators.minLength(3)]],
+      bio: [profile.bio],
+    });
+
+    this.displayImageUrl = profile.imageUrl
+      ? `${this.baseUrl}/${profile.imageUrl}?t=${new Date().getTime()}`
+      : 'assets/default-avatar.png';
+
+    this.f['userName'].valueChanges.subscribe(() => {
+      this.userNameExists = false;
+    });
+
+    this.loading = false;
+  }
+
   enableEdit(): void {
+    if (!this.isOwnProfile) return;
     this.isEditing = true;
   }
 
   cancelEdit(): void {
+    if (!this.isOwnProfile || !this.profile) return;
+
     this.isEditing = false;
     this.selectedImageFile = undefined;
     this.userNameExists = false;
 
-    if (this.profile) {
-      this.profileForm.patchValue({
-        fullName: this.profile.fullName,
-        userName: this.profile.userName,
-        bio: this.profile.bio
-      });
-    }
+    this.profileForm.patchValue({
+      fullName: this.profile.fullName,
+      userName: this.profile.userName,
+      bio: this.profile.bio
+    });
   }
 
   onFileSelected(event: Event): void {
+    if (!this.isOwnProfile) return;
+
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedImageFile = input.files[0];
@@ -86,7 +121,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.profileForm.invalid) {
+    if (!this.isOwnProfile || this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
       return;
     }
@@ -95,7 +130,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   updateProfileImage(): void {
-    if (!this.selectedImageFile) return;
+    if (!this.isOwnProfile || !this.selectedImageFile) return;
 
     this.sendProfileUpdateRequest(true);
   }
@@ -113,18 +148,16 @@ export class UserProfileComponent implements OnInit {
     }
 
     this.userProfileService.UpdateMyProfile(formData).subscribe({
-      next: (updated) => {
+      next: () => {
         const msg = onlyImageUpdate ? 'Foto de perfil atualizada!' : 'Perfil atualizado com sucesso!';
         this.toastr.success(msg);
 
         this.selectedImageFile = undefined;
         this.imageJustUpdated = true;
 
-        if (!onlyImageUpdate) {
-          this.isEditing = false;
-        }
+        if (!onlyImageUpdate) this.isEditing = false;
 
-        this.loadProfile();
+        this.loadOwnProfile();
       },
       error: (error) => {
         if (error.status === 400 && error.error === 'Nome de usuário já está em uso.') {

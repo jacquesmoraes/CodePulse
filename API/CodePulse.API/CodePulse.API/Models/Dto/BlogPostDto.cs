@@ -11,7 +11,8 @@ public class BlogPostDto
     public DateTime PublishedDate { get; set; }
     public bool IsVisible { get; set; }
     public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
-    public string Author { get; set; }
+  public int ViewCount { get; set; }
+  public BlogPostAuthorDto Author { get; set; }
 
-   
+
 }

@@ -8,24 +8,28 @@ namespace CodePulse.API.Mapping
   {
     public BlogPostMappingProfile()
     {
+      Console.WriteLine(">>> BlogPostMappingProfile carregado");
       CreateMap<CreateBlogPostRequestDto, BlogPost>()
-        .ForMember(dest => dest.Categories, opt => opt.MapFrom(src =>
-          src.Categories.Select(guidId => new Category { Id = guidId })));
+        .ForMember(dest => dest.Categories, opt => opt.Ignore())
+        .ForMember(dest => dest.AuthorId, opt => opt.Ignore())
+        .ForMember(dest => dest.ViewCount, opt => opt.MapFrom(src => 0))
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()));
 
-      CreateMap<CreateCategoriesDto, Category>();
-      CreateMap<UpdateCategoryRequestDto, Category>();
       CreateMap<UpdateBlogPostRequestDto, BlogPost>()
-        .ForMember(dest => dest.Categories, opt => opt.MapFrom(src =>
-          src.Categories.Select(guidId => new Category { Id = guidId })));
+        .ForMember(dest => dest.Categories, opt => opt.Ignore())
+        .ForMember(dest => dest.AuthorId, opt => opt.Ignore())
+        .ForMember(dest => dest.ViewCount, opt => opt.Ignore());
 
       CreateMap<BlogImage, BlogImageDto>();
       CreateMap<UserImageProfileDto, UserImageProfile>();
       CreateMap<Category, CategoryDto>();
       CreateMap<UserImageProfile, UserImageProfileDto>();
 
-      CreateMap<BlogPost, BlogPostDto>()
-    .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
-    .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author));
+      
+
+
+
+
     }
   }
 }

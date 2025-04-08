@@ -1,7 +1,5 @@
-using AutoMapper;
 using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.Dto;
-using CodePulse.API.Repositories.Implementation;
 using CodePulse.API.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,164 +8,170 @@ using System.Security.Claims;
 
 namespace CodePulse.API.Controllers
 {
-  [Route("api/[controller]")]
+  [Route ( "api/[controller]" )]
   [ApiController]
   public class BlogPostController : ControllerBase
   {
     private readonly IBlogPostRepository _postRepository;
-    private readonly IMapper _mapper;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IUserRepository _userRepository;
+    private readonly UserManager<UserProfile> _userManager;
+    private readonly ILogger<BlogPostController> _logger;
 
-    public BlogPostController(IBlogPostRepository postRepository, 
-        IMapper mapper,
+    public BlogPostController (
+        IBlogPostRepository postRepository,
         ICategoryRepository categoryRepository,
-        UserManager<IdentityUser> userManager,
-        IUserRepository userRepository)
+        UserManager<UserProfile> userManager,
+        ILogger<BlogPostController> logger )
     {
       _postRepository = postRepository;
-      _mapper = mapper;
       _categoryRepository = categoryRepository;
       _userManager = userManager;
-      _userRepository = userRepository;
+      _logger = logger;
     }
 
     [HttpPost]
-    [Authorize(Roles = "Writer,Admin")]
-    public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto createBlogPost)
+    [Authorize ( Roles = "Writer,Admin" )]
+    public async Task<IActionResult> CreateBlogPost ( [FromBody] CreateBlogPostRequestDto createBlogPost )
     {
-        if (createBlogPost == null)
-        {
-            return BadRequest("The payload is empty.");
-        }
+      if ( createBlogPost == null )
+      {
+        return BadRequest ( "The payload is empty." );
+      }
 
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var userProfile = await _userRepository.GetUserProfileByIdentityUserIdAsync(userId);
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var user = await _userManager.FindByIdAsync(userId);
+      if ( user == null )
+      {
+        return NotFound ( "User not found." );
+      }
 
-        if (userProfile == null)
-        {
-            return NotFound("User profile not found.");
-        }
+      var blogPost = await BlogPostMapperHelper.MapToDomainAsync(createBlogPost, user.Id, _categoryRepository);
 
-        var blogPost = _mapper.Map<BlogPost>(createBlogPost);
-        blogPost.Author = userProfile.UserName;
-
-        if (createBlogPost.Categories?.Any() == true)
-        {
-            blogPost.Categories = new List<Category>();
-            foreach (var categoryGuid in createBlogPost.Categories)
-            {
-                var existingCategory = await _categoryRepository.GetCategoryByIdAsync(categoryGuid);
-                if (existingCategory != null)
-                {
-                    blogPost.Categories.Add(existingCategory);
-                }
-            }
-        }
-
-        blogPost = await _postRepository.CreateBlogPostAsync(blogPost);
-        return Ok(_mapper.Map<BlogPostDto>(blogPost));
+      blogPost = await _postRepository.CreateBlogPostAsync ( blogPost );
+      var response = BlogPostMapperHelper.MapToDto(blogPost);
+      return Ok ( response );
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllBlogPosts(
+    public async Task<IActionResult> GetAllBlogPosts (
         [FromQuery] string? query,
         [FromQuery] string? sortBy,
         [FromQuery] string? sortDirection,
         [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize)
+        [FromQuery] int? pageSize )
     {
-        var blogPosts = await _postRepository.GetAllAsync(query, sortBy, sortDirection, pageNumber, pageSize);
-        return Ok(_mapper.Map<IEnumerable<BlogPostDto>>(blogPosts));
+      var blogPosts = await _postRepository.GetAllAsync(query, sortBy, sortDirection, pageNumber, pageSize);
+      var mapped = blogPosts.Select(BlogPostMapperHelper.MapToDto).ToList();
+      return Ok ( mapped );
     }
 
     [HttpGet]
-    [Route("{id:guid}")]
-    public async Task<IActionResult> GetBlogPostById([FromRoute] Guid id)
+    [Route ( "{id:guid}" )]
+    public async Task<IActionResult> GetBlogPostById ( [FromRoute] Guid id )
     {
-        var blogPostId = await _postRepository.GetBlogPostByIdAsync(id);
-        if (blogPostId == null)
-        {
-            return NotFound();
-        }
-        return Ok(_mapper.Map<BlogPostDto>(blogPostId));
+      var blogPost = await _postRepository.GetBlogPostByIdAsync(id);
+      if ( blogPost == null )
+      {
+        return NotFound ( );
+      }
+      return Ok ( BlogPostMapperHelper.MapToDto ( blogPost ) );
     }
 
-    [HttpGet]
-    [Route("{urlHandle}")]
-    public async Task<IActionResult> GetPostByUrlHandle([FromRoute] string urlHandle)
+    [HttpGet ( "{urlHandle}" )]
+    public async Task<IActionResult> GetPostByUrlHandle ( string urlHandle )
     {
-        var blogpost = await _postRepository.GetBlogPostByUrlHandle(urlHandle);
-        return Ok(_mapper.Map<BlogPostDto>(blogpost));
+      var post = await _postRepository.GetBlogPostByUrlHandle(urlHandle);
+      if ( post == null ) return NotFound ( );
+
+      var dto = BlogPostMapperHelper.MapToDto(post);
+      return Ok ( dto );
     }
 
     [HttpPut]
-    [Route("{id:guid}")]
-    [Authorize(Roles = "Writer,Admin")]
-    public async Task<IActionResult> UpdateBlogPost([FromRoute] Guid id, [FromBody] UpdateBlogPostRequestDto dto)
+    [Route ( "{id:guid}" )]
+    [Authorize ( Roles = "Writer,Admin" )]
+    public async Task<IActionResult> UpdateBlogPost ( [FromRoute] Guid id, [FromBody] UpdateBlogPostRequestDto updateBlogPost )
     {
-        var existingPost = await _postRepository.GetBlogPostByIdAsync(id);
-        if (existingPost == null)
-            return NotFound();
+      var existingBlogPost = await _postRepository.GetBlogPostByIdAsync(id);
+      if ( existingBlogPost == null )
+      {
+        return NotFound ( );
+      }
 
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-            return Unauthorized();
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      if ( existingBlogPost.AuthorId != userId )
+      {
+        return Forbid ( );
+      }
 
-        var userProfile = await _userRepository.GetUserProfileByIdentityUserIdAsync(user.Id);
-        if (userProfile == null)
-            return Unauthorized();
+      // Mapeamento manual
+      existingBlogPost.Title = updateBlogPost.Title;
+      existingBlogPost.ShortDescription = updateBlogPost.ShortDescription;
+      existingBlogPost.Content = updateBlogPost.Content;
+      existingBlogPost.FeaturedImageUrl = updateBlogPost.FeaturedImageUrl;
+      existingBlogPost.UrlHandle = updateBlogPost.UrlHandle;
+      existingBlogPost.PublishedDate = updateBlogPost.PublishedDate;
+      existingBlogPost.IsVisible = updateBlogPost.IsVisible;
 
-        if (!User.IsInRole("Admin") && existingPost.Author != userProfile.UserName)
-            return Forbid("You can only edit your own posts");
+      existingBlogPost.Categories = new List<Category> ( );
+      if ( updateBlogPost.Categories?.Any ( ) == true )
+      {
+        foreach ( var categoryGuid in updateBlogPost.Categories )
+        {
+          var existingCategory = await _categoryRepository.GetCategoryByIdAsync(categoryGuid);
+          if ( existingCategory != null )
+          {
+            existingBlogPost.Categories.Add ( existingCategory );
+          }
+        }
+      }
 
-        var blogPost = _mapper.Map<BlogPost>(dto);
-        blogPost.Id = existingPost.Id;
-        blogPost.Author = existingPost.Author;
-
-        var updatedPost = await _postRepository.UpdateBlogPostAsync(blogPost);
-        return Ok(_mapper.Map<BlogPostDto>(updatedPost));
+      var updatedBlogPost = await _postRepository.UpdateBlogPostAsync(existingBlogPost);
+      return Ok ( BlogPostMapperHelper.MapToDto ( updatedBlogPost ) );
     }
 
-    [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Writer,Admin")]
-    public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
+    [HttpDelete ( "{id:guid}" )]
+    [Authorize ( Roles = "Writer,Admin" )]
+    public async Task<IActionResult> DeleteBlogPost ( [FromRoute] Guid id )
     {
-        var existingPost = await _postRepository.GetBlogPostByIdAsync(id);
-        if (existingPost == null)
-            return NotFound();
+      var existingPost = await _postRepository.GetBlogPostByIdAsync(id);
+      if ( existingPost == null )
+        return NotFound ( );
 
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-            return Unauthorized();
+      var user = await _userManager.GetUserAsync(User);
+      if ( user == null )
+        return Unauthorized ( );
 
-        var userProfile = await _userRepository.GetUserProfileByIdentityUserIdAsync(user.Id);
-        if (userProfile == null)
-            return Unauthorized();
+      if ( !User.IsInRole ( "Admin" ) && existingPost.AuthorId != user.Id )
+        return Forbid ( "You can only delete your own posts" );
 
-        if (!User.IsInRole("Admin") && existingPost.Author != userProfile.UserName)
-            return Forbid("You can only delete your own posts");
-
-        var deletePost = await _postRepository.DeleteBlogPostAsync(id);
-        return Ok(_mapper.Map<BlogPostDto>(deletePost));
+      var deletePost = await _postRepository.DeleteBlogPostAsync(id);
+      return Ok ( BlogPostMapperHelper.MapToDto ( deletePost ) );
     }
 
     [HttpGet]
-    [Route("count")]
-    public async Task<IActionResult> GetBlogPostsCount()
+    [Route ( "count" )]
+    public async Task<IActionResult> GetBlogPostsCount ( )
     {
-        var result = await _postRepository.GetBlogPostsCountAsync();
-        return Ok(result);
+      var result = await _postRepository.GetBlogPostsCountAsync();
+      return Ok ( result );
     }
 
     [HttpGet]
-    [Route("mostPopular")]
-    public async Task<IActionResult> MostViewCount(int count = 5)
+    [Route ( "mostPopular" )]
+    public async Task<IActionResult> MostViewCount ( int count = 5 )
     {
+      try
+      {
         var posts = await _postRepository.GetPopularPosts(count);
-        return Ok(posts);
+        var mappedPosts = posts.Select(BlogPostMapperHelper.MapToDto).ToList();
+        return Ok ( mappedPosts );
+      }
+      catch ( Exception ex )
+      {
+        _logger.LogError ( ex, "Error getting most popular posts" );
+        return StatusCode ( 500, "An error occurred while getting the most popular posts" );
+      }
     }
   }
 }
-

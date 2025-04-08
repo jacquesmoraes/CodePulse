@@ -3,15 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CodePulse.API.Models.Dto
 {
- public class UserProfileDto
-{
-    public required string UserId { get; set; } // do IdentityUser
-    public required string UserName { get; set; } // do IdentityUser
-    public required string Email { get; set; } // do IdentityUser
-
-    public required string FullName { get; set; }
-    public string? Bio { get; set; }
-    public string? ImageUrl { get; set; } // do UserImageProfile
-}
-
+    public class UserProfileDto
+    {
+        public string Id { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string FullName { get; set; }
+        public string? Bio { get; set; }
+        public string? Interests { get; set; }
+        public string? ImageUrl { get; set; }
+    }
 }

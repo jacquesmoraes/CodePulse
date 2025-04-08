@@ -7,8 +7,8 @@
     "featuredImageUrl": "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg",
     "UrlHandle": "understanding-javascript-closures",
     "publishedDate": "2024-06-20T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "817cb3ee-feb1-4dc0-8e8a-ae4210f36eab",
@@ -18,8 +18,8 @@
     "featuredImageUrl": "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg",
     "UrlHandle": "exploring-the-fetch-api",
     "publishedDate": "2024-06-20T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "03a44efe-c891-4fed-ad3d-aebe51da4734",
@@ -29,19 +29,19 @@
     "featuredImageUrl": "https://images.pexels.com/photos/5483077/pexels-photo-5483077.jpeg",
     "UrlHandle": "intro-to-.net-8-and-minimal-apis",
     "publishedDate": "2024-04-14T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "733d09d3-cc6e-46ff-936d-f1dd7a2b98df",
     "title": "State Management in Angular",
-    "shortDescription": "Manage complex application states using Angular\u2019s built-in tools.",
-    "content": "# State Management in Angular\n\nManage complex application states using Angular\u2019s built-in tools. This article will guide you through examples, best practices, and implementation details to help you master the topic.",
+    "shortDescription": "Manage complex application states using Angular's built-in tools.",
+    "content": "# State Management in Angular\n\nManage complex application states using Angular's built-in tools. This article will guide you through examples, best practices, and implementation details to help you master the topic.",
     "featuredImageUrl": "https://images.pexels.com/photos/7367/startup-photo.jpg",
     "UrlHandle": "state-management-in-angular",
     "publishedDate": "2024-05-21T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "95c6a68d-d2d1-405a-873e-4dc444cd8f37",
@@ -51,8 +51,8 @@
     "featuredImageUrl": "https://images.unsplash.com/photo-1531497865144-0464ef8fb9c1",
     "UrlHandle": "responsive-design-with-css-grid",
     "publishedDate": "2024-03-19T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "9db178fe-4335-4f74-91bc-b3f42e7d134e",
@@ -62,19 +62,19 @@
     "featuredImageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475",
     "UrlHandle": "top-10-vscode-extensions-for-devs",
     "publishedDate": "2024-08-24T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "beb85c08-1a2a-4241-b459-a6a5a437f30f",
-    "title": "A Beginner\u2019s Guide to Git & GitHub",
+    "title": "A Beginner's Guide to Git & GitHub",
     "shortDescription": "Understand version control with this beginner-friendly guide.",
-    "content": "# A Beginner\u2019s Guide to Git & GitHub\n\nUnderstand version control with this beginner-friendly guide. This article will guide you through examples, best practices, and implementation details to help you master the topic.",
+    "content": "# A Beginner's Guide to Git & GitHub\n\nUnderstand version control with this beginner-friendly guide. This article will guide you through examples, best practices, and implementation details to help you master the topic.",
     "featuredImageUrl": "https://images.pexels.com/photos/16037283/pexels-photo-16037283.jpeg",
     "UrlHandle": "a-beginners-guide-to-git-and-github",
     "publishedDate": "2024-12-05T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "9668e2ee-0e1e-4a40-b4e6-223ac6fd84ad",
@@ -84,8 +84,8 @@
     "featuredImageUrl": "https://images.pexels.com/photos/1029757/pexels-photo-1029757.jpeg",
     "UrlHandle": "deploying-with-docker-and-nginx",
     "publishedDate": "2024-08-08T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "a3a9338a-6e6f-4393-91f5-015f8a014ef2",
@@ -95,8 +95,8 @@
     "featuredImageUrl": "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
     "UrlHandle": "building-rest-apis-with-spring-boot",
     "publishedDate": "2024-10-01T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   },
   {
     "id": "b26627ab-cb18-418a-b0d6-1c7bf9cebda1",
@@ -106,7 +106,7 @@
     "featuredImageUrl": "https://images.pexels.com/photos/109371/pexels-photo-109371.jpeg",
     "UrlHandle": "typescript-vs-javascript-when-to-choose-what",
     "publishedDate": "2024-02-12T00:00:00",
-    "author": "CodePulse Writer",
-    "isVisible": true
+    "isVisible": true,
+    "viewCount": 0
   }
 ]

@@ -312,3 +312,25 @@
 .widget-item .skeleton-image {
   border-radius: 6px;
 }
+.profile-info.public {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-info.public h2 {
+  margin-bottom: 5px;
+}
+
+.profile-info.public .username {
+  font-weight: bold;
+  color: #666;
+}
+
+.profile-info.public .email {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.profile-info.public .bio-block {
+  margin-top: 15px;
+}
