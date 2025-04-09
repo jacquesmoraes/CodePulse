@@ -45,7 +45,13 @@
                         </h2>
                         <p class="text-muted mb-2">{{ blog.shortDescription }}</p>
                         <div class="d-flex align-items-center mb-1">
-                          <div class="author-avatar me-2" aria-hidden="true"></div>
+                          <img
+                          [src]="blog.author.imageUrl || 'assets/default-avatar.png'"
+                          alt="Avatar do autor"
+                          class="author-avatar me-2"
+                          width="40"
+                          height="40"
+                        />
                           <div class="post-meta">
                             <p class="post-date mb-0">
                              
@@ -54,7 +60,7 @@
                               </a>
                               
                              
-                              <span >Unknown</span>
+                              
                               <time>{{ blog.publishedDate | date: 'mediumDate' }}</time>
                             </p>
                           </div>

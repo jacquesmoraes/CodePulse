@@ -6,8 +6,7 @@ public class ApplicationContext : DbContext
     public DbSet<BlogPost> BlogPosts { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<BlogImage> BlogImages { get; set; }
-
-    public DbSet<UserProfile> UsersProfiles { get; set; } // <-- Adicione isso aqui
+    public DbSet<UserProfile> UsersProfiles { get; set; }
 
     public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 
@@ -16,6 +15,9 @@ public class ApplicationContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<UserProfile>().ToTable("AspNetUsers", t => t.ExcludeFromMigrations());
+        
+        // Configuração para usar a tabela UserImageProfiles
+        modelBuilder.Entity<UserImageProfile>().ToTable("UserImageProfiles", t => t.ExcludeFromMigrations());
 
         // Relacionamentos
         modelBuilder.Entity<BlogPost>()

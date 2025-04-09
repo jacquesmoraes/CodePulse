@@ -9,31 +9,46 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const user = authService.getUser();
-  //check for jwt token
+
   let token = cookieService.get('Authorization');
+
   if (token && user) {
     token = token.replace('Bearer', '');
     const decodedToken: any = jwtDecode(token);
-    //chek if the token has expired
+
     const expirationDate = decodedToken.exp * 1000;
-    const curentDate = new Date().getTime();
-    if (expirationDate < curentDate) {
+    const currentDate = new Date().getTime();
+
+    if (expirationDate < currentDate) {
       authService.lougout();
-      return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } })
+      return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
     }
-    else {
-      // token still valid
-      if (user.roles.includes('Writer')) {
-        return true;
-      }
-      else {
-        alert('unauthorized');
-        return false;
-      }
+
+    const url = state.url;
+
+    // ✅ Se for Writer e tentar acessar /aboutme ou /admin, redireciona para dashboard
+    if (
+      user.roles.includes('Writer') &&
+      !user.roles.includes('Admin') &&
+      (url.startsWith('/aboutme') || url.startsWith('/admin'))
+    ) {
+      return router.createUrlTree(['/dashboard']);
     }
+
+    // ✅ Se for Reader e tentar acessar /dashboard ou /admin, redireciona para aboutme
+    if (
+      user.roles.includes('Reader') &&
+      !user.roles.includes('Admin') &&
+      (url.startsWith('/dashboard') || url.startsWith('/admin'))
+    ) {
+      return router.createUrlTree(['/aboutme']);
+    }
+
+    // ✅ Token válido e usuário tem alguma role permitida
+    return true;
   }
-  else {
-    authService.lougout();
-    return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } })
-  }
+
+  // ❌ Usuário não autenticado
+  authService.lougout();
+  return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
 };

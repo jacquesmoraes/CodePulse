@@ -1,0 +1,152 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f4f4f4;
+  }
+  
+  .dashboard-container {
+    display: flex;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    gap: 2rem;
+  }
+  
+  .profile-card {
+    flex: 0 0 300px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    position: sticky;
+    top: 1rem;
+    align-self: flex-start;
+    height: fit-content;
+  }
+  
+  .profile-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .profile-card p {
+    color: #666;
+    font-size: 0.95rem;
+  }
+  
+  .post-list {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 2rem);
+  }
+  
+  .post-card {
+    border-bottom: 1px solid #eee;
+    padding: 1rem 0;
+  }
+  
+  .post-card:last-child {
+    border-bottom: none;
+  }
+  
+  .post-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .post-card p {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  @media (max-width: 768px) {
+    :host {
+      flex-direction: column;
+    }
+  
+    .dashboard-container {
+      flex-direction: column;
+    }
+  
+    .profile-card {
+      position: static;
+      width: 100%;
+    }
+  
+    .post-list {
+      max-height: none;
+    }
+  }
+  .profile-image img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ccc;
+    margin-bottom: 10px;
+  }
+  .actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  
+  .actions a {
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+  
+  .actions a:first-child {
+    background-color: #f4f4f4;
+    color: #333;
+    border: 1px solid #ddd;
+  }
+  
+  .actions a:last-child {
+    background-color: #f26522;
+    color: white;
+    border: none;
+  }
+  
+  .actions a:first-child:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .actions a:last-child:hover {
+    background-color: #c2501c;
+  }
+  .post-card {
+    
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s;
+  }
+  
+  .post-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .post-image {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .post-content {
+    flex: 1;
+  }
+  

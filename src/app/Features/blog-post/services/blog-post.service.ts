@@ -70,5 +70,9 @@ export class BlogPostService {
     return this.http.get<BlogPost[]>(`${environment.apiBaseUrl}/api/blogpost/mostpopular?count=${count}`)
   }
 
+  getMyPosts() : Observable<BlogPost[]>{
+    return this.http.get<BlogPost[]>(`${environment.apiBaseUrl}/api/blogpost/my-posts?addAuth=true`); 
+  }
+
 
 }

@@ -124,7 +124,7 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
     this.updateBlogPostSubscription = this.blogPostService.updateBlogPost(this.id!, updateBlogPost)
       .subscribe({
         next: (response) => {
-          this.router.navigateByUrl('/admin/blogpost');
+          this.router.navigateByUrl('/dashboard');
         }
       });
   }

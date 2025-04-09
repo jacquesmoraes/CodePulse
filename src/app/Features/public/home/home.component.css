@@ -334,3 +334,26 @@
 .profile-info.public .bio-block {
   margin-top: 15px;
 }
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 0.5rem;
+}
+
+.post-meta a {
+  color: #f26522; /* cor de destaque, como no seu blog */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.post-meta a:hover {
+  color: #c2501c;
+}
+
+.post-meta time {
+  font-style: italic;
+}

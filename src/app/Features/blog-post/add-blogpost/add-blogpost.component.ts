@@ -25,9 +25,11 @@ export class AddBlogpostComponent implements OnInit {
     baseUrl: string = environment.apiBaseUrl;
   constructor(
     private blogPostService: BlogPostService,
-    private router: Router,
+    public router: Router,
     private categoryService: CategoryService,
-    private imageSelectorService: ImageSelectorService
+    private imageSelectorService: ImageSelectorService,
+    
+    
   ) {
     this.model = {
       title: '',

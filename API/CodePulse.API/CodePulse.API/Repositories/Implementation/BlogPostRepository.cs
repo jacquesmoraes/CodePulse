@@ -35,6 +35,7 @@ namespace CodePulse.API.Repositories.Implementation
       var blogPosts = _context.BlogPosts
         .Include(bp => bp.Categories)
         .Include(bp => bp.AuthorProfile)
+        .ThenInclude(x => x.Image)
         .AsQueryable();
 
       if (!string.IsNullOrEmpty(query))
@@ -67,7 +68,14 @@ namespace CodePulse.API.Repositories.Implementation
       var skipResults = (pageNumber - 1) * pageSize ?? 0;
       blogPosts = blogPosts.Skip(skipResults).Take(pageSize ?? 100);
 
-      return await blogPosts.ToListAsync();
+      var posts =  await blogPosts.ToListAsync();
+      foreach (var post in posts)
+{
+    _logger.LogInformation($"Post: {post.Title} | Autor: {post.AuthorProfile?.UserName} | ImgId: {post.AuthorProfile?.ImageId} | ImgUrl: {post.AuthorProfile?.Image?.Url}");
+}
+
+      return posts;
+      
     }
 
     public async Task<BlogPost?> GetBlogPostByIdAsync(Guid id)
@@ -75,6 +83,7 @@ namespace CodePulse.API.Repositories.Implementation
       return await _context.BlogPosts
         .Include(x => x.Categories)
         .Include(x => x.AuthorProfile)
+        .ThenInclude(x => x.Image)
         .FirstOrDefaultAsync(bp => bp.Id == id);
     }
 
@@ -117,7 +126,7 @@ namespace CodePulse.API.Repositories.Implementation
     {
       return await _context.BlogPosts
         .Include(x => x.Categories)
-        .Include(x => x.AuthorProfile)
+        .Include(x => x.AuthorProfile).ThenInclude(x => x.Image)
         .FirstOrDefaultAsync(bp => bp.UrlHandle == urlhandle);
     }
 
@@ -150,7 +159,9 @@ namespace CodePulse.API.Repositories.Implementation
                 UserName = x.AuthorProfile.UserName,
                 FullName = x.AuthorProfile.FullName,
                 Bio = x.AuthorProfile.Bio,
-                Interests = x.AuthorProfile.Interests
+                Interests = x.AuthorProfile.Interests,
+                 Image = x.AuthorProfile.Image,  // Adicione esta linha
+                 ImageId = x.AuthorProfile.ImageId  
             },
             Categories = x.Categories.Select(c => new Category
             {
@@ -164,12 +175,12 @@ namespace CodePulse.API.Repositories.Implementation
         .ToListAsync();
     }
 
-    public async Task<List<BlogPost>> GetPostByAuthorAsync(string authorName)
+    public async Task<List<BlogPost>> GetPostByAuthorAsync(string authorId)
     {
       return await _context.BlogPosts
         .Include(x => x.Categories)
-        .Include(x => x.AuthorProfile)
-        .Where(x => x.AuthorProfile.UserName == authorName)
+        .Include(x => x.AuthorProfile).ThenInclude(x => x.Image)
+        .Where(x => x.AuthorId == authorId)
         .ToListAsync();
     }
   }

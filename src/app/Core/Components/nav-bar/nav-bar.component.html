@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto">
 
-        <ng-container *ngIf="user !== undefined && user?.roles?.includes('Writer')">
+        <ng-container *ngIf="user !== undefined && user?.roles?.includes('Admin')">
 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,9 +37,17 @@
       </ng-container>
       <ng-template #showLogout>
         <div class="d-flex align-items-center gap-2">
-          <div class="text-white ">{{ user?.email }}</div>
+          <div class="text-white ">{{'@'+ user?.userName }}</div>
           <button class="btn btn-outline-light ms-2" (click)="onLogout()">Sair</button>
-          <button class="btn btn-outline-light ms-2" [routerLink]="['/aboutme']">My profile</button>
+          <ng-container *ngIf="user !== undefined && user.roles.includes('Writer'); else readerProfile">
+            <button class="btn btn-outline-light ms-2" [routerLink]="['/dashboard']">Dashboard</button>
+          </ng-container>
+
+          <ng-template #readerProfile>
+            <button class="btn btn-outline-light ms-2" [routerLink]="['/aboutme']">My Profile</button>
+          </ng-template>
+
+
         </div>
       </ng-template>
     </div>

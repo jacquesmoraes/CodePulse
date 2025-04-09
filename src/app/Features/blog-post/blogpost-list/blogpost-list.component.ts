@@ -3,7 +3,8 @@ import { BlogPost } from '../models/blog-post.model';
 import { BlogPostService } from '../services/blog-post.service';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-
+import { User } from '../../auth/models/user.model';
+import { AuthService } from '../../auth/services/auth.service';
 @Component({
   selector: 'app-blogpost-list',
   templateUrl: './blogpost-list.component.html',
@@ -15,43 +16,58 @@ export class BlogpostListComponent implements OnInit, OnDestroy {
 
   // Filtros e paginação
   query?: string;
-  sortBy: string = 'PublishedDate';       // Começa ordenando por data
-  sortDirection: string = 'desc';         // Mais recentes primeiro
+  sortBy: string = 'PublishedDate';
+  sortDirection: string = 'desc';
   pageNumber = 1;
   pageSize = 5;
   totalCount?: number;
   totalPagesList: number[] = [];
 
-  // Subscrição para deletar
   private deleteSubscription?: Subscription;
+  private currentUser?: User;
 
-  constructor(private blogPostService: BlogPostService) {}
+  constructor(
+    private blogPostService: BlogPostService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
+    this.currentUser = this.authService.getUser();
     this.refreshBlogPostList();
   }
 
   refreshBlogPostList(): void {
-    this.blogPostService.getBlogPostsCount().subscribe({
-      next: (count) => {
-        this.totalCount = count;
-        const totalPages = Math.ceil(count / this.pageSize);
-        this.totalPagesList = Array.from({ length: totalPages }, (_, i) => i + 1);
-        this.loadBlogPosts();
-      }
-    });
+    if (this.isWriterOnly()) {
+      // Writer não precisa de contagem paginada (a não ser que deseje implementar)
+      this.loadBlogPosts();
+    } else {
+      this.blogPostService.getBlogPostsCount().subscribe({
+        next: (count) => {
+          this.totalCount = count;
+          const totalPages = Math.ceil(count / this.pageSize);
+          this.totalPagesList = Array.from({ length: totalPages }, (_, i) => i + 1);
+          this.loadBlogPosts();
+        }
+      });
+    }
   }
 
   private loadBlogPosts(): void {
-    this.blogPostService.GetAllBlogPosts(
-      this.query,
-      this.sortBy,
-      this.sortDirection,
-      this.pageSize,
-      this.pageNumber
-    ).subscribe(posts => {
-      this.blogPosts = posts;
-    });
+    if (this.isWriterOnly()) {
+      this.blogPostService.getMyPosts().subscribe(posts => {
+        this.blogPosts = posts;
+      });
+    } else {
+      this.blogPostService.GetAllBlogPosts(
+        this.query,
+        this.sortBy,
+        this.sortDirection,
+        this.pageSize,
+        this.pageNumber
+      ).subscribe(posts => {
+        this.blogPosts = posts;
+      });
+    }
   }
 
   onDelete(post: BlogPost): void {
@@ -86,12 +102,7 @@ export class BlogpostListComponent implements OnInit, OnDestroy {
   }
 
   sort(sortBy: string, direction: string): void {
-    if (sortBy === 'date') {
-      this.sortBy = 'PublishedDate';
-    } else if (sortBy === 'author') {
-      this.sortBy = 'Author';
-    }
-  
+    this.sortBy = sortBy === 'date' ? 'PublishedDate' : 'Author';
     this.sortDirection = direction;
     this.pageNumber = 1;
     this.loadBlogPosts();
@@ -120,4 +131,8 @@ export class BlogpostListComponent implements OnInit, OnDestroy {
     this.deleteSubscription?.unsubscribe();
   }
 
+  private isWriterOnly(): boolean {
+    const roles = this.currentUser?.roles || [];
+    return roles.includes('Writer') && !roles.includes('Admin');
+  }
 }

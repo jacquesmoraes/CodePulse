@@ -18,6 +18,6 @@ namespace CodePulse.API.Repositories.Interface
     Task<BlogPost?> UpdateBlogPostAsync(BlogPost UpdateBlogPost);
     Task<BlogPost?> DeleteBlogPostAsync(Guid id);
     Task<List<BlogPost>> GetPopularPosts(int count = 5);
-    Task<List<BlogPost>> GetPostByAuthorAsync(string authorName);
+    Task<List<BlogPost>> GetPostByAuthorAsync(string authorId);
   }
 }

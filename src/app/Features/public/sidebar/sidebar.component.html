@@ -35,12 +35,14 @@
       <h3 class="widget-title">Recent Posts</h3>
       <ng-container *ngIf="!sidebarLoading; else skeletonSidebar">
         <div *ngFor="let post of recentPosts; trackBy: trackByFn" class="post-item">
+         
           <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
             height="60" decoding="async">
           <div>
             <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
             <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
           </div>
+          
         </div>
       </ng-container>
 

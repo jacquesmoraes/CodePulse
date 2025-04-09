@@ -13,21 +13,26 @@ import { LoginComponent } from './Features/auth/login/login.component';
 import { authGuard } from './Features/auth/guards/auth.guard';
 import { RegisterComponent } from './Features/auth/register/register.component';
 import { UserProfileComponent } from './profile/user-profile/user-profile.component';
+import { DashboardComponent } from './Features/dashboard/writer/dashboard.component';
+import { adminGuard } from './Features/auth/guards/admin.guard';
 
 
 const routes: Routes = [
-  {path: 'admin/categories', component:CategoriesListComponent, canActivate:[authGuard]},
-  {path:'admin/categories/add', component:AddCategoryComponent , canActivate:[authGuard]},
-  {path: 'admin/categories/:id', component:EditCategoryComponent, canActivate:[authGuard]},
-  {path: 'admin/blogpost', component: BlogpostListComponent, canActivate:[authGuard]},
-  {path: 'admin/blogpost/add', component:AddBlogpostComponent, canActivate:[authGuard]},
-  {path: 'admin/blogpost/:id', component:EditBlogPostComponent, canActivate:[authGuard]},
-  {path: 'admin/blogpost/details/:id', component:BlogPostDetailsComponent, canActivate:[authGuard]},
-  {path: '', component:HomeComponent},
-  {path: 'blog/:url', component:BlogdetailsComponent},
-  {path: 'login', component:LoginComponent},
-  {path: 'register', component:RegisterComponent},
-  {path: 'aboutme', component:UserProfileComponent},
+  { path: 'admin/categories', component: CategoriesListComponent, canActivate: [authGuard, adminGuard] },
+  { path: 'admin/categories/add', component: AddCategoryComponent, canActivate: [authGuard] },
+  { path: 'admin/categories/:id', component: EditCategoryComponent, canActivate: [authGuard] },
+  { path: 'admin/blogpost', component: BlogpostListComponent, canActivate: [authGuard] },
+  { path: 'admin/blogpost/add', component: AddBlogpostComponent, canActivate: [authGuard] },
+  { path: 'admin/blogpost/:id', component: EditBlogPostComponent, canActivate: [authGuard] },
+  { path: 'admin/blogpost/details/:id', component: BlogPostDetailsComponent, canActivate: [authGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+  { path: 'dashboard/edit/:id', component: EditBlogPostComponent, canActivate: [authGuard] },
+  { path: 'dashboard/details/:id', component: BlogPostDetailsComponent, canActivate: [authGuard] },
+  { path: '', component: HomeComponent },
+  { path: 'blog/:url', component: BlogdetailsComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'aboutme', component: UserProfileComponent, canActivate: [authGuard] },
   { path: 'profile/:username', component: UserProfileComponent }
 
 ];

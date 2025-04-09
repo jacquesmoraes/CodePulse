@@ -28,6 +28,11 @@ import { ToastrModule } from 'ngx-toastr';
 import { LazyLoadDirective } from './shared/directives/lazy-load.directive';
 import { UserProfileComponent } from './profile/user-profile/user-profile.component';
 import { SidebarComponent } from './Features/public/sidebar/sidebar.component';
+import { ProfileCardComponent } from './Features/dashboard/components/profile-card/profile-card.component';
+import { ProfileListComponent } from './Features/dashboard/components/profile-list/profile-list.component';
+import { DashboardComponent } from './Features/dashboard/writer/dashboard.component';
+import { WriterSidebarComponent } from './Features/dashboard/writer/writer-sidebar/writer-sidebar.component';
+import { WriterPostsComponent } from './Features/dashboard/writer/writer-posts/writer-posts.component';
 
 
 @NgModule({
@@ -50,6 +55,11 @@ import { SidebarComponent } from './Features/public/sidebar/sidebar.component';
     LazyLoadDirective,
     UserProfileComponent,
     SidebarComponent,
+    ProfileCardComponent,
+    ProfileListComponent,
+    DashboardComponent,
+    WriterSidebarComponent,
+    WriterPostsComponent,
   ],
   imports: [
     BrowserModule,
