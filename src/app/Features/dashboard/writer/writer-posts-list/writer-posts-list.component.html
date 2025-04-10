@@ -1,14 +1,23 @@
-<h3>Seus Posts</h3>
+<!-- Título e Filtro -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3>Seus Posts</h3>
 
-<div *ngFor="let post of posts" class="post-card">
+  <!-- Dropdown de filtro (apenas para admin) -->
+  <div *ngIf="isAdmin" class="col-md-4">
+    <select class="form-select" [(ngModel)]="selectedAuthor" (change)="filterPosts()">
+      <option value="">Todos os autores</option>
+      <option *ngFor="let author of authors" [value]="author.userName">
+        {{ author.fullName }} ({{'@'+ author.userName }})
+      </option>
+    </select>
+  </div>
+</div>
+
+<!-- Lista de Posts -->
+<div *ngFor="let post of filteredPosts" class="post-card">
   <div class="post-card-body">
-    
     <!-- Imagem -->
-    <img 
-      [src]="post.featuredImageUrl || 'assets/no-image.png'" 
-      alt="Imagem do post" 
-      class="post-image"
-    />
+    <img [src]="post.featuredImageUrl || 'assets/no-image.png'" alt="Imagem do post" class="post-image" />
 
     <!-- Conteúdo -->
     <div class="post-content">
@@ -25,8 +34,11 @@
       <div class="actions">
         <a [routerLink]="['/dashboard/details', post.id]">Ver</a>
         <a [routerLink]="['/dashboard/edit', post.id]">Editar</a>
+        <!-- Botão de excluir (apenas para admin) -->
+        <button *ngIf="isAdmin" class="btn btn-danger btn-sm" (click)="deletePost(post.id)">
+          Excluir
+        </button>
       </div>
     </div>
-    
   </div>
 </div>

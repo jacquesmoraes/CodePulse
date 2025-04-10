@@ -37,6 +37,9 @@ import { MarkdownModule } from 'ngx-markdown';
 import { WriterProfileComponent } from './Features/dashboard/writer/writer-profile/writer-profile.component';
 import { UserprofilecardComponent } from './Features/dashboard/components/userprofilecard/userprofilecard.component';
 import { UserprofilelistComponent } from './Features/dashboard/components/userprofilelist/userprofilelist.component';
+import { AdminUserListComponent } from './Features/dashboard/admin/admin-user-list/admin-user-list.component';
+import { AdminUserCreateComponent } from './Features/dashboard/admin/admin-user-create/admin-user-create.component';
+import { AdminUserDashboardComponent } from './Features/dashboard/admin/admin-user-dashboard.component';
 
 
 
@@ -67,7 +70,10 @@ import { UserprofilelistComponent } from './Features/dashboard/components/userpr
     WriterProfileComponent,
     UserProfileComponent,
     UserprofilecardComponent,
-    UserprofilelistComponent
+    UserprofilelistComponent,
+    AdminUserListComponent,
+    AdminUserCreateComponent,
+    AdminUserDashboardComponent
   ],
   imports: [
     BrowserModule,

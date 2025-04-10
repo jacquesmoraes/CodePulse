@@ -39,14 +39,22 @@
         <div class="d-flex align-items-center gap-2">
           <div class="text-white ">{{'@'+ user?.userName }}</div>
           <button class="btn btn-outline-light ms-2" (click)="onLogout()">Sair</button>
-          <ng-container *ngIf="user !== undefined && user.roles.includes('Writer'); else readerProfile">
-            <button class="btn btn-outline-light ms-2" [routerLink]="['/dashboard']">Dashboard</button>
+          <ng-container *ngIf="user !== undefined">
+            <ng-container *ngIf="user.roles.includes('Admin'); else notAdmin">
+              <button class="btn btn-outline-light ms-2" [routerLink]="['/admin/dashboard']">Admin Dashboard</button>
+            </ng-container>
+          
+            <ng-template #notAdmin>
+              <ng-container *ngIf="user.roles.includes('Writer'); else readerProfile">
+                <button class="btn btn-outline-light ms-2" [routerLink]="['/dashboard']">Dashboard</button>
+              </ng-container>
+            </ng-template>
           </ng-container>
-
+          
           <ng-template #readerProfile>
             <button class="btn btn-outline-light ms-2" [routerLink]="['/aboutme']">My Profile</button>
           </ng-template>
-
+          
 
         </div>
       </ng-template>

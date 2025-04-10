@@ -1,68 +1,67 @@
 .post-card {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    transition: transform 0.2s;
-  }
-  
-  .post-card:hover {
-    transform: translateY(-2px);
-  }
-  
-  .post-card-body {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-  
-  .post-image {
-    width: 120px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    flex-shrink: 0;
-   
-  }
-  
-  .post-content {
-    flex: 1;
-    min-width: 0;
-  }
-  
-  .actions {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-  }
-  
-  .actions a {
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.5rem;
-    font-size: 0.85rem;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s;
-  }
-  
-  .actions a:first-child {
-    background-color: #f4f4f4;
-    color: #333;
-    border: 1px solid #ddd;
-  }
-  
-  .actions a:last-child {
-    background-color: #f26522;
-    color: white;
-    border: none;
-  }
-  
-  .actions a:first-child:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .actions a:last-child:hover {
-    background-color: #c2501c;
-  }
-  
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+}
+
+.post-card-body {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.post-image {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+ 
+}
+
+.post-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.actions a {
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.actions a:first-child {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.actions a:last-child {
+  background-color: #f26522;
+  color: white;
+  border: none;
+}
+
+.actions a:first-child:hover {
+  background-color: #e0e0e0;
+}
+
+.actions a:last-child:hover {
+  background-color: #c2501c;
+}
