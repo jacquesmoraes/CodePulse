@@ -11,7 +11,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { EditCategoryComponent } from './Features/Categories/edit-category/edit-category.component';
 import { BlogpostListComponent } from './Features/blog-post/blogpost-list/blogpost-list.component';
 import { AddBlogpostComponent } from './Features/blog-post/add-blogpost/add-blogpost.component';
-import { MarkdownModule } from 'ngx-markdown';
+
 import { EditBlogPostComponent } from './Features/blog-post/edit-blog-post/edit-blog-post.component';
 import { ImageSelectorComponent } from './shared/components/image-selector/image-selector.component';
 import { BlogPostDetailsComponent } from './Features/blog-post/details-blogpost/details-blogpost.component';
@@ -33,6 +33,11 @@ import { ProfileListComponent } from './Features/dashboard/components/profile-li
 import { DashboardComponent } from './Features/dashboard/writer/dashboard.component';
 import { WriterSidebarComponent } from './Features/dashboard/writer/writer-sidebar/writer-sidebar.component';
 import { WriterPostsComponent } from './Features/dashboard/writer/writer-posts/writer-posts.component';
+import { WriterPostsListComponent } from './Features/dashboard/writer/writer-posts-list/writer-posts-list.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { MarkdownModule } from 'ngx-markdown';
+import { WriterProfileComponent } from './Features/dashboard/writer/writer-profile/writer-profile.component';
+
 
 
 @NgModule({
@@ -60,6 +65,9 @@ import { WriterPostsComponent } from './Features/dashboard/writer/writer-posts/w
     DashboardComponent,
     WriterSidebarComponent,
     WriterPostsComponent,
+    WriterPostsListComponent,
+    WriterProfileComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -67,6 +75,7 @@ import { WriterPostsComponent } from './Features/dashboard/writer/writer-posts/w
     FormsModule,
     HttpClientModule,
     MarkdownModule.forRoot(),
+    NgApexchartsModule,
     NgxSpinnerModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,

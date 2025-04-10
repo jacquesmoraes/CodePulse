@@ -28,6 +28,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
   { path: 'dashboard/edit/:id', component: EditBlogPostComponent, canActivate: [authGuard] },
   { path: 'dashboard/details/:id', component: BlogPostDetailsComponent, canActivate: [authGuard] },
+  {path: 'dashboard/add', component:AddBlogpostComponent, canActivate: [authGuard]},
   { path: '', component: HomeComponent },
   { path: 'blog/:url', component: BlogdetailsComponent },
   { path: 'login', component: LoginComponent },

@@ -1,4 +1,5 @@
 <div class="dashboard-container">
+  
   <!-- Perfil à esquerda -->
   <div class="profile-card">
     <div class="profile-image">
@@ -6,44 +7,49 @@
     </div>
     <div class="profile-info">
       <h2>{{ profile?.fullName }}</h2>
-      <p class="username">{{'@'+ profile?.userName }}</p>
+      <p class="username">{{ '@' + profile?.userName }}</p>
       <p class="email">{{ profile?.email }}</p>
 
       <div class="bio" *ngIf="profile?.bio">
         <label>Bio</label>
         <p>{{ profile?.bio }}</p>
-        <app-writer-sidebar (sectionChanged)="($event)"></app-writer-sidebar>
       </div>
+
+      <app-writer-sidebar (sectionChanged)="onSectionChange($event)"></app-writer-sidebar>
     </div>
   </div>
 
-  <!-- Lista de posts à direita -->
+  <!-- Área dinâmica à direita -->
+   
   <div class="post-list">
-    <h3>Seus Posts</h3>
-    <div *ngFor="let post of blogPosts" class="post-card">
-      <div class="post-card">
-        <img [src]="post.featuredImageUrl || 'assets/no-image.png'" alt="Imagem do post" class="post-image" />
-        
-        <div class="post-content">
-          <h4>{{ post.title }}</h4>
-          <p>{{ post.shortDescription }}</p>
-          
-          <div class="post-meta">
-            <a [routerLink]="['/profile', post.author.userName]">
-              {{ '@' + post.author.userName }}
-            </a>
-            <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
-          </div>
-      
-          <div class="actions">
-            <a [routerLink]="['/dashboard/details', post.id]">Ver</a>
-            <a [routerLink]="['/dashboard/edit', post.id]">Editar</a>
-          </div>
-        </div>
-      </div>
+    <ng-container [ngSwitch]="selectedSection">
 
+      <!-- Lista completa de posts -->
+      <app-writer-posts-list 
+        *ngSwitchCase="'posts-list'" 
+        [posts]="blogPosts">
+      </app-writer-posts-list>
 
-      </div>
-    </div>
-  </div>
+      <!-- Tela com cards da dashboard de posts -->
+      <app-writer-posts 
+        *ngSwitchCase="'posts'" 
+        [posts]="blogPosts"
+        (viewAllPosts)="onSectionChange('posts-list')">
+      </app-writer-posts>
 
+      <!-- Categorias -->
+      <!-- <app-writer-categories *ngSwitchCase="'categories'"></app-writer-categories> -->
+
+      <!-- Perfil -->
+       <app-writer-profile *ngSwitchCase="'profile'"></app-writer-profile> 
+
+      <!-- Default -->
+      <app-writer-posts 
+      *ngSwitchDefault 
+      [posts]="blogPosts" 
+      (viewAllPosts)="onSectionChange('posts-list')">
+    </app-writer-posts>
+
+    </ng-container>
+  </div>>
+</div>

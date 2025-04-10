@@ -1,0 +1,58 @@
+<div class="card update-profile-card">
+    <div class="card-body">
+      <!-- Foto -->
+      <div class="profile-photo-wrapper mb-3">
+        <div class="profile-photo">
+          <img [src]="profile?.imageUrl" alt="Foto de perfil"
+               [class.fade-in]="imageJustUpdated" (load)="onImageLoaded()" />
+          <button type="button" class="edit-photo-btn" (click)="photoInput.click()">Editar Foto</button>
+          <input #photoInput type="file" (change)="onFileSelected($event)" accept="image/*" hidden />
+        </div>
+  
+        <button *ngIf="selectedImageFile" type="button"
+                class="btn btn-sm btn-outline-primary mt-2"
+                (click)="updateProfileImage()">Salvar Foto</button>
+      </div>
+  
+      <!-- Formulário -->
+      <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  
+        <!-- Visualização -->
+        <ng-container *ngIf="!isEditing; else editMode">
+          <h5>{{ profile?.fullName }}</h5>
+          <p class="text-muted">{{'@'+ profile?.userName }}</p>
+          <p>{{ profile?.bio }}</p>
+          <p class="text-secondary small">{{ profile?.email }}</p>
+        </ng-container>
+  
+        <!-- Edição -->
+        <ng-template #editMode>
+          <div class="mb-3">
+            <label>Nome completo</label>
+            <input class="form-control" formControlName="fullName" />
+          </div>
+  
+          <div class="mb-3">
+            <label>Nome de usuário</label>
+            <input class="form-control" formControlName="userName" />
+            <small *ngIf="userNameExists" class="text-danger">Nome já em uso.</small>
+          </div>
+  
+          <div class="mb-3">
+            <label>Bio</label>
+            <textarea class="form-control" formControlName="bio" rows="3"></textarea>
+          </div>
+        </ng-template>
+  
+        <!-- Botões -->
+        <div class="d-flex gap-2">
+          <button *ngIf="!isEditing" type="button" class="btn btn-outline-secondary" (click)="enableEdit()">Editar</button>
+          <ng-container *ngIf="isEditing">
+            <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || userNameExists">Salvar</button>
+            <button type="button" class="btn btn-outline-danger" (click)="cancelEdit()">Cancelar</button>
+          </ng-container>
+        </div>
+      </form>
+    </div>
+  </div>
+  

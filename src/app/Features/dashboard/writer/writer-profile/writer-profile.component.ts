@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { UserProfile } from '../models/user-profile.model';
-import { UserProfileService } from '../user-profile.service';
-import { environment } from 'src/environments/environment';
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { UserProfile } from 'src/app/profile/models/user-profile.model';
+import { UserProfileService } from 'src/app/profile/user-profile.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  selector: 'app-writer-profile',
+  templateUrl: './writer-profile.component.html',
+  styleUrls: ['./writer-profile.component.css']
 })
-export class UserProfileComponent implements OnInit {
-  profileForm!: FormGroup;
+export class WriterProfileComponent {
+ profileForm!: FormGroup;
   profile?: UserProfile;
   isEditing = false;
   loading = true;

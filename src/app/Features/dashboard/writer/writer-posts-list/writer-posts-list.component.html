@@ -1,0 +1,32 @@
+<h3>Seus Posts</h3>
+
+<div *ngFor="let post of posts" class="post-card">
+  <div class="post-card-body">
+    
+    <!-- Imagem -->
+    <img 
+      [src]="post.featuredImageUrl || 'assets/no-image.png'" 
+      alt="Imagem do post" 
+      class="post-image"
+    />
+
+    <!-- Conteúdo -->
+    <div class="post-content">
+      <h4>{{ post.title }}</h4>
+      <p>{{ post.shortDescription }}</p>
+
+      <div class="post-meta">
+        <a [routerLink]="['/profile', post.author.userName]">
+          {{ '@' + post.author.userName }}
+        </a>
+        <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+      </div>
+
+      <div class="actions">
+        <a [routerLink]="['/dashboard/details', post.id]">Ver</a>
+        <a [routerLink]="['/dashboard/edit', post.id]">Editar</a>
+      </div>
+    </div>
+    
+  </div>
+</div>

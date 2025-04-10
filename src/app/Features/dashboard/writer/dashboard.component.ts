@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   blogPosts: BlogPost[] = [];
   loading = true;
   displayImageUrl: string = '';
+  selectedSection: string = 'posts';
 
   constructor(
     private userProfileService: UserProfileService,
@@ -30,13 +31,12 @@ export class DashboardComponent implements OnInit {
     this.userProfileService.GetMyProfile().subscribe({
       next: (profile) => {
         this.profile = profile;
-        this.displayImageUrl = profile.imageUrl
-          ? `https://localhost:7167/${profile.imageUrl}`
-          : 'assets/default-avatar.png';
+        this.displayImageUrl =this.userProfileService.getFullImageUrl(profile.imageUrl);
 
         this.blogPostService.getMyPosts().subscribe({
           next: (posts) => {
             this.blogPosts = posts;
+            console.log('Blog posts carregados:', posts);
             this.loading = false;
           },
           error: () => {
@@ -51,6 +51,13 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  onSectionChange(section: string) {
+    this.selectedSection = section;
+  }
+
+
+
 }
 
 

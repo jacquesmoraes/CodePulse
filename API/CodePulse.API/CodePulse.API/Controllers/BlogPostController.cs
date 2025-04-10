@@ -63,10 +63,7 @@ namespace CodePulse.API.Controllers
         [FromQuery] int? pageSize )
     {
       var blogPosts = await _postRepository.GetAllAsync(query, sortBy, sortDirection, pageNumber, pageSize);
-       foreach (var post in blogPosts)
-    {
-        _logger.LogInformation($"Post: {post.Title} | Autor: {post.AuthorProfile?.UserName} | Img: {post.AuthorProfile?.Image?.Url}");
-    }
+       
       var mapped = blogPosts.Select(BlogPostMapperHelper.MapToDto).ToList();
       return Ok ( mapped );
     }

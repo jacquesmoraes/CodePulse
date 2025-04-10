@@ -68,9 +68,7 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
     this.pendingImage = selectedImage;
     this.pendingImageMessage = `Imagem "${selectedImage.fileName}" selecionada. Será enviada ao salvar.`;
     
-    // Mostra o caminho completo da imagem no input
-    // Assumindo que a URL será no formato: {Request.Scheme}://{Request.Host}/{savedImage.Url}
-    // Vamos usar o baseUrl do ambiente como aproximação
+    
     this.displayImageUrl = `${this.baseUrl}/images/${selectedImage.fileName}`;
 
     // Atualiza o campo da imagem para mostrar o preview

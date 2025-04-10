@@ -65,3 +65,12 @@ body {
   color: #fff !important;
   text-shadow: none !important;
 }
+/* styles.css */
+.card-total-posts-clickable {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.card-total-posts-clickable:hover {
+  transform: scale(1.02);
+}

@@ -5,7 +5,7 @@
     <ng-container *ngIf="!isOwnProfile && profile">
       <div class="profile-photo-wrapper">
         <div class="profile-photo">
-          <img [src]="displayImageUrl || 'https://via.placeholder.com/150?text=User'"
+          <img [src]="displayImageUrl "
                alt="Foto de perfil" />
         </div>
       </div>
@@ -26,7 +26,7 @@
     <ng-container *ngIf="isOwnProfile">
       <div class="profile-photo-wrapper">
         <div class="profile-photo">
-          <img [src]="displayImageUrl || 'https://via.placeholder.com/150?text=User'"
+          <img [src]="displayImageUrl "
                alt="Foto de perfil"
                [class.fade-in]="imageJustUpdated"
                (load)="onImageLoaded()" />

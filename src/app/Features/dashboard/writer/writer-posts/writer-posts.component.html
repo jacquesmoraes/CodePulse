@@ -1,56 +1,57 @@
-<!-- writer-posts.component.html -->
-<div class="container">
-    <div class="row g-4">
-  
-      <!-- Card: Total de Postagens -->
-      <div class="col-md-3">
-        <div class="card text-white bg-primary h-100">
-          <div class="card-body">
-            <h5 class="card-title">Total de Postagens</h5>
-            <p class="card-text display-6">{{ totalPosts }}</p>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Card: Adicionar Postagem -->
-      <div class="col-md-3">
-        <div class="card h-100">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">Nova Postagem</h5>
-            <button class="btn btn-success mt-auto" (click)="addPost()">
-              ➕ Adicionar
-            </button>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Card: Ver Todos os Posts -->
-      <div class="col-md-3">
-        <div class="card h-100">
-          <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">Ver Postagens</h5>
-            <button class="btn btn-outline-primary mt-auto" (click)="goToPosts()">
-              📋 Ver Todos
-            </button>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Card: Posts Mais Visualizados -->
-      <div class="col-md-3">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Mais Visualizados</h5>
-            <ul class="list-group list-group-flush">
-              <li *ngFor="let post of topViewedPosts" class="list-group-item d-flex justify-content-between">
-                <span class="text-truncate">{{ post.title }}</span>
-                <span class="badge bg-secondary">{{ post.views }}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-  
-    </div>
+<div class="container-fluid">
+
+  <!-- Botão de adicionar post -->
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-success" (click)="addPost()">
+      ➕ Adicionar Postagem
+    </button>
   </div>
-  
+
+  <!-- Linha dos cards -->
+  <div class="row g-4">
+    
+    <!-- Card: Total de Postagens -->
+    <div class="col-md-3">
+      <div class="card text-white bg-primary h-100 card-total-posts-clickable"
+      
+      (click)="viewAllPosts.emit()">
+        <div class="card-body d-flex flex-column justify-content-center text-center">
+          <h5 class="card-title">Total de Postagens</h5>
+          <p class="display-6 m-0">{{ totalPosts }}</p>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- Card: Últimos Posts -->
+    <div class="col-md-9">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Últimos Posts</h5>
+          <ul class="list-group list-group-flush">
+            <li 
+              *ngFor="let post of latestPosts" 
+              class="list-group-item d-flex justify-content-between align-items-center">
+              <span class="text-truncate">{{ post.title }}</span>
+              <span class="badge bg-secondary">{{ post.viewCount }} visualizações</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+ <!-- Gráfico abaixo dos cards -->
+<div class="mt-5">
+  <apx-chart 
+    *ngIf="chartOptions && chartOptions.series"
+    [series]="chartOptions.series || []"
+    [chart]="chartOptions.chart || { type: 'bar', height: 350 }"
+    [xaxis]="chartOptions.xaxis || { categories: [] }"
+    [dataLabels]="chartOptions.dataLabels || { enabled: false }"
+    [title]="chartOptions.title || { text: '' }">
+  </apx-chart>
+</div>
+
+</div>
