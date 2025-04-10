@@ -63,6 +63,8 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
     this.isImageSelectorVisible = false;
   }
 
+
+  
   // Método chamado quando o ImageSelectorComponent emite o objeto SelectedImage
   onImageSelected(selectedImage: SelectedImage): void {
     this.pendingImage = selectedImage;

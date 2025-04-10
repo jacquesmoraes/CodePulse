@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
         this.blogPostService.getMyPosts().subscribe({
           next: (posts) => {
             this.blogPosts = posts;
-            console.log('Blog posts carregados:', posts);
+            
             this.loading = false;
           },
           error: () => {

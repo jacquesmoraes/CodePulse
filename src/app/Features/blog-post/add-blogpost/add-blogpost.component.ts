@@ -56,7 +56,15 @@ export class AddBlogpostComponent implements OnInit {
     this.isImageSelectorVisible = false;
   }
 
-  
+  formatUrlHandle(url: string): void {
+    // Formata a URL enquanto o usuário digita
+    this.model.urlHandle = url
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '') // Remove caracteres especiais
+      .replace(/\s+/g, '-')     // Substitui espaços por hífens
+      .replace(/-+/g, '-');     // Remove hífens duplicados
+  }
   onImageSelected(selectedImage: SelectedImage): void {
     this.pendingImage = selectedImage;
     this.pendingImageMessage = `Imagem "${selectedImage.fileName}" selecionada. Será enviada ao salvar.`;

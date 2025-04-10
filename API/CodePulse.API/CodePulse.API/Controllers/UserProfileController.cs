@@ -44,6 +44,8 @@ public class UserProfileController : ControllerBase
         return Ok(profile);
     }
 
+
+  //endpoint publico pra visualizar um usuario pelo username
     [HttpGet("public/{username}")]
     public async Task<IActionResult> GetProfileByUserName(string username)
     {
@@ -53,6 +55,8 @@ public class UserProfileController : ControllerBase
 
         return Ok(profile);
     }
+
+
 
     // Endpoint para usuário autenticado ver seu próprio perfil
     [HttpGet("me")]
@@ -116,6 +120,7 @@ public class UserProfileController : ControllerBase
         _logger.LogInformation("Retornando perfil com sucesso");
         return Ok(profile);
     }
+
 
     // Endpoint para usuário autenticado atualizar seu próprio perfil
     [HttpPut("me")]
@@ -200,7 +205,30 @@ public class UserProfileController : ControllerBase
         }
     }
 
-    // Endpoint para usuário autenticado deletar seu próprio perfil
+
+  //endpoint pro usuario alterar a senha
+  [HttpPut("update-password")]
+  [Authorize]
+  public async Task<IActionResult> UpdatePassword ( [FromBody] UpdateUserCredentialsDto credentials )
+  {
+    var user = await _userManager.GetUserAsync(User);
+    if(user== null ) return Unauthorized("user not found");
+
+    if(string.IsNullOrWhiteSpace(credentials.CurrentPassword) || string.IsNullOrWhiteSpace ( credentials.NewPassword ) )
+    
+      return BadRequest("senha atual e nova senha sao obrigatórias");
+    
+    var result = await _userManager.ChangePasswordAsync(user, credentials.CurrentPassword, credentials.NewPassword);
+    if ( !result.Succeeded)
+     return BadRequest("Erro ao alterar a senha. Verifique se a senha atual está correta e se a nova senha atende aos requisitos.");
+
+    
+    return NoContent();
+
+  }
+
+
+  // Endpoint para usuário autenticado deletar seu próprio perfil
     [HttpDelete("me")]
     [Authorize]
     public async Task<IActionResult> DeleteMyProfile()
@@ -210,7 +238,9 @@ public class UserProfileController : ControllerBase
         return Ok("Usuário e perfil removidos com sucesso.");
     }
 
-    // Lista todos os writers (público)
+
+
+  // Lista todos os writers (público)
     [HttpGet("writers")]
     public async Task<IActionResult> GetAllWriters()
     {

@@ -1,58 +1,84 @@
 <div class="card update-profile-card">
-    <div class="card-body">
-      <!-- Foto -->
-      <div class="profile-photo-wrapper mb-3">
-        <div class="profile-photo">
-          <img [src]="profile?.imageUrl" alt="Foto de perfil"
-               [class.fade-in]="imageJustUpdated" (load)="onImageLoaded()" />
-          <button type="button" class="edit-photo-btn" (click)="photoInput.click()">Editar Foto</button>
-          <input #photoInput type="file" (change)="onFileSelected($event)" accept="image/*" hidden />
+  <div class="card-body">
+
+    <!-- Formulário de informações do usuário -->
+    <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
+      <!-- Visualização -->
+      <ng-container *ngIf="!isEditing; else editMode">
+        <h5>{{ profile?.fullName }}</h5>
+        <p class="text-muted">{{ '@' + profile?.userName }}</p>
+        <p>{{ profile?.bio }}</p>
+        <p class="text-secondary small">{{ profile?.email }}</p>
+      </ng-container>
+
+      <!-- Edição -->
+      <ng-template #editMode>
+        <div class="mb-3">
+          <label>Nome completo</label>
+          <input class="form-control" formControlName="fullName" />
         </div>
-  
-        <button *ngIf="selectedImageFile" type="button"
-                class="btn btn-sm btn-outline-primary mt-2"
-                (click)="updateProfileImage()">Salvar Foto</button>
-      </div>
-  
-      <!-- Formulário -->
-      <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-  
-        <!-- Visualização -->
-        <ng-container *ngIf="!isEditing; else editMode">
-          <h5>{{ profile?.fullName }}</h5>
-          <p class="text-muted">{{'@'+ profile?.userName }}</p>
-          <p>{{ profile?.bio }}</p>
-          <p class="text-secondary small">{{ profile?.email }}</p>
+
+        <div class="mb-3">
+          <label>Nome de usuário</label>
+          <input class="form-control" formControlName="userName" />
+          <small *ngIf="userNameExists" class="text-danger">Nome já em uso.</small>
+        </div>
+
+        <div class="mb-3">
+          <label>Bio</label>
+          <textarea class="form-control" formControlName="bio" rows="3"></textarea>
+        </div>
+      </ng-template>
+
+      <!-- Botões -->
+      <div class="d-flex gap-2">
+        <button *ngIf="!isEditing" type="button" class="btn btn-outline-secondary" (click)="enableEdit()">Editar</button>
+        <ng-container *ngIf="isEditing">
+          <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || userNameExists">Salvar</button>
+          <button type="button" class="btn btn-outline-danger" (click)="cancelEdit()">Cancelar</button>
         </ng-container>
-  
-        <!-- Edição -->
-        <ng-template #editMode>
-          <div class="mb-3">
-            <label>Nome completo</label>
-            <input class="form-control" formControlName="fullName" />
-          </div>
-  
-          <div class="mb-3">
-            <label>Nome de usuário</label>
-            <input class="form-control" formControlName="userName" />
-            <small *ngIf="userNameExists" class="text-danger">Nome já em uso.</small>
-          </div>
-  
-          <div class="mb-3">
-            <label>Bio</label>
-            <textarea class="form-control" formControlName="bio" rows="3"></textarea>
-          </div>
-        </ng-template>
-  
-        <!-- Botões -->
-        <div class="d-flex gap-2">
-          <button *ngIf="!isEditing" type="button" class="btn btn-outline-secondary" (click)="enableEdit()">Editar</button>
-          <ng-container *ngIf="isEditing">
-            <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || userNameExists">Salvar</button>
-            <button type="button" class="btn btn-outline-danger" (click)="cancelEdit()">Cancelar</button>
-          </ng-container>
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
-  
+</div>
+
+<!-- Formulário separado para alteração de senha -->
+<div class="card update-password-card mt-4">
+  <div class="card-body">
+    <h6 class="mb-3">Alterar Senha</h6>
+
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <div class="mb-3">
+        <label>Senha atual</label>
+        <input type="password" class="form-control" formControlName="currentPassword">
+      </div>
+
+      <div class="mb-3">
+        <label>Nova senha</label>
+        <input type="password"
+               class="form-control"
+               formControlName="newPassword"
+               (focus)="passwordFocused = true"
+               (blur)="passwordFocused = false"
+               (input)="validatePassword(passwordForm.get('newPassword')?.value)">
+      </div>
+
+      <!-- Validações visuais -->
+      <div *ngIf="passwordFocused" class="password-criteria mb-3">
+        <ul class="list-unstyled small">
+          <li *ngFor="let c of criteriaList">
+            <span *ngIf="c.loading" class="spinner-border spinner-border-sm text-secondary me-1"></span>
+            <span *ngIf="!c.loading">
+              <i class="bi"
+                 [ngClass]="c.valid ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'"></i>
+            </span>
+            {{ c.label }}
+          </li>
+        </ul>
+      </div>
+
+      <button type="submit" class="btn btn-warning" [disabled]="passwordForm.invalid">Atualizar Senha</button>
+    </form>
+  </div>
+</div>

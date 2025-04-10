@@ -37,6 +37,7 @@ namespace CodePulse.API.Controllers
       {
         return BadRequest ( "The payload is empty." );
       }
+      createBlogPost.UrlHandle = FormatUrlHandle(createBlogPost.UrlHandle);
 
       var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
       var user = await _userManager.FindByIdAsync(userId);
@@ -115,6 +116,7 @@ namespace CodePulse.API.Controllers
       return Ok ( dto );
     }
 
+
     [HttpPut]
     [Route ( "{id:guid}" )]
     [Authorize ( Roles = "Writer,Admin" )]
@@ -131,7 +133,7 @@ namespace CodePulse.API.Controllers
       {
         return Forbid ( );
       }
-
+       updateBlogPost.UrlHandle = FormatUrlHandle(updateBlogPost.UrlHandle);
       // Mapeamento manual
       existingBlogPost.Title = updateBlogPost.Title;
       existingBlogPost.ShortDescription = updateBlogPost.ShortDescription;
@@ -201,5 +203,24 @@ namespace CodePulse.API.Controllers
         return StatusCode ( 500, "An error occurred while getting the most popular posts" );
       }
     }
+
+
+
+    private string FormatUrlHandle(string urlHandle)
+{
+    if (string.IsNullOrEmpty(urlHandle))
+        return string.Empty;
+
+    return urlHandle
+        .ToLowerInvariant()
+        .Trim()
+        .Replace(" ", "-")           // Substitui espaços por hífens
+        .Replace("--", "-")          // Remove hífens duplicados
+        .Replace("[^a-z0-9\\-]", "") // Remove caracteres especiais
+        .Replace("-+", "-");         // Remove múltiplos hífens seguidos
+}
   }
+
+
+
 }

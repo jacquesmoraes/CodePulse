@@ -9,6 +9,7 @@ import { UpdateProfile } from './models/update-profile.model';
   providedIn: 'root'
 })
 export class UserProfileService {
+ 
   private profileSubject = new BehaviorSubject<UserProfile | null>(null);
   profile$ = this.profileSubject.asObservable();
   constructor(private http:HttpClient) { }
@@ -33,6 +34,11 @@ export class UserProfileService {
   GetPublicProfile(username: string): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/public/${username}`);
 
+  }
+
+  updatePassword(currentPassword:string, newPassword:string): Observable<void>{
+    const payload= {currentPassword, newPassword};
+    return this.http.put<void>(`${environment.apiBaseUrl}/api/UserProfile/update-password`, payload);
   }
 
   getFullImageUrl(imagePath?: string): string {

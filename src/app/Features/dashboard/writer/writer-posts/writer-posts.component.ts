@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ApexAxisChartSeries,
@@ -22,29 +22,52 @@ export type ChartOptions = {
   templateUrl: './writer-posts.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class WriterPostsComponent implements OnInit {
- 
-
+export class WriterPostsComponent implements OnInit, OnChanges {
   @Input() posts: BlogPost[] = [];
   @Output() viewAllPosts = new EventEmitter<void>();
 
-  public chartOptions: Partial<ChartOptions> =   {
+  public chartOptions: Partial<ChartOptions> = {
     series: [{
       name: 'Visualizações',
       data: []
     }],
-    chart: { type: 'bar', height: 350 },
-    xaxis: { categories: [] },
-    dataLabels: { enabled: false },
-    title: { text: '' }
+    chart: { 
+      type: 'bar', 
+      height: 350 
+    },
+    xaxis: { 
+      categories: [] 
+    },
+    dataLabels: { 
+      enabled: false 
+    },
+    title: { 
+      text: 'Top 5 Posts Mais Visualizados' 
+    }
   };
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
+    
+    if (this.posts.length > 0) {
+      this.updateChartOptions();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['posts'] && this.posts.length > 0) {
+      
+      this.updateChartOptions();
+    }
+  }
+
+  private updateChartOptions(): void {
     const topViewed = [...this.posts]
       .sort((a, b) => b.viewCount - a.viewCount)
       .slice(0, 5);
+
+    
 
     this.chartOptions = {
       series: [
@@ -72,13 +95,15 @@ export class WriterPostsComponent implements OnInit {
         enabled: true,
       },
     };
+
+    
   }
 
-  addPost() {
+  addPost(): void {
     this.router.navigateByUrl('/dashboard/add');
   }
 
-  goToPosts() {
+  goToPosts(): void {
     this.viewAllPosts.emit();
   }
 
@@ -90,5 +115,11 @@ export class WriterPostsComponent implements OnInit {
 
   get totalPosts(): number {
     return this.posts.length;
+  }
+
+  get isChartReady(): boolean {
+    return this.posts.length > 0 && 
+           this.chartOptions.series !== undefined && 
+           this.chartOptions.series[0].data.length > 0;
   }
 }

@@ -20,6 +20,7 @@
             class="form-control" 
              name="urlHandle" 
              [(ngModel)]="model.urlHandle"
+             (ngModelChange)="formatUrlHandle($event)"
              required>
         </div>
 
