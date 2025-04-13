@@ -74,94 +74,116 @@ namespace CodePulse.API.Repositories.Implementation
     }
 
     public async Task<UpdateUserProfileResponseDto?> UpdateUserProfileAsync(string userId, UpdateUserProfileRequestDto request)
+{
+    using var transaction = await _context.Database.BeginTransactionAsync();
+    try
     {
-      using var transaction = await _context.Database.BeginTransactionAsync();
-      try
-      {
-          var profile = await _context.UsersProfiles
-              .Include(p => p.Image)
-              .FirstOrDefaultAsync(p => p.Id == userId);
+        var profile = await _context.UsersProfiles
+            .Include(p => p.Image)
+            .FirstOrDefaultAsync(p => p.Id == userId);
 
-          if (profile == null)
-              return null;
+        if (profile == null)
+            return null;
 
-          // Verificar se já existe outro perfil com o mesmo UserName
-          if (request.UserName != profile.UserName)
-          {
-              var existingProfile = await _context.UsersProfiles
-                  .FirstOrDefaultAsync(p => p.UserName.ToLower() == request.UserName.ToLower() && p.Id != userId);
+        // Atualizações condicionais
+        if (!string.IsNullOrWhiteSpace(request.FullName))
+            profile.FullName = request.FullName;
 
-              if (existingProfile != null)
-              {
-                  throw new ArgumentException("Nome de usuário já está em uso.");
-              }
-          }
+        if (!string.IsNullOrWhiteSpace(request.UserName) && request.UserName != profile.UserName)
+        {
+            var existingProfile = await _context.UsersProfiles
+                .FirstOrDefaultAsync(p => p.UserName.ToLower() == request.UserName.ToLower() && p.Id != userId);
 
-          // Atualizar os campos do perfil
-          profile.FullName = request.FullName;
-          profile.UserName = request.UserName;
-          profile.Bio = request.Bio;
+            if (existingProfile != null)
+                throw new ArgumentException("Nome de usuário já está em uso.");
 
-          if (request.ImageFile != null)
-          {
-              // Apaga imagem antiga, se houver
-              if (profile.Image != null)
-              {
-                  var oldPath = Path.Combine(_environment.WebRootPath, profile.Image.Url);
-                  if (File.Exists(oldPath))
-                      File.Delete(oldPath);
+            profile.UserName = request.UserName;
+        }
 
-                  _context.UserImageProfiles.Remove(profile.Image);
-              }
+        if (!string.IsNullOrWhiteSpace(request.Bio))
+            profile.Bio = request.Bio;
 
-              // Salva nova imagem
-              var newImage = await _userImageRepository.SaveUserImageAsync(request.ImageFile);
-              profile.ImageId = newImage.Id;
-              profile.Image = newImage;
-          }
+        if (!string.IsNullOrWhiteSpace(request.Interests))
+            profile.Interests = request.Interests;
 
-          await _context.SaveChangesAsync();
-          await transaction.CommitAsync();
+        // Atualização da imagem, se fornecida
+        if (request.ImageFile != null)
+        {
+            if (profile.Image != null)
+            {
+                var oldPath = Path.Combine(_environment.WebRootPath, profile.Image.Url);
+                if (File.Exists(oldPath))
+                    File.Delete(oldPath);
 
-          // Mapear para o DTO de resposta simplificado
-          return new UpdateUserProfileResponseDto
-          {
-              UserId = profile.Id,
-              FullName = profile.FullName,
-              UserName = profile.UserName,
-              Bio = profile.Bio,
-              Image = profile.Image != null ? new UserImageProfileDto
-              {
-                  Id = profile.Image.Id,
-                  FileName = profile.Image.FileName,
-                  FileExtension = profile.Image.FileExtension,
-                  Url = profile.Image.Url
-              } : null
-          };
-      }
-      catch
-      {
-          await transaction.RollbackAsync();
-          throw;
-      }
+                _context.UserImageProfiles.Remove(profile.Image);
+            }
+
+            var newImage = await _userImageRepository.SaveUserImageAsync(request.ImageFile);
+            profile.ImageId = newImage.Id;
+            profile.Image = newImage;
+        }
+
+        await _context.SaveChangesAsync();
+        await transaction.CommitAsync();
+
+        return new UpdateUserProfileResponseDto
+        {
+            UserId = profile.Id,
+            FullName = profile.FullName,
+            UserName = profile.UserName,
+            Bio = profile.Bio,
+            Interests = profile.Interests,
+            Image = profile.Image != null ? new UserImageProfileDto
+            {
+                Id = profile.Image.Id,
+                FileName = profile.Image.FileName,
+                FileExtension = profile.Image.FileExtension,
+                Url = profile.Image.Url
+            } : null
+        };
     }
-
-    public async Task DeleteUserProfileAsync(string userId)
+    catch
     {
-      var profile = await _context.UsersProfiles.FirstOrDefaultAsync(p => p.Id == userId);
-      if (profile != null)
-      {
+        await transaction.RollbackAsync();
+        throw;
+    }
+}
+
+   public async Task<bool> DeleteUserProfileAsync(string userId)
+{
+    using var transaction = await _context.Database.BeginTransactionAsync();
+
+    try
+    {
+        var profile = await _context.UsersProfiles
+            .Include(p => p.Image)
+            .FirstOrDefaultAsync(p => p.Id == userId);
+
+        if (profile == null)
+            return false;
+
+        // Deleta imagem do disco e do banco
+        if (profile.Image != null)
+        {
+            var imagePath = Path.Combine(_environment.WebRootPath, profile.Image.Url);
+            if (File.Exists(imagePath))
+                File.Delete(imagePath);
+
+            _context.UserImageProfiles.Remove(profile.Image);
+        }
+
         _context.UsersProfiles.Remove(profile);
-      }
+        await _context.SaveChangesAsync();
+        await transaction.CommitAsync();
 
-      var user = await _userManager.FindByIdAsync(userId);
-      if (user != null)
-      {
-        await _userManager.DeleteAsync(user);
-      }
-
-      await _context.SaveChangesAsync();
+        return true;
     }
+    catch
+    {
+        await transaction.RollbackAsync();
+        throw;
+    }
+}
 
     public async Task<UserProfileDto?> GetUserProfileByUserNameAsync(string username)
     {
@@ -207,5 +229,7 @@ namespace CodePulse.API.Repositories.Implementation
       return await _context.UsersProfiles
           .FirstOrDefaultAsync(p => p.Id == userId);
     }
-  }
+
+   
+}
 }

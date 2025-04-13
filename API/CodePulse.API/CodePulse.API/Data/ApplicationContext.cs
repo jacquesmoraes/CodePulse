@@ -7,6 +7,7 @@ public class ApplicationContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<BlogImage> BlogImages { get; set; }
     public DbSet<UserProfile> UsersProfiles { get; set; }
+  public DbSet<UserImageProfile> UserImageProfiles { get; set; }
 
     public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 

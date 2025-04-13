@@ -112,4 +112,6 @@ public class UserManagementController : ControllerBase
 
         return Ok(_mapper.Map<UserProfileDto>(removedProfile));
     }
+
+
 }

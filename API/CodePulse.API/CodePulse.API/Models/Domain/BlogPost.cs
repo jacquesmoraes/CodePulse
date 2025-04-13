@@ -20,7 +20,7 @@ namespace CodePulse.API.Models.Domain
 
     public BlogPost()
     {
-      Categories = new List<Category>();
+      
     }
   }
 }

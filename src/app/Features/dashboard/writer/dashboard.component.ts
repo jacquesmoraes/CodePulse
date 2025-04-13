@@ -16,6 +16,8 @@ export class DashboardComponent implements OnInit {
   loading = true;
   displayImageUrl: string = '';
   selectedSection: string = 'posts';
+  selectedImageFile: File | null = null;
+
   isAdmin: boolean = false;
   constructor(
     private userProfileService: UserProfileService,
@@ -55,7 +57,47 @@ export class DashboardComponent implements OnInit {
   onSectionChange(section: string) {
     this.selectedSection = section;
   }
-
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    if (!file.type.match(/image\/*/)) {
+      this.toastr.error('Por favor, selecione um arquivo de imagem válido.');
+      return;
+    }
+  
+    if (file.size > 5 * 1024 * 1024) {
+      this.toastr.error('A imagem deve ter no máximo 5MB.');
+      return;
+    }
+  
+    this.selectedImageFile = file;
+    this.uploadProfileImage();
+  }
+  
+  uploadProfileImage(): void {
+    if (!this.selectedImageFile) return;
+  
+    const formData = new FormData();
+    formData.append('fullName', this.profile?.fullName || '');
+    formData.append('userName', this.profile?.userName || '');
+    formData.append('bio', this.profile?.bio || '');
+    formData.append('imageFile', this.selectedImageFile);
+  
+    this.userProfileService.UpdateMyProfile(formData).subscribe({
+      next: (updatedProfile) => {
+        this.toastr.success('Imagem de perfil atualizada!');
+        this.profile = updatedProfile;
+        this.displayImageUrl = this.userProfileService.getFullImageUrl(updatedProfile.imageUrl);
+        this.selectedImageFile = null;
+        this.userProfileService.setProfile(updatedProfile);
+      },
+      error: () => {
+        this.toastr.error('Erro ao atualizar imagem do perfil.');
+      }
+    });
+  }
+  
 
 
 }

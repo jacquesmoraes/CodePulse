@@ -16,6 +16,7 @@ export class WriterProfileComponent implements OnInit {
   isEditing = false;
   userNameExists = false;
   passwordFocused = false;
+  
 
   criteriaList = [
     { key: 'hasUpperCase', label: 'Pelo menos uma letra maiúscula', valid: false, loading: false },
@@ -31,11 +32,13 @@ export class WriterProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userProfileService.getProfile().subscribe({
+    // Escuta o perfil armazenado no BehaviorSubject
+    this.userProfileService.profile$.subscribe({
       next: (profile) => {
         if (profile) {
           this.initProfileForm(profile);
         } else {
+          // Se ainda não houver perfil no BehaviorSubject, busca da API
           this.userProfileService.GetMyProfile().subscribe({
             next: (fetchedProfile) => {
               this.userProfileService.setProfile(fetchedProfile);
@@ -47,7 +50,8 @@ export class WriterProfileComponent implements OnInit {
       },
       error: () => this.toastr.error('Erro ao acessar perfil armazenado.')
     });
-
+  
+    // Inicializa o formulário de senha
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: [
@@ -59,11 +63,13 @@ export class WriterProfileComponent implements OnInit {
         ]
       ]
     });
-
+  
     this.passwordForm.get('newPassword')?.valueChanges.subscribe(password => {
       this.validatePassword(password);
     });
   }
+  
+  
 
   private initProfileForm(profile: UserProfile): void {
     this.profile = profile;
@@ -134,12 +140,21 @@ export class WriterProfileComponent implements OnInit {
     formData.append('userName', formValues.userName);
 
     this.userProfileService.UpdateMyProfile(formData).subscribe({
-      next: () => {
+      next: (updatedProfile) => {
         this.toastr.success('Perfil atualizado com sucesso!');
         this.isEditing = false;
         this.userNameExists = false;
-        this.loadLatestProfile();
+    
+        this.profile = updatedProfile; // ← atualiza o card
+        this.profileForm.patchValue({
+          fullName: updatedProfile.fullName,
+          userName: updatedProfile.userName,
+          bio: updatedProfile.bio
+        });
+    
+        this.userProfileService.setProfile(updatedProfile); // ← se usa serviço compartilhado
       },
+    
       error: (error) => {
         if (error.status === 400 && error.error === 'Nome de usuário já está em uso.') {
           this.userNameExists = true;

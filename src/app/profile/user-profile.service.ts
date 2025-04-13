@@ -38,6 +38,12 @@ export class UserProfileService {
     return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/public/${username}`);
 
   }
+  updateProfileImage(file: File): Observable<{ url: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ url: string }>(`${environment.apiBaseUrl}/UserImageProfile/upload-image`, formData);
+  }
+  
 
   updatePassword(currentPassword:string, newPassword:string): Observable<void>{
     const payload= {currentPassword, newPassword};

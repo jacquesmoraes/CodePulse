@@ -68,23 +68,39 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
   // Método chamado quando o ImageSelectorComponent emite o objeto SelectedImage
   onImageSelected(selectedImage: SelectedImage): void {
     this.pendingImage = selectedImage;
+  
+    const realUrl = `${this.baseUrl}/images/${selectedImage.fileName}`;
     this.pendingImageMessage = `Imagem "${selectedImage.fileName}" selecionada. Será enviada ao salvar.`;
-    
-    
-    this.displayImageUrl = `${this.baseUrl}/images/${selectedImage.fileName}`;
-
-    // Atualiza o campo da imagem para mostrar o preview
-    if (typeof selectedImage.preview === 'string' && this.blogPost) {
-      this.blogPost.featuredImageUrl = selectedImage.preview; 
+  
+    // 👉 Coloca o caminho final (real) no input
+    this.displayImageUrl = realUrl;
+    if (this.blogPost) {
+      this.blogPost.featuredImageUrl = realUrl;
     }
   
+    // 👉 Faz preview visual da imagem (antes do upload)
+    const reader = new FileReader();
+    reader.onload = () => {
+      // Mostra o preview temporário
+      const previewTemp = reader.result as string;
+      const imagePreviewElement = document.querySelector('#image-preview') as HTMLImageElement;
+      if (imagePreviewElement) {
+        imagePreviewElement.src = previewTemp;
+      }
+    };
+  
+    reader.readAsDataURL(selectedImage.file);
     this.closeImageSelector();
     this.cdr.detectChanges();
   }
+  
+  
 
   onSubmit(): void {
     console.log("enviou");
     if (this.blogPost && this.id) {
+      this.blogPost!.featuredImageUrl = this.displayImageUrl;
+
       if (this.pendingImage) {
         // Se houver imagem pendente, faz o upload primeiro
         this.imageSelectorService.uploadImage(this.pendingImage.file, this.pendingImage.fileName)
