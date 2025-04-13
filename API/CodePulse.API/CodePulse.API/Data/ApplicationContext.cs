@@ -20,12 +20,14 @@ public class ApplicationContext : DbContext
         // Configuração para usar a tabela UserImageProfiles
         modelBuilder.Entity<UserImageProfile>().ToTable("UserImageProfiles", t => t.ExcludeFromMigrations());
 
+
         // Relacionamentos
-        modelBuilder.Entity<BlogPost>()
-            .HasOne(b => b.AuthorProfile)
-            .WithMany()
-            .HasForeignKey(b => b.AuthorId)
-            .OnDelete(DeleteBehavior.Restrict);
+       modelBuilder.Entity<BlogPost>()
+    .HasOne(b => b.AuthorProfile)
+    .WithMany(up => up.BlogPosts)
+    .HasForeignKey(b => b.AuthorId)
+    .OnDelete(DeleteBehavior.Cascade); // <-- Altere aqui
+
 
         modelBuilder.Entity<BlogImage>().HasIndex(b => b.FileName).IsUnique();
 

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserProfile } from 'src/app/profile/models/user-profile.model';
 import { environment } from 'src/environments/environment';
+import { CreateUserRequest } from './models/create-user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,16 +19,22 @@ export class AdminUserService {
     return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserManagement/writers/${id}`);
   }
 
-  createWriter(user: {
-    fullName: string;
-    userName: string;
-    email: string;
-    bio: string;
-    password: string;
-    role: string;
-  }): Observable<UserProfile> {
-    return this.http.post<UserProfile>(`${environment.apiBaseUrl}/api/UserManagement/writers`, user);
-  }
+ 
+
+createWriter(user: CreateUserRequest): Observable<UserProfile> {
+  return this.http.post<UserProfile>(
+    `${environment.apiBaseUrl}/api/UserManagement/users`,
+    user
+  );
+}
+
+createUser(user: CreateUserRequest): Observable<UserProfile> {
+  // a conversão de 'Reader' para 'User' será feita no componente
+  return this.http.post<UserProfile>(
+    `${environment.apiBaseUrl}/api/UserManagement/users`,
+    user
+  );
+}
 
   updateUserRole(userId: string, newRole: string): Observable<UserProfile> {
     return this.http.put<UserProfile>(
@@ -35,6 +42,10 @@ export class AdminUserService {
       { newRole }
     );
   }
+  deleteUser(userId: string): Observable<UserProfile> {
+    return this.http.delete<UserProfile>(`${environment.apiBaseUrl}/api/UserManagement/users/${userId}`);
+  }
+  
 
   deleteWriter(userId: string): Observable<UserProfile> {
     return this.http.delete<UserProfile>(`${environment.apiBaseUrl}/api/UserManagement/writers/${userId}`);

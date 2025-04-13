@@ -21,6 +21,11 @@
         <label>Bio</label>
         <p>{{ profile?.bio }}</p>
       </div>
+      <div class="interests" *ngIf="profile?.interests">
+        <label>Interesses</label>
+        <p>{{ profile?.interests }}</p>
+      </div>
+      
 
       <!-- Sidebar estilo Admin -->
       <div class="sidebar-buttons">

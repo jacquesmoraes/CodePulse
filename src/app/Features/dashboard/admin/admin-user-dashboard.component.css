@@ -79,4 +79,18 @@
       max-height: none;
     }
   }
+  .profile-image {
+    position: relative;
+  }
+  
+  .edit-photo-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
   

@@ -77,7 +77,9 @@ export class WriterProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       fullName: [profile.fullName, [Validators.required, Validators.minLength(3)]],
       userName: [profile.userName, [Validators.required, Validators.minLength(3)]],
-      bio: [profile.bio]
+      bio: [profile.bio],
+      interests: [profile.interests] 
+      
     });
 
     this.f['userName'].valueChanges.subscribe(() => {
@@ -98,7 +100,8 @@ export class WriterProfileComponent implements OnInit {
     this.profileForm.patchValue({
       fullName: this.profile.fullName,
       userName: this.profile.userName,
-      bio: this.profile.bio
+      bio: this.profile.bio,
+      interests: this.profile.interests 
     });
   }
 
@@ -138,6 +141,7 @@ export class WriterProfileComponent implements OnInit {
     formData.append('fullName', formValues.fullName);
     formData.append('bio', formValues.bio || '');
     formData.append('userName', formValues.userName);
+    formData.append('interests', formValues.interests || '');
 
     this.userProfileService.UpdateMyProfile(formData).subscribe({
       next: (updatedProfile) => {
@@ -172,7 +176,8 @@ export class WriterProfileComponent implements OnInit {
         this.profileForm.patchValue({
           fullName: profile.fullName,
           userName: profile.userName,
-          bio: profile.bio
+          bio: profile.bio,
+          interests: profile.interests
         });
       }
     });

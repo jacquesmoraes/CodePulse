@@ -19,6 +19,10 @@
           <label>Bio</label>
           <p>{{ profile.bio }}</p>
         </div>
+        <div class="bio-block" *ngIf="profile?.interests">
+          <label>Interesses</label>
+          <p>{{ profile.interests }}</p>
+        </div>
       </div>
     </ng-container>
 
@@ -54,6 +58,10 @@
               <label>Bio</label>
               <p>{{ profile?.bio }}</p>
             </div>
+            <div class="interests" *ngIf="profile?.interests">
+              <label>Interesses</label>
+              <p>{{ profile?.interests }}</p>
+            </div>
           </div>
         </ng-container>
 
@@ -80,6 +88,11 @@
             <label>Bio</label>
             <textarea formControlName="bio" rows="3"></textarea>
           </div>
+          <div class="interests" *ngIf="profile?.interests">
+            <label>Interesses</label>
+            <p>{{ profile?.interests }}</p>
+          </div>
+          
         </ng-template>
 
         <!-- Botões -->
@@ -88,6 +101,10 @@
           <div *ngIf="isEditing">
             <button type="submit" class="save-btn" [disabled]="profileForm.invalid || userNameExists">Salvar</button>
             <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancelar</button>
+            <button class="btn btn-outline-danger mt-3" (click)="onDeleteMyProfile()">
+              Excluir meu perfil
+            </button>
+            
           </div>
         </div>
 

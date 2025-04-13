@@ -56,7 +56,9 @@ export class UserProfileService {
       : 'assets/default-avatar.png';
   }
   
-  
+  deleteUser(userId: string) {
+    return this.http.delete(`${environment.apiBaseUrl}/users/${userId}`);
+  }
 
 
 }

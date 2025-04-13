@@ -1,9 +1,10 @@
 export interface UserProfile {
-    userId: string;
+    id: string;
     userName: string;
     email: string;
     fullName: string;
     bio?: string;
+    interests?: string
     imageUrl?: string;
 
   }

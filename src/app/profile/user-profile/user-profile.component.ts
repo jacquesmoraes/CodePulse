@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { UserProfile } from '../models/user-profile.model';
 import { UserProfileService } from '../user-profile.service';
@@ -14,14 +14,14 @@ import { ActivatedRoute } from '@angular/router';
 export class UserProfileComponent implements OnInit {
   profileForm!: FormGroup;
   profile?: UserProfile;
-  isEditing = false;
-  loading = true;
+  isEditing: boolean = false;
+  loading: boolean = true;
   selectedImageFile?: File;
   displayImageUrl: string = '';
   baseUrl: string = environment.apiBaseUrl;
-  imageJustUpdated = false;
-  userNameExists = false;
-  isOwnProfile = false;
+  imageJustUpdated: boolean = false;
+  userNameExists: boolean = false;
+  isOwnProfile: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -31,26 +31,22 @@ export class UserProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const username = this.route.snapshot.paramMap.get('username');
-
+    const username: string | null = this.route.snapshot.paramMap.get('username');
     if (username) {
       this.loadPublicProfile(username);
-      
     } else {
       this.loadOwnProfile();
     }
   }
 
-  
   loadOwnProfile(): void {
     this.loading = true;
     this.isOwnProfile = true;
 
     this.userProfileService.GetMyProfile().subscribe({
-      next: (profile) => {
-        this.initProfileForm(profile)
+      next: (profile: UserProfile) => {
+        this.initProfileForm(profile);
         this.userProfileService.setProfile(profile);
-
       },
       error: () => {
         this.toastr.error('Erro ao carregar o perfil.');
@@ -64,7 +60,7 @@ export class UserProfileComponent implements OnInit {
     this.isOwnProfile = false;
 
     this.userProfileService.GetPublicProfile(username).subscribe({
-      next: (profile) => {
+      next: (profile: UserProfile) => {
         this.profile = profile;
         this.displayImageUrl = this.userProfileService.getFullImageUrl(profile.imageUrl);
         this.loading = false;
@@ -140,9 +136,13 @@ export class UserProfileComponent implements OnInit {
   }
 
   private sendProfileUpdateRequest(onlyImageUpdate: boolean = false): void {
-    const formValues = this.profileForm.value;
-    const formData = new FormData();
+    const formValues = this.profileForm.value as {
+      fullName: string;
+      bio: string;
+      userName: string;
+    };
 
+    const formData = new FormData();
     formData.append('fullName', formValues.fullName);
     formData.append('bio', formValues.bio || '');
     formData.append('userName', formValues.userName);
@@ -174,7 +174,34 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  get f() {
+  onDeleteMyProfile(): void {
+    if (!this.profile?.id) return;
+  
+    const confirmed = confirm('Tem certeza que deseja excluir seu perfil? Esta ação não poderá ser desfeita.');
+  
+    if (confirmed) {
+      this.userProfileService.deleteUser(this.profile.id).subscribe({
+        next: () => {
+          this.toastr.success('Perfil excluído com sucesso.');
+          setTimeout(() => {
+            // Redireciona para login ou home
+            window.location.href = '/login'; // ou this.router.navigate(['/login']);
+          }, 1500);
+        },
+        error: (error) => {
+          console.error(error);
+          if (error.status === 403) {
+            this.toastr.error('Você não tem permissão para excluir este perfil.');
+          } else {
+            this.toastr.error('Erro ao excluir o perfil.');
+          }
+        }
+      });
+    }
+  }
+  
+
+  get f(): { [key: string]: AbstractControl } {
     return this.profileForm.controls;
   }
 

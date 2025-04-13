@@ -2,45 +2,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CodePulse.API.Models.Dto
 {
-  /// <summary>
-  /// DTO para criação de usuários pelo admin
-  /// </summary>
+  
   public class CreateUserRequestDto
   {
-    /// <summary>
-    /// Email do usuário
-    /// </summary>
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; }
+   
+     public string FullName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Senha do usuário
-    /// </summary>
-    [Required]
-    public string Password { get; set; }
+    public string UserName { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Nome completo do usuário
-    /// </summary>
-    [Required]
-    public string FullName { get; set; }
+    public string Email { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Nome de usuário
-    /// </summary>
-    [Required]
-    public string UserName { get; set; }
+    public string Password { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Biografia do usuário (opcional)
-    /// </summary>
-    public string? Bio { get; set; }
+    public string Bio { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Role do usuário (Writer ou User)
-    /// </summary>
-    [Required]
-    public string Role { get; set; }
+    public string Interests { get; set; } = string.Empty;
+
+    public string Role { get; set; } = "Reader"; 
   }
 }

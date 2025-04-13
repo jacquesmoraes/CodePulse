@@ -4,6 +4,10 @@
     <div class="profile-card">
       <div class="profile-image position-relative">
         <img [src]="displayImageUrl || 'assets/default-avatar.png'" alt="Foto de Perfil" />
+        <button type="button" class="edit-photo-btn" (click)="photoInput.click()" title="Editar Foto">
+          <i class="bi bi-camera-fill"></i>
+        </button>
+        <input #photoInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none;" />
       </div>
       <div class="profile-info">
         <h2>{{ profile?.fullName }}</h2>
@@ -14,6 +18,10 @@
           <label>Bio</label>
           <p>{{ profile?.bio }}</p>
         </div>
+        <div class="bio" *ngIf="profile?.interests">
+          <label>Interests</label>
+          <p>{{ profile?.interests }}</p>
+        </div>
   
         <!-- Sidebar embutida -->
         <div class="sidebar-buttons">
@@ -21,6 +29,8 @@
           <button class="btn btn-outline-primary w-100 mb-2" (click)="onSectionChange('posts-list')">todos os posts</button>
           <button class="btn btn-outline-primary w-100 mb-2" (click)="onSectionChange('profile')">Perfil</button>
           <button class="btn btn-outline-danger w-100 mb-2" (click)="onSectionChange('manage-users')">Gerenciar Usuários</button>
+          <button class="btn btn-success w-100 mb-2" (click)="onSectionChange('create-user')"> Criar novo usuário</button>
+  
         </div>
       </div>
     </div>
@@ -47,6 +57,8 @@
   
         <!-- Lista de Usuários -->
         <app-admin-user-list *ngSwitchCase="'manage-users'"></app-admin-user-list>
+        <app-admin-user-create *ngSwitchCase="'create-user'"></app-admin-user-create>
+
   
         <!-- Default -->
         <app-writer-posts 

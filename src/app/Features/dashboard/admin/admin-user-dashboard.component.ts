@@ -18,6 +18,8 @@ export class AdminUserDashboardComponent {
   displayImageUrl: string = '';
   selectedSection: string = 'posts';
   authors: UserProfile[] = []; 
+  selectedImageFile: File | null = null;
+
 
   constructor(
     private userProfileService: UserProfileService,
@@ -68,5 +70,43 @@ export class AdminUserDashboardComponent {
 
   onSectionChange(section: string) {
     this.selectedSection = section;
+  }
+
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+  
+    if (!file || !file.type.startsWith('image/')) {
+      this.toastr.error('Por favor, selecione uma imagem válida.');
+      return;
+    }
+  
+    if (file.size > 5 * 1024 * 1024) {
+      this.toastr.error('A imagem deve ter no máximo 5MB.');
+      return;
+    }
+  
+    this.selectedImageFile = file;
+    this.uploadAdminProfileImage();
+  }
+  
+
+  uploadAdminProfileImage(): void {
+    if (!this.selectedImageFile) return;
+  
+    const formData = new FormData();
+    formData.append('imageFile', this.selectedImageFile);
+  
+    this.userProfileService.UpdateMyProfile(formData).subscribe({
+      next: (updatedProfile) => {
+        this.toastr.success('Imagem de perfil atualizada com sucesso!');
+        this.profile = updatedProfile;
+        this.displayImageUrl = this.userProfileService.getFullImageUrl(updatedProfile.imageUrl);
+        this.selectedImageFile = null;
+      },
+      error: () => {
+        this.toastr.error('Erro ao atualizar imagem de perfil.');
+      }
+    });
   }
 }

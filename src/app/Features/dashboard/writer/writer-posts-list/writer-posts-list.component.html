@@ -35,7 +35,7 @@
         <a [routerLink]="['/dashboard/details', post.id]">Ver</a>
         <a [routerLink]="['/dashboard/edit', post.id]">Editar</a>
         <!-- Botão de excluir (apenas para admin) -->
-        <button *ngIf="isAdmin" class="btn btn-danger btn-sm" (click)="deletePost(post.id)">
+        <button class="btn btn-danger btn-sm" (click)="deletePost(post.id)">
           Excluir
         </button>
       </div>

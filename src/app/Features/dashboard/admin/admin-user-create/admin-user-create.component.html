@@ -1,23 +1,22 @@
 <div class="p-4">
-    <h2 class="text-xl font-bold mb-4">Criar novo usuário</h2>
-  
-    <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()" class="space-y-4">
-      <input formControlName="fullName" placeholder="Nome completo" class="w-full p-2 border rounded" />
-      <input formControlName="userName" placeholder="Nome de usuário" class="w-full p-2 border rounded" />
-      <input formControlName="email" placeholder="Email" class="w-full p-2 border rounded" />
-      <textarea formControlName="bio" placeholder="Bio" class="w-full p-2 border rounded"></textarea>
-      <input formControlName="password" placeholder="Senha" type="password" class="w-full p-2 border rounded" />
-      <select formControlName="role" class="w-full p-2 border rounded">
-        <option value="Writer">Writer</option>
-        <option value="User">User</option>
-      </select>
-  
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-        Criar usuário
-      </button>
-  
-      <div *ngIf="successMessage" class="text-green-600 mt-2">{{ successMessage }}</div>
-      <div *ngIf="errorMessage" class="text-red-600 mt-2">{{ errorMessage }}</div>
-    </form>
-  </div>
-  
+  <h2>Criar novo usuário</h2>
+
+  <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+    <input formControlName="fullName" placeholder="Nome completo" />
+    <input formControlName="userName" placeholder="Nome de usuário" />
+    <input formControlName="email" placeholder="Email" />
+    <textarea formControlName="bio" placeholder="Bio"></textarea>
+    <input formControlName="password" type="password" placeholder="Senha" />
+    <select formControlName="role" class="w-full p-2 border rounded">
+      <option value="Writer">Writer</option>
+      <option value="User">User</option>
+    </select>
+    
+    
+
+    <button type="submit">Criar usuário</button>
+
+    <div *ngIf="successMessage" class="text-success mt-2">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="text-error mt-2">{{ errorMessage }}</div>
+  </form>
+</div>
