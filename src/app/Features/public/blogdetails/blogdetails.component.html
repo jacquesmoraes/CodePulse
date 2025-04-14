@@ -1,75 +1,131 @@
-<div class="container mt-5">
-  <div class="row">
-    <!-- Coluna principal do post -->
-    <div class="col-lg-8">
-      <ng-container *ngIf="blogposts$ | async as blogpost">
-        <article class="blog-post mb-5">
-          <h1 class="blog-post-title mb-2">{{ blogpost.title }}</h1>
-          <p class="blog-post-meta text-muted">
-            <a [routerLink]="['/profile', blogpost.author.userName]">
-              {{ '@' + blogpost.author.userName }}
-            </a>
-            {{ blogpost.publishedDate | date: 'mediumDate' }}
-          </p>
-          <img *ngIf="blogpost.featuredImageUrl" [src]="blogpost.featuredImageUrl" alt="Imagem do post"
-            class="img-fluid rounded mb-4 shadow-sm" />
+<!-- blogdetails.component.html -->
+<div class="blog-container">
+  <div class="container">
+    <div class="row">
+      <!-- Coluna principal do post -->
+      <div class="col-lg-8">
+        <ng-container *ngIf="blogposts$ | async as blogpost">
+          <article class="blog-post">
+            <!-- Header do Post -->
+            <div class="post-header">
+              <!-- Categorias -->
+              <div class="post-categories" *ngIf="blogpost.categories?.length">
+                <span class="category-tag" *ngFor="let category of blogpost.categories">
+                  {{ category.name }}
+                </span>
+              </div>
+              
+              <h1 class="blog-post-title">{{ blogpost.title }}</h1>
+              
+              <!-- Meta info do autor -->
+              <div class="author-meta">
+                <div class="author-info">
+                  <img [src]="blogpost.author.imageUrl || 'assets/default-avatar.png'" 
+                       alt="Author avatar" 
+                       class="author-avatar">
+                  <div class="author-details">
+                    <a [routerLink]="['/profile', blogpost.author.userName]" class="author-name">
+                      {{ blogpost.author.fullName }}
+                    </a>
+                    <span class="author-username">{{ '@' + blogpost.author.userName }}</span>
+                    <time class="post-date">{{ blogpost.publishedDate | date: 'longDate' }}</time>
+                  </div>
+                </div>
+                
+                <!-- Botões de compartilhamento -->
+                <div class="share-buttons">
+                  <button class="share-btn" (click)="shareOnTwitter()">
+                    <i class="bi bi-twitter"></i>
+                  </button>
+                  <button class="share-btn" (click)="shareOnFacebook()">
+                    <i class="bi bi-facebook"></i>
+                  </button>
+                  <button class="share-btn" (click)="shareOnLinkedIn()">
+                    <i class="bi bi-linkedin"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
 
-          <div class="blog-post-content markdown-container">
-            <markdown [data]="blogpost.content"></markdown>
+            <!-- Imagem principal -->
+            <div class="featured-image-container" *ngIf="blogpost.featuredImageUrl">
+              <img [src]="blogpost.featuredImageUrl" 
+                   alt="Imagem do post"
+                   class="featured-image">
+            </div>
+
+            <!-- Conteúdo do post -->
+            <div class="blog-post-content markdown-container">
+              <markdown [data]="blogpost.content"></markdown>
+            </div>
+
+            <!-- Tags do post -->
+            <div class="post-tags" *ngIf="blogpost.categories?.length">
+              <h4>Tags relacionadas:</h4>
+              <div class="tags-container">
+                <a *ngFor="let category of blogpost.categories" 
+                   [routerLink]="['/category', category.urlHandle]" 
+                   class="tag">
+                  #{{ category.name }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Seção de comentários -->
+            <div class="comments-section">
+              <h3>Comentários</h3>
+              <div id="disqus_thread" class="disqus-container"></div>
+            </div>
+          </article>
+        </ng-container>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-lg-4">
+        <div class="sidebar-container">
+          <!-- Popular Posts -->
+          <div class="sidebar-widget popular-posts">
+            <h3 class="widget-title">Posts Populares</h3>
+            <div class="posts-list">
+              <div *ngFor="let post of mostViewedPosts" class="post-card">
+                <div class="post-image">
+                  <img [src]="post.featuredImageUrl" 
+                       [alt]="post.title" 
+                       loading="lazy">
+                </div>
+                <div class="post-info">
+                  <h4>
+                    <a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a>
+                  </h4>
+                  <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+                  <span class="views-count">
+                    <i class="bi bi-eye"></i> {{ post.viewCount }} views
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            
-          </div>
-        </article>
 
-        <!-- Comentários -->
-        <div id="disqus_thread"></div>
-        <script>
-          /**
-           *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-           *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
-          /*
-          var disqus_config = function () {
-          this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-          this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-          };
-          */
-          (function () { // DON'T EDIT BELOW THIS LINE
-            var d = document,
-              s = d.createElement('script');
-            s.src = 'https://codepulse-blog.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-          })();
-
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
-            Disqus.</a></noscript>
-      </ng-container>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="col-lg-4 sidebar">
-
-      <div class="recent-posts-widget widget-item">
-        <h3 class="widget-title">Most Popular posts</h3>
-
-        <div *ngFor="let post of mostViewedPosts" class="post-item">
-          <img [src]="post.featuredImageUrl" loading="lazy" alt="{{ post.title }}" class="flex-shrink-0">
-          <div>
-            <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
-            <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+          <!-- Related Posts -->
+          <div class="sidebar-widget related-posts" *ngIf="relatedPosts.length">
+            <h3 class="widget-title">Posts Relacionados</h3>
+            <div class="posts-list">
+              <div *ngFor="let post of relatedPosts" class="post-card">
+                <div class="post-image">
+                  <img [src]="post.featuredImageUrl" 
+                       [alt]="post.title" 
+                       loading="lazy">
+                </div>
+                <div class="post-info">
+                  <h4>
+                    <a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a>
+                  </h4>
+                  <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-     
-
-      <div class="widget-item p-4 mb-4 border rounded shadow-sm bg-light">
-        <h4 class="widget-title mb-3">Outros conteúdos</h4>
-        <ul class="list-unstyled small">
-          <li><a href="#">Conteúdo 1</a></li>
-          <li><a href="#">Conteúdo 2</a></li>
-          <li><a href="#">Conteúdo 3</a></li>
-        </ul>
       </div>
     </div>
   </div>

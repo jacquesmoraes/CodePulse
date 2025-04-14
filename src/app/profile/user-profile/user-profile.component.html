@@ -1,115 +1,169 @@
 <div class="profile-container" *ngIf="!loading">
-  <div class="profile-box">
-
+  <div class="profile-wrapper">
     <!-- PERFIL PÚBLICO -->
-    <ng-container *ngIf="!isOwnProfile && profile">
-      <div class="profile-photo-wrapper">
-        <div class="profile-photo">
-          <img [src]="displayImageUrl "
-               alt="Foto de perfil" />
-        </div>
-      </div>
-
-      <div class="profile-info public">
-        <h2>{{ profile.fullName }}</h2>
-        <p class="username">{{'@'+ profile.userName }}</p>
-        <p class="email">{{ profile.email }}</p>
-
-        <div class="bio-block" *ngIf="profile.bio">
-          <label>Bio</label>
-          <p>{{ profile.bio }}</p>
-        </div>
-        <div class="bio-block" *ngIf="profile?.interests">
-          <label>Interesses</label>
-          <p>{{ profile.interests }}</p>
-        </div>
-      </div>
-    </ng-container>
-
-    <!-- PERFIL PRÓPRIO COM FORMULÁRIO -->
-    <ng-container *ngIf="isOwnProfile">
-      <div class="profile-photo-wrapper">
-        <div class="profile-photo">
-          <img [src]="displayImageUrl "
-               alt="Foto de perfil"
-               [class.fade-in]="imageJustUpdated"
-               (load)="onImageLoaded()" />
-          <button type="button" class="edit-photo-btn" (click)="photoInput.click()">...</button>
-          <input #photoInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none;" />
-        </div>
-
-        <!-- Se tiver imagem nova, mostra botão de salvar -->
-        <button *ngIf="selectedImageFile" type="button" class="update-photo-btn" (click)="updateProfileImage()">
-          Atualizar Foto
-        </button>
-      </div>
-
-      <!-- Formulário -->
-      <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
-
-        <!-- VISUALIZAÇÃO -->
-        <ng-container *ngIf="!isEditing; else editMode">
-          <div class="profile-info">
-            <h2>{{ profile?.fullName }}</h2>
-            <p class="username">&#64;{{ profile?.userName }}</p>
-            <p class="email">{{ profile?.email }}</p>
-
-            <div class="bio-block" *ngIf="profile?.bio">
-              <label>Bio</label>
-              <p>{{ profile?.bio }}</p>
-            </div>
-            <div class="interests" *ngIf="profile?.interests">
-              <label>Interesses</label>
-              <p>{{ profile?.interests }}</p>
+    <div class="profile-main">
+      <ng-container *ngIf="!isOwnProfile && profile">
+        <div class="profile-header">
+          <div class="profile-photo-wrapper">
+            <div class="profile-photo">
+              <img [src]="displayImageUrl" alt="Foto de perfil" />
             </div>
           </div>
-        </ng-container>
 
-        <!-- EDIÇÃO -->
-        <ng-template #editMode>
-          <div class="form-group">
-            <label>Nome completo</label>
-            <input formControlName="fullName" />
+          <div class="profile-info public">
+            <h2>{{ profile.fullName }}</h2>
+            <p class="username">{{'@'+ profile.userName }}</p>
+            <p class="email">{{ profile.email }}</p>
+
+            <div class="stats-container">
+              <div class="stat-item">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Listas</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Favoritos</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Posts</span>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label>Nome de usuário</label>
-            <input formControlName="userName" />
-            <small *ngIf="f['userName'].touched && f['userName'].errors?.['required']" class="text-danger">
-              O nome de usuário é obrigatório.
-            </small>
-            <small *ngIf="f['userName'].touched && f['userName'].errors?.['minlength']" class="text-danger">
-              O nome de usuário deve ter pelo menos 3 caracteres.
-            </small>
-            <small *ngIf="userNameExists" class="text-danger">Este nome de usuário já está em uso.</small>
-          </div>
-
-          <div class="form-group">
+        <div class="profile-details">
+          <div class="bio-block" *ngIf="profile.bio">
             <label>Bio</label>
-            <textarea formControlName="bio" rows="3"></textarea>
+            <p>{{ profile.bio }}</p>
           </div>
-          <div class="interests" *ngIf="profile?.interests">
+          <div class="bio-block" *ngIf="profile?.interests">
             <label>Interesses</label>
-            <p>{{ profile?.interests }}</p>
-          </div>
-          
-        </ng-template>
-
-        <!-- Botões -->
-        <div class="button-group">
-          <button *ngIf="!isEditing" type="button" class="edit-btn" (click)="enableEdit()">Editar</button>
-          <div *ngIf="isEditing">
-            <button type="submit" class="save-btn" [disabled]="profileForm.invalid || userNameExists">Salvar</button>
-            <button type="button" class="cancel-btn" (click)="cancelEdit()">Cancelar</button>
-            <button class="btn btn-outline-danger mt-3" (click)="onDeleteMyProfile()">
-              Excluir meu perfil
-            </button>
-            
+            <p>{{ profile.interests }}</p>
           </div>
         </div>
+      </ng-container>
 
-      </form>
-    </ng-container>
+      <!-- PERFIL PRÓPRIO COM FORMULÁRIO -->
+      <ng-container *ngIf="isOwnProfile">
+        <div class="profile-header">
+          <div class="profile-photo-wrapper">
+            <div class="profile-photo">
+              <img [src]="displayImageUrl"
+                   alt="Foto de perfil"
+                   [class.fade-in]="imageJustUpdated"
+                   (load)="onImageLoaded()" />
+              <button type="button" class="edit-photo-btn" (click)="photoInput.click()">
+                <i class="bi bi-camera"></i>
+              </button>
+              <input #photoInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none;" />
+            </div>
+            
+            <!-- Se tiver imagem nova, mostra botão de salvar -->
+            <button *ngIf="selectedImageFile" type="button" class="update-photo-btn" (click)="updateProfileImage()">
+              <i class="bi bi-cloud-upload"></i> Atualizar Foto
+            </button>
+          </div>
 
+          <!-- Formulário -->
+          <form *ngIf="profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+            <!-- VISUALIZAÇÃO -->
+            <ng-container *ngIf="!isEditing; else editMode">
+              <div class="profile-info">
+                <h2>{{ profile?.fullName }}</h2>
+                <p class="username">&#64;{{ profile?.userName }}</p>
+                <p class="email">{{ profile?.email }}</p>
+
+                <div class="bio-block" *ngIf="profile?.bio">
+                  <label>Bio</label>
+                  <p>{{ profile?.bio }}</p>
+                </div>
+                <div class="interests" *ngIf="profile?.interests">
+                  <label>Interesses</label>
+                  <p>{{ profile?.interests }}</p>
+                </div>
+
+                <button type="button" class="edit-btn" (click)="enableEdit()">
+                  <i class="bi bi-pencil"></i> Editar
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- EDIÇÃO -->
+            <ng-template #editMode>
+              <div class="edit-form">
+                <div class="form-group">
+                  <label class="form-label">Nome completo</label>
+                  <input formControlName="fullName" class="form-input" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Nome de usuário</label>
+                  <input formControlName="userName" class="form-input" />
+                  <div class="validation-messages">
+                    <small *ngIf="f['userName'].touched && f['userName'].errors?.['required']" class="error-message">
+                      <i class="bi bi-exclamation-circle"></i>
+                      O nome de usuário é obrigatório.
+                    </small>
+                    <small *ngIf="f['userName'].touched && f['userName'].errors?.['minlength']" class="error-message">
+                      <i class="bi bi-exclamation-circle"></i>
+                      O nome de usuário deve ter pelo menos 3 caracteres.
+                    </small>
+                    <small *ngIf="userNameExists" class="error-message">
+                      <i class="bi bi-exclamation-circle"></i>
+                      Este nome de usuário já está em uso.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Bio</label>
+                  <textarea formControlName="bio" rows="3" class="form-textarea"></textarea>
+                </div>
+
+                <div class="interests" *ngIf="profile?.interests">
+                  <label class="form-label">Interesses</label>
+                  <p class="interests-text">{{ profile?.interests }}</p>
+                </div>
+
+                <div class="edit-actions">
+                  <div class="primary-actions">
+                    <button type="submit" class="save-btn" [disabled]="profileForm.invalid || userNameExists">
+                      <i class="bi bi-check-lg"></i> Salvar
+                    </button>
+                    <button type="button" class="cancel-btn" (click)="cancelEdit()">
+                      <i class="bi bi-x-lg"></i> Cancelar
+                    </button>
+                  </div>
+                  <button type="button" class="delete-btn" (click)="onDeleteMyProfile()">
+                    <i class="bi bi-trash"></i> Excluir meu perfil
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+          </form>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Seção de Favoritos -->
+    <div class="favorites-section">
+      <div class="section-header">
+        <h3>Listas de Favoritos</h3>
+        <div class="list-filters">
+          <button class="filter-btn active">Todos</button>
+          <button class="filter-btn">Posts</button>
+          <button class="filter-btn">Categorias</button>
+        </div>
+      </div>
+
+      <div class="favorites-grid">
+        <div class="empty-state">
+          <i class="bi bi-bookmark-heart"></i>
+          <p>Nenhuma lista de favoritos ainda</p>
+          <small>As listas de favoritos aparecerão aqui</small>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

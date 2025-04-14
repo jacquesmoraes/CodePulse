@@ -10,6 +10,7 @@ import { SelectedImage } from 'src/app/shared/models/selected-images.model';
 import { ImageSelectorService } from 'src/app/shared/components/image-selector.service';
 import { BlogImage } from 'src/app/shared/models/blog-image.model';
 import { environment } from 'src/environments/environment';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-edit-blog-post',
@@ -36,7 +37,8 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     public router: Router,
     private imageSelectorService: ImageSelectorService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -140,7 +142,12 @@ export class EditBlogPostComponent implements OnInit, OnDestroy {
     this.updateBlogPostSubscription = this.blogPostService.updateBlogPost(this.id!, updateBlogPost)
       .subscribe({
         next: (response) => {
+          const user = this.authService.getUser();
+        if (user?.roles?.includes('Admin')) {
+          this.router.navigateByUrl('/admin/dashboard');
+        } else {
           this.router.navigateByUrl('/dashboard');
+        }
         }
       });
   }

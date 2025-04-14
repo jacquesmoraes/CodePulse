@@ -11,9 +11,10 @@ import { CreateUserRequest } from './models/create-user.model';
 export class AdminUserService {
   constructor(private http: HttpClient) {}
 
-  getAllWriters(): Observable<UserProfile[]> {
-    return this.http.get<UserProfile[]>(`${environment.apiBaseUrl}/api/UserManagement/writers`);
+  getAllUsers(): Observable<UserProfile[]> {
+    return this.http.get<UserProfile[]>(`${environment.apiBaseUrl}/api/UserManagement/users`);
   }
+  
 
   getWriterById(id: string): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserManagement/writers/${id}`);

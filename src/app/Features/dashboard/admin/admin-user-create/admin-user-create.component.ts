@@ -27,19 +27,17 @@ export class AdminUserCreateComponent {
 
   onSubmit() {
     if (this.createUserForm.invalid) return;
-
+  
     const formValue = this.createUserForm.value;
-
-    // converte 'Reader' para 'User' antes de enviar ao backend
-    const userPayload: CreateUserRequest = {
-      ...formValue,
-      role: formValue.role === 'Reader' ? 'User' : 'Writer',
-    };
-
+  
+    console.log('🛫 Payload enviado:', formValue);
+  
+    const userPayload: CreateUserRequest = { ...formValue };
+  
     this.adminUserService.createUser(userPayload).subscribe({
       next: () => {
         Swal.fire('Sucesso', 'Usuário criado com sucesso!', 'success');
-        this.createUserForm.reset({ role: 'Reader' });
+        this.createUserForm.reset({ role: 'User' });
       },
       error: (err) => {
         Swal.fire('Erro', err.error || 'Erro ao criar usuário.', 'error');

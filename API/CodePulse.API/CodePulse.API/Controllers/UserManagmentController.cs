@@ -47,7 +47,7 @@ public class UserManagementController : ControllerBase
       }
 
       // Verificar se a role é válida
-      if ( request.Role != "Writer" && request.Role != "Reader" )
+      if ( request.Role != "Writer" && request.Role != "User" )
       {
         return BadRequest ( "Role inválido. Use 'Writer' ou 'Reader'." );
       }
@@ -82,12 +82,14 @@ public class UserManagementController : ControllerBase
 
 
 
-  [HttpGet ( "writers" )]
-  public async Task<IActionResult> GetAllWriters ( )
+  [HttpGet ( "users" )]
+  public async Task<IActionResult> GetAllUsers ( )
   {
-    var writers = await _userManagementRepository.GetAllWritersAsync();
+    var writers = await _userManagementRepository.GetAllUsersAsync();
     return Ok ( _mapper.Map<List<UserProfileDto>> ( writers ) );
   }
+
+
 
   [HttpGet ( "writers/{userId}" )]
   public async Task<IActionResult> GetWriter ( string userId )
@@ -98,6 +100,7 @@ public class UserManagementController : ControllerBase
 
     return Ok ( _mapper.Map<UserProfileDto> ( writer ) );
   }
+
 
   [HttpPut ( "writers/{userId}/role" )]
   public async Task<IActionResult> UpdateUserRole ( string userId, [FromBody] UpdateUserRoleRequestDto request )
@@ -116,6 +119,7 @@ public class UserManagementController : ControllerBase
     }
   }
 
+
   [HttpDelete ( "users/{userId}" )]
   [Authorize] // Qualquer logado pode chamar, verificação será feita dentro
   public async Task<IActionResult> RemoveUser ( string userId )
@@ -126,7 +130,7 @@ public class UserManagementController : ControllerBase
       if ( removedUser == null )
         return NotFound ( "Usuário não encontrado" );
 
-      return Ok ( "Usuário removido com sucesso." );
+      return NoContent();
     }
     catch ( UnauthorizedAccessException )
     {

@@ -4,7 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { UserProfile } from '../models/user-profile.model';
 import { UserProfileService } from '../user-profile.service';
 import { environment } from 'src/environments/environment';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/Features/auth/services/auth.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -27,7 +28,9 @@ export class UserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private userProfileService: UserProfileService,
     private toastr: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService : AuthService
   ) {}
 
   ngOnInit(): void {
@@ -175,17 +178,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   onDeleteMyProfile(): void {
-    if (!this.profile?.id) return;
-  
     const confirmed = confirm('Tem certeza que deseja excluir seu perfil? Esta ação não poderá ser desfeita.');
   
     if (confirmed) {
-      this.userProfileService.deleteUser(this.profile.id).subscribe({
+      this.userProfileService.deleteUser().subscribe({
         next: () => {
           this.toastr.success('Perfil excluído com sucesso.');
+          this.authService.lougout(); // Importante: fazer logout após deletar o perfil
           setTimeout(() => {
-            // Redireciona para login ou home
-            window.location.href = '/login'; // ou this.router.navigate(['/login']);
+            this.router.navigateByUrl('/login');
           }, 1500);
         },
         error: (error) => {
@@ -198,8 +199,7 @@ export class UserProfileComponent implements OnInit {
         }
       });
     }
-  }
-  
+}
 
   get f(): { [key: string]: AbstractControl } {
     return this.profileForm.controls;

@@ -194,7 +194,7 @@ public async Task<IActionResult> DeleteMyProfile()
         return NotFound("Perfil não encontrado ou já foi excluído.");
     }
 
-    return Ok("Usuário e perfil removidos com sucesso.");
+    return NoContent();
 }
 
 

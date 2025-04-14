@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/Features/auth/services/auth.service';
 import { UserProfile } from 'src/app/profile/models/user-profile.model';
 import { UserProfileService } from 'src/app/profile/user-profile.service';
 
@@ -28,7 +30,9 @@ export class WriterProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userProfileService: UserProfileService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -207,6 +211,31 @@ export class WriterProfileComponent implements OnInit {
       }
     });
   }
+
+  onDeleteMyProfile(): void {
+    const confirmed = confirm('Tem certeza que deseja excluir seu perfil? Esta ação não poderá ser desfeita.');
+  
+    if (confirmed) {
+      this.userProfileService.deleteUser().subscribe({
+        next: () => {
+          this.toastr.success('Perfil excluído com sucesso.');
+          this.authService.lougout(); // Importante: fazer logout após deletar o perfil
+          setTimeout(() => {
+            this.router.navigateByUrl('/login');
+          }, 1500);
+        },
+        error: (error) => {
+          console.error(error);
+          if (error.status === 403) {
+            this.toastr.error('Você não tem permissão para excluir este perfil.');
+          } else {
+            this.toastr.error('Erro ao excluir o perfil.');
+          }
+        }
+      });
+    }
+}
+
 
   get f() {
     return this.profileForm.controls;

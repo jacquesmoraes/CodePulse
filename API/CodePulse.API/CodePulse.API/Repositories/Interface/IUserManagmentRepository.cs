@@ -7,7 +7,7 @@ namespace CodePulse.API.Repositories.Interface
   public interface IUserManagmentRepository
   {
      Task<UserProfile> CreateUserAsync(UserProfile userProfile, string password, string email, string role);
-    Task<List<UserProfile>> GetAllWritersAsync();
+    Task<List<UserProfile>> GetAllUsersAsync();
     Task<UserProfile?> GetWriterByIdAsync(string userId);
     Task<UserProfile?> UpdateUserRoleAsync(string userId, string newRole);
     

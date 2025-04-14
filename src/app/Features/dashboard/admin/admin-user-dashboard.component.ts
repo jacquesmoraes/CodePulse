@@ -56,7 +56,7 @@ export class AdminUserDashboardComponent {
     });
 
     // Usando o AdminUserService em vez do UserProfileService
-    this.adminUserService.getAllWriters().subscribe({
+    this.adminUserService.getAllUsers().subscribe({
       next: (data) => {
         // opcional: filtra o admin fora da lista
         this.authors = data.filter(author => author.userName.toLowerCase() !== 'admin');

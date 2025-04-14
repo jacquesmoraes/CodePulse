@@ -2,15 +2,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h3>Seus Posts</h3>
 
-  <!-- Dropdown de filtro (apenas para admin) -->
-  <div *ngIf="isAdmin" class="col-md-4">
-    <select class="form-select" [(ngModel)]="selectedAuthor" (change)="filterPosts()">
-      <option value="">Todos os autores</option>
-      <option *ngFor="let author of authors" [value]="author.userName">
-        {{ author.fullName }} ({{'@'+ author.userName }})
-      </option>
-    </select>
-  </div>
+ 
 </div>
 
 <!-- Lista de Posts -->

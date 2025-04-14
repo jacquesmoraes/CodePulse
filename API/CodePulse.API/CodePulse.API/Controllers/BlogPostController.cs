@@ -205,6 +205,13 @@ namespace CodePulse.API.Controllers
     }
 
 
+    [HttpGet("related/{postId:guid}")]
+public async Task<IActionResult> GetRelatedPosts([FromRoute] Guid postId)
+{
+    var relatedPosts = await _postRepository.GetRelatedPostsAsync(postId);
+    var mapped = relatedPosts.Select(BlogPostMapperHelper.MapToDto).ToList();
+    return Ok(mapped);
+}
 
     private string FormatUrlHandle(string urlHandle)
 {

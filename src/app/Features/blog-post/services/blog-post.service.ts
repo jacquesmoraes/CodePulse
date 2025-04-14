@@ -62,6 +62,10 @@ export class BlogPostService {
 
   }
 
+  getRelatedPosts(postId: string): Observable<BlogPost[]> {
+    return this.http.get<BlogPost[]>(`${environment.apiBaseUrl}/api/blogpost/related/${postId}`);
+  }
+  
   getBlogPostsCount(): Observable<number>{
     return this.http.get<number>(`${environment.apiBaseUrl}/api/blogpost/count`)
   }

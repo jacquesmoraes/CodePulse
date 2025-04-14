@@ -31,9 +31,7 @@ export class UserProfileService {
     return this.http.put<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/me`, data)
   }
 
-  getAllWriters(): Observable<UserProfile[]> {
-    return this.http.get<UserProfile[]>(`${environment.apiBaseUrl}/UserManagement/writers`);
-  }
+ 
   GetPublicProfile(username: string): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/public/${username}`);
 
@@ -56,8 +54,8 @@ export class UserProfileService {
       : 'assets/default-avatar.png';
   }
   
-  deleteUser(userId: string) {
-    return this.http.delete(`${environment.apiBaseUrl}/users/${userId}`);
+  deleteUser() {
+    return this.http.delete(`${environment.apiBaseUrl}/api/UserProfile/me`);
   }
 
 

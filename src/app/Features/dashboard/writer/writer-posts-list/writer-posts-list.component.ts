@@ -5,6 +5,7 @@ import { AdminUserService } from '../../admin/admin-user.service';
 import { BlogPostService } from 'src/app/Features/blog-post/services/blog-post.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+import { UserProfileService } from 'src/app/profile/user-profile.service';
 
 @Component({
   selector: 'app-writer-posts-list',
@@ -21,9 +22,10 @@ export class WriterPostsListComponent implements OnInit {
   searchTerm: string = '';
 
   constructor(
-    private adminUserService: AdminUserService,
+    
     private blogPostService: BlogPostService,
-    private toastr: ToastrService
+    
+   
   ) {}
 
   ngOnInit(): void {
@@ -31,33 +33,13 @@ export class WriterPostsListComponent implements OnInit {
 
     // Buscar lista de writers apenas se for admin
     if (this.isAdmin) {
-      this.loadAuthors();
+      
     }
   }
 
-  private loadAuthors(): void {
-    this.adminUserService.getAllWriters().subscribe({
-      next: (data) => {
-        this.authors = data;
-      },
-      error: (error) => {
-        console.error('Erro ao buscar autores:', error);
-        this.toastr.error('Não foi possível carregar a lista de autores. Por favor, tente novamente mais tarde.');
-      }
-    });
-  }
+ 
 
-  filterPosts() {
-    this.filteredPosts = this.posts.filter(post => {
-      const matchesAuthor = this.selectedAuthor ? post.author.userName === this.selectedAuthor : true;
-      const matchesSearch = this.searchTerm
-        ? post.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          post.content.toLowerCase().includes(this.searchTerm.toLowerCase())
-        : true;
-
-      return matchesAuthor && matchesSearch;
-    });
-  }
+  
 
   deletePost(postId: string) {
     Swal.fire({
@@ -73,8 +55,9 @@ export class WriterPostsListComponent implements OnInit {
       if (result.isConfirmed) {
         this.blogPostService.deleteBlogPost(postId).subscribe({
           next: () => {
+            // Filtra os posts e atualiza tanto a lista original quanto a lista filtrada
             this.posts = this.posts.filter(post => post.id !== postId);
-            this.filterPosts(); // Atualiza a lista filtrada
+            this.filteredPosts = this.filteredPosts.filter(post => post.id !== postId);
   
             Swal.fire({
               title: 'Excluído!',
@@ -95,4 +78,5 @@ export class WriterPostsListComponent implements OnInit {
       }
     });
   }
+  
 }

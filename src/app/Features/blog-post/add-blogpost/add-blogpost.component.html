@@ -1,128 +1,104 @@
 <div class="container mt-5">
-    <h2 class="text-center mb-4">📝 Adicionar Nova Postagem</h2>
+  <h2 class="text-center mb-4">📝 Adicionar Nova Postagem</h2>
 
-    <form class="mb-5" #Form="ngForm" (ngSubmit)="onSubmit()">
-        <!-- Título -->
-        <div class="mb-3 ">
-            <label for="title" class="form-label fw-bold">Title</label>
-            <input type="text" 
-            id="title" 
-            class="form-control"
-             [(ngModel)]="model.title"  
-            name="title" 
-            required>
-        </div>
-        <!-- URL Handle -->
-        <div class="mb-3">
-            <label for="urlHandle" class="form-label fw-bold">URL Handle</label>
-            <input type="text" 
-            id="urlHandle" 
-            class="form-control" 
-             name="urlHandle" 
-             [(ngModel)]="model.urlHandle"
-             (ngModelChange)="formatUrlHandle($event)"
-             required>
-        </div>
+  <form class="mb-5" #Form="ngForm" (ngSubmit)="onSubmit()">
+    <!-- Título -->
+    <div class="mb-3 ">
+      <label for="title" class="form-label fw-bold">Title</label>
+      <input type="text" id="title" class="form-control" [(ngModel)]="model.title" name="title" required>
+    </div>
+    <!-- URL Handle -->
+    <div class="mb-3">
+      <label for="urlHandle" class="form-label fw-bold">URL Handle</label>
+      <input type="text" id="urlHandle" class="form-control" name="urlHandle" [(ngModel)]="model.urlHandle"
+        (ngModelChange)="formatUrlHandle($event)" required>
+    </div>
 
-        <!-- Descrição Curta -->
-        <div class="mb-3">
-            <label for="shortDescription" class="form-label fw-bold">Short description</label>
-            <input type="text" 
-            id="shortDescription" 
-            class="form-control" 
-            name="shortDescription" 
-            [(ngModel)]="model.shortDescription"
-            required>
-        </div>
+    <!-- Descrição Curta -->
+    <div class="mb-3">
+      <label for="shortDescription" class="form-label fw-bold">Short description</label>
+      <input type="text" id="shortDescription" class="form-control" name="shortDescription"
+        [(ngModel)]="model.shortDescription" required>
+    </div>
 
-       
 
-     <!-- Conteúdo -->
-<div >
-    <label for="content" class="form-label fw-bold">Content</label>
 
-    <!-- Layout responsivo para Editor e Preview -->
-    <div class="row align-items-stretch">
+    <!-- Conteúdo -->
+    <div>
+      <label for="content" class="form-label fw-bold">Content</label>
+
+      <!-- Layout responsivo para Editor e Preview -->
+      <div class="row align-items-stretch">
         <!-- Editor -->
         <div class="col-md-6 p-2 flex-column">
-            <textarea id="content"
-                class="form-control markdown-editor flex-grow-1"
-                style="height: 350px; max-height: 350px;"
-                name="content"
-                [(ngModel)]="model.content"
-                >
-               
+          <textarea id="content" class="form-control markdown-editor flex-grow-1"
+            style="height: 350px; max-height: 350px;" name="content" [(ngModel)]="model.content">
+
             </textarea>
         </div>
 
         <!-- Preview -->
-        <div class="col-md-6 p-2 preview-container d-flex flex-column" style="height: 350px; overflow-y: scroll;">
-            <markdown [data]="model.content"></markdown>
+        <!-- Preview -->
+        <div class="col-md-6 p-2 preview-container d-flex flex-column markdown-container"
+          style="height: 350px; overflow-y: scroll;">
+          <markdown [data]="model.content"></markdown>
         </div>
+
+      </div>
     </div>
-</div>
 
-        <!-- URL da Imagem Destacada -->
-        <div class="mb-3">
-            <label class="form-label fw-bold">
-              Featured Image URL
-              <button type="button" class="btn btn-light" (click)="openImageSelector()">select image</button>
-            </label>
-            <input type="text" class="form-control" [(ngModel)]="model.featuredImageUrl" name="featuredImageUrl">
-          </div>
-          <!-- Preview da imagem (se houver) -->
-          <ng-container *ngIf="model.featuredImageUrl">
-            <div class="text-center mt-3">
-              <img [src]="model.featuredImageUrl" alt="Preview da imagem" class="img-fluid rounded shadow-sm" style="max-width: 400px;">
-            </div>
-          </ng-container>
-   
-        <!-- Autor -->
-        <div class="row">
-             <!-- Data de Publicação -->
-             <div class="mb-3 col-md-6">
-                 <label for="publishedDate" class="form-label fw-bold">Published date</label>
-                 <input type="date" 
-                 id="publishedDate" 
-                 class="form-control" 
-                 value="{{model.publishedDate}}"
-                 [ngModel]="model.publishedDate | date: 'yyyy-MM-dd'"
-                 (ngModelChange)="model.publishedDate= $event" 
-                 name="publishedDate" 
-                 required>
-             </div>
-        
-        </div>
-        <!-- Visibilidade -->
-        <div class="form-check mb-4">
-            <input class="form-check-input"
-             type="checkbox"
-              id="isVisible" 
-              [(ngModel)]="model.isVisible"
-              name="isVisible">
-            <label class="form-check-label"
-           
-            for="isVisible">Publish this post?</label>
-        </div>
-        <div class="mt-2">
-            <label for="categories" class="form-label">Categories</label>
-            <ng-container *ngIf="category$ | async as categories">
-                <select class="form-control" name="categories" [(ngModel)]="model.categories" id="categories" multiple>
-                    <option *ngFor="let category of categories"[value]="category.id">
-                        {{category.name}}
-                    </option>
-                </select>
+    <!-- URL da Imagem Destacada -->
+    <div class="mb-3">
+      <label class="form-label fw-bold">
+        Featured Image URL
+        <button type="button" class="btn btn-light" (click)="openImageSelector()">select image</button>
+      </label>
+      <input type="text" class="form-control" [(ngModel)]="model.featuredImageUrl" name="featuredImageUrl">
+    </div>
+    <!-- Preview da imagem (se houver) -->
+    <ng-container *ngIf="model.featuredImageUrl">
+      <div class="text-center mt-3">
+        <img [src]="model.featuredImageUrl" alt="Preview da imagem" class="img-fluid rounded shadow-sm"
+          style="max-width: 400px;">
+      </div>
+    </ng-container>
 
-            </ng-container>
-        </div>
+    <!-- Autor -->
+    <div class="row">
+      <!-- Data de Publicação -->
+      <div class="mb-3 col-md-6">
+        <label for="publishedDate" class="form-label fw-bold">Published date</label>
+        <input type="date" id="publishedDate" class="form-control" value="{{model.publishedDate}}"
+          [ngModel]="model.publishedDate | date: 'yyyy-MM-dd'" (ngModelChange)="model.publishedDate= $event"
+          name="publishedDate" required>
+      </div>
 
-        <!-- Botões -->
-        <div class="d-flex justify-content-between mt-3">
-            <button type="button" class="btn btn-secondary" (click)="router.navigateByUrl('/admin/blogpost')" >❌ Cancel</button>
-            <button type="submit" class="btn btn-primary">💾 Save post</button>
-        </div>
-    </form>
-   
+    </div>
+    <!-- Visibilidade -->
+    <div class="form-check mb-4">
+      <input class="form-check-input" type="checkbox" id="isVisible" [(ngModel)]="model.isVisible" name="isVisible">
+      <label class="form-check-label" for="isVisible">Publish this post?</label>
+    </div>
+    <div class="mt-2">
+      <label for="categories" class="form-label">Categories</label>
+      <ng-container *ngIf="category$ | async as categories">
+        <select class="form-control" name="categories" [(ngModel)]="model.categories" id="categories" multiple>
+          <option *ngFor="let category of categories" [value]="category.id">
+            {{category.name}}
+          </option>
+        </select>
+
+      </ng-container>
+    </div>
+
+    <!-- Botões -->
+    <div class="d-flex justify-content-between mt-3">
+      <button type="button" class="btn btn-secondary" (click)="router.navigateByUrl('/admin/blogpost')">❌
+        Cancel</button>
+      <button type="submit" class="btn btn-primary">💾 Save post</button>
+    </div>
+  </form>
+
 </div>
 
 
@@ -130,16 +106,14 @@
 
 
 
-<div class="image-container-modal position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center"
+<div
+  class="image-container-modal position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center"
   [ngClass]="{'d-block': isImageSelectorVisible, 'd-none': !isImageSelectorVisible}">
-  
-    
-    
-    <!-- Componente de Seleção de Imagem -->
-    <app-image-selector 
-  [isVisible]="isImageSelectorVisible" 
-  (imageSelected)="onImageSelected($event)"
-  (modalClosed)="closeImageSelector()">
-</app-image-selector>
-  </div>
 
+
+
+  <!-- Componente de Seleção de Imagem -->
+  <app-image-selector [isVisible]="isImageSelectorVisible" (imageSelected)="onImageSelected($event)"
+    (modalClosed)="closeImageSelector()">
+  </app-image-selector>
+</div>

@@ -4,6 +4,8 @@ import { UserProfile } from 'src/app/profile/models/user-profile.model';
 import { UserProfileService } from 'src/app/profile/user-profile.service';
 import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { BlogPostService } from '../../blog-post/services/blog-post.service';
+import { AuthService } from '../../auth/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,7 +24,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private userProfileService: UserProfileService,
     private blogPostService: BlogPostService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    
   ) {}
 
   ngOnInit(): void {
@@ -98,6 +101,7 @@ export class DashboardComponent implements OnInit {
     });
   }
   
+ 
 
 
 }

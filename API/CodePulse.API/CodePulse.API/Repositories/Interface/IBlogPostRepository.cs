@@ -12,10 +12,12 @@ namespace CodePulse.API.Repositories.Interface
       int? pageNumber = 1,
       int? pageSize = 100
       );
+
     Task<int> GetBlogPostsCountAsync();
     Task<BlogPost?> GetBlogPostByIdAsync(Guid id);
     Task<BlogPost?> GetBlogPostByUrlHandle(string urlhandle);
     Task<BlogPost?> UpdateBlogPostAsync(BlogPost UpdateBlogPost);
+    Task<IEnumerable<BlogPost>> GetRelatedPostsAsync(Guid postId);
     Task<BlogPost?> DeleteBlogPostAsync(Guid id);
     Task<List<BlogPost>> GetPopularPosts(int count = 5);
     Task<List<BlogPost>> GetPostByAuthorAsync(string authorId);

@@ -74,3 +74,13 @@ transition: transform 0.2s;
 .card-total-posts-clickable:hover {
 transform: scale(1.02);
 }
+.markdown-container img {
+  display: block !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 1rem auto !important;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+  max-height: 600px;
+}

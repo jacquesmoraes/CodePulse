@@ -37,7 +37,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 
     // ✅ Se for Reader e tentar acessar /dashboard ou /admin, redireciona para aboutme
     if (
-      user.roles.includes('Reader') &&
+      user.roles.includes('User') &&
       !user.roles.includes('Admin') &&
       (url.startsWith('/dashboard') || url.startsWith('/admin'))
     ) {

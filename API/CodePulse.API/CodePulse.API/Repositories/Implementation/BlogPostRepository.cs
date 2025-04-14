@@ -87,6 +87,28 @@ namespace CodePulse.API.Repositories.Implementation
         .FirstOrDefaultAsync(bp => bp.Id == id);
     }
 
+    public async Task<IEnumerable<BlogPost>> GetRelatedPostsAsync(Guid postId)
+{
+    var currentPost = await _context.BlogPosts
+        .Include(p => p.Categories)
+        .FirstOrDefaultAsync(p => p.Id == postId);
+
+    if (currentPost == null || currentPost.Categories == null || !currentPost.Categories.Any())
+        return Enumerable.Empty<BlogPost>();
+
+    var categoryIds = currentPost.Categories.Select(c => c.Id).ToList();
+
+    return await _context.BlogPosts
+        .Include(p => p.Categories)
+        .Include(p => p.AuthorProfile)
+        .Where(p => p.Id != postId &&
+                    p.Categories.Any(c => categoryIds.Contains(c.Id)) &&
+                    p.IsVisible)
+        .OrderByDescending(p => p.PublishedDate)
+        .Take(5)
+        .ToListAsync();
+}
+
     public async Task<BlogPost?> UpdateBlogPostAsync(BlogPost blogPost)
     {
       var existingPost = await _context.BlogPosts

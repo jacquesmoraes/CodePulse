@@ -1,135 +1,278 @@
-.blog-post {
-    margin-bottom: 40px;
-  }
-  
-  .blog-post-title {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .blog-post-meta {
-    color: #6c757d;
-    margin-bottom: 1.5rem;
-  }
-  
-  .blog-post-content {
-    max-width: 100%;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    overflow-x: hidden;
-  }
-  .blog-post-content * {
-    max-width: 100% !important;
-    box-sizing: border-box;
-  }
-  .post-image {
-    max-width: 800px;  /* Tamanho máximo desejado */
-    max-height: 800px;
-    width: 100%;       /* Garante responsividade */
-    height: auto;      /* Mantém a proporção da imagem */
-    display: block;
-    margin: 0 auto;    /* Centraliza a imagem */
-  }
-  .blog-post-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #2c3e50;
-  }
-  
-  .blog-post-meta {
-    font-size: 0.9rem;
-    color: #888;
-  }
-  
-  .sidebar .widget-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-left: 4px solid #f26522;
-    padding-left: 10px;
-  }
-  
-  .sidebar a {
-    text-decoration: none;
-    color: #495057;
-  }
-  
-  .sidebar a:hover {
-    color: #f26522;
-  }
- 
-  /* Garante que o conteúdo de markdown fique dentro da largura da coluna */
-.markdown-container {
-  max-width: 100%;
-  overflow-wrap: break-word;
-  word-break: break-word;
+/* blogdetails.component.css */
+.blog-container {
+  padding: 40px 0;
+  background-color: #f8f9fa;
 }
 
-/* Imagens dentro do markdown: responsivas e com limite de largura */
-.markdown-container img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 1rem auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  width: auto;
-  max-height: 600px;
-  object-fit: contain;
+/* Post Header */
+.post-header {
+  margin-bottom: 2rem;
 }
 
-
-/* Evita que elementos largos quebrem o layout */
-.markdown-container pre,
-.markdown-container table {
-  max-width: 100%;
-  overflow-x: auto;
+.post-categories {
+  margin-bottom: 1rem;
 }
 
-/* Protege de invasão de largura nos próprios col-* */
-.blog-post {
-  min-width: 0;
+.category-tag {
+  background: #e9ecef;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #495057;
+  margin-right: 8px;
 }
-.sidebar .widget-item {
-  background: #f9f9f9;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+
+.blog-post-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #212529;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
 }
-/* Recent Posts */
-.recent-posts-widget .post-item {
+
+/* Author Meta */
+.author-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.author-info {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  gap: 1rem;
 }
 
-.recent-posts-widget .post-item img {
-  width: 60px;
-  height: 60px;
+.author-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   object-fit: cover;
-  margin-right: 12px;
-  border-radius: 6px;
 }
 
-.recent-posts-widget h4 {
-  font-size: 0.9rem;
-  margin: 0 0 4px;
-  color: #2c3e50;
+.author-details {
+  display: flex;
+  flex-direction: column;
 }
 
-.recent-posts-widget h4 a {
+.author-name {
+  font-weight: 600;
+  color: #212529;
   text-decoration: none;
-  color: inherit;
 }
 
-.recent-posts-widget h4 a:hover {
+.author-username {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.post-date {
+  font-size: 0.85rem;
+  color: #868e96;
+}
+
+/* Share Buttons */
+.share-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.share-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #f8f9fa;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.share-btn:hover {
+  background: #e9ecef;
+  color: #212529;
+}
+
+/* Featured Image */
+.featured-image-container {
+  margin: 2rem -15px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.featured-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Content */
+.blog-post {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.blog-post-content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #495057;
+}
+
+/* Tags */
+.post-tags {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tag {
+  background: #e9ecef;
+  padding: 6px 16px;
+  border-radius: 20px;
+  color: #495057;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  background: #dee2e6;
+  color: #212529;
+}
+
+/* Comments Section */
+.comments-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.disqus-container {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Sidebar */
+.sidebar-container {
+  position: sticky;
+  top: 2rem;
+}
+
+.sidebar-widget {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.widget-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f26522;
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.post-card {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.post-card:hover {
+  background: #f8f9fa;
+}
+
+.post-image img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.post-info {
+  flex: 1;
+}
+
+.post-info h4 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+
+.post-info a {
+  color: #212529;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.post-info a:hover {
   color: #f26522;
 }
 
-.recent-posts-widget time {
-  font-size: 0.75rem;
-  color: #888;
+.post-info time {
+  font-size: 0.85rem;
+  color: #868e96;
 }
 
+.views-count {
+  font-size: 0.85rem;
+  color: #868e96;
+  margin-left: 1rem;
+}
 
+/* Responsividade */
+@media (max-width: 992px) {
+  .blog-post-title {
+    font-size: 2rem;
+  }
+  
+  .author-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .share-buttons {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-container {
+    padding: 20px 0;
+  }
+  
+  .blog-post {
+    padding: 1.5rem;
+  }
+  
+  .featured-image-container {
+    margin: 1.5rem -15px;
+  }
+}

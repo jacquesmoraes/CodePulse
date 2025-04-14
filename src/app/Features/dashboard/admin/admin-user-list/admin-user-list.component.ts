@@ -24,7 +24,7 @@ export class AdminUserListComponent implements OnInit {
   }
 
   loadUsers(): void {
-    this.adminUserService.getAllWriters().subscribe({
+    this.adminUserService.getAllUsers().subscribe({
       next: (response) => {
         this.users = response;
         this.filteredUsers = [...response]; // inicializa lista filtrada

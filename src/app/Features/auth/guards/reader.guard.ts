@@ -11,7 +11,7 @@ export const readerGuard: CanActivateFn = () => {
     return router.createUrlTree(['/login']);
   }
 
-  if (user.roles.includes('Reader')) {
+  if (user.roles.includes('User')) {
     return true; // permite acesso normal
   }
 

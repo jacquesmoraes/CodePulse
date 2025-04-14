@@ -10,17 +10,20 @@ public class UserManagementRepository : IUserManagmentRepository
   private readonly UserManager<UserProfile> _userManager;
   private readonly IWebHostEnvironment _environment;
   private readonly ApplicationContext _appContext;
+  private readonly ILogger<UserManagementRepository> _logger1;
   private readonly AuthContext _context;
 
   public UserManagementRepository (
       UserManager<UserProfile> userManager,
       IWebHostEnvironment environment,
       ApplicationContext appContext,
+      ILogger<UserManagementRepository> logger1,
       AuthContext context )
   {
     _userManager = userManager;
     _environment = environment;
     _appContext = appContext;
+    _logger1 = logger1;
     _context = context;
   }
 
@@ -36,14 +39,14 @@ public class UserManagementRepository : IUserManagmentRepository
         userProfile.EmailConfirmed = true;
         userProfile.NormalizedUserName = userProfile.UserName.ToUpper();
         userProfile.NormalizedEmail = email.ToUpper();
-
+      Console.WriteLine($"🔥 Role recebida: {role}");
         // Cria usuário no Identity
         var result = await _userManager.CreateAsync(userProfile, password);
         if (!result.Succeeded)
             throw new ApplicationException("Falha ao criar usuário: " + string.Join(", ", result.Errors.Select(e => e.Description)));
 
         // Valida role
-        if (role != "Writer" && role != "Reader")
+        if (role != "Writer" && role != "User")
         {
             // Caso inválido, desfaz a criação
             await _userManager.DeleteAsync(userProfile);
@@ -71,9 +74,9 @@ public class UserManagementRepository : IUserManagmentRepository
 
 
 
-  public async Task<List<UserProfile>> GetAllWritersAsync ( )
+  public async Task<List<UserProfile>> GetAllUsersAsync ( )
   {
-    return ( await _userManager.GetUsersInRoleAsync ( "Writer" ) ).ToList ( );
+    return await _context.UsersProfiles.ToListAsync ( );
   }
 
   public async Task<UserProfile?> GetWriterByIdAsync ( string userId )
