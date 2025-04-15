@@ -2,6 +2,7 @@ using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.Dto;
 using CodePulse.API.Repositories.Interface;
 
+namespace CodePulse.API.Helper;
 public static class BlogPostMapperHelper
 {
   public static BlogPostDto MapToDto(BlogPost post)

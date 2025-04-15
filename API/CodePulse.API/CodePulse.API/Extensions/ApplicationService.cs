@@ -68,6 +68,7 @@ namespace CodePulse.API.Extensions
       services.AddScoped<IUserRepository, UserRepository>();
       services.AddScoped<IUserImageProfileRepository, UserImageProfileRepository>();
       services.AddScoped<IUserManagmentRepository, UserManagementRepository>();
+      services.AddScoped<IFavoriteRepository, FavoriteRepository> ( );
 
       return services;
     }

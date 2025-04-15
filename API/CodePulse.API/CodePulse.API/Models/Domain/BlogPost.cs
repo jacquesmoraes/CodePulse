@@ -14,6 +14,7 @@ namespace CodePulse.API.Models.Domain
     public bool IsVisible { get; set; }
     public int ViewCount { get; set; }
     public List<Category> Categories { get; set; } = new List<Category>();
+    public ICollection<FavoritePost> FavoriteBlogPosts { get; set; } = new List<FavoritePost> ( );
     public string AuthorId { get; set; }
     [ForeignKey("AuthorId")]
     public UserProfile AuthorProfile { get; set; }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+namespace CodePulse.API.Repositories.Implementation;
 public class UserManagementRepository : IUserManagmentRepository
 {
   private readonly UserManager<UserProfile> _userManager;
@@ -39,7 +40,7 @@ public class UserManagementRepository : IUserManagmentRepository
         userProfile.EmailConfirmed = true;
         userProfile.NormalizedUserName = userProfile.UserName.ToUpper();
         userProfile.NormalizedEmail = email.ToUpper();
-      Console.WriteLine($"🔥 Role recebida: {role}");
+     
         // Cria usuário no Identity
         var result = await _userManager.CreateAsync(userProfile, password);
         if (!result.Succeeded)

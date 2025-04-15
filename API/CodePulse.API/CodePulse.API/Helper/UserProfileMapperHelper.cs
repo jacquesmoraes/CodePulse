@@ -1,6 +1,7 @@
 using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.Dto;
 
+namespace CodePulse.API.Helper;
 public static class UserProfileMapperHelper
 {
     public static UserProfileDto MapToDto(UserProfile profile, HttpRequest request)

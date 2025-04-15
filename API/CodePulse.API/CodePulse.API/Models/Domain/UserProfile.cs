@@ -15,7 +15,8 @@ namespace CodePulse.API.Models.Domain
     [ForeignKey("ImageId")]
     public UserImageProfile? Image { get; set; }
 
-     public ICollection<BlogPost>? BlogPosts { get; set; }
+     public ICollection<BlogPost> BlogPosts { get; set; } = new List<BlogPost> ( );
+    public ICollection<FavoritePost> FavoriteBlogPosts { get; set; } = new List<FavoritePost>();
 
     public UserProfile()
     {
