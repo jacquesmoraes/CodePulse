@@ -157,7 +157,7 @@ namespace CodePulse.API.Repositories.Implementation
       return await _context.BlogPosts.CountAsync();
     }
 
-    public async Task<List<BlogPost>> GetPopularPosts(int count = 5)
+    public async Task<IEnumerable<BlogPost>> GetPopularPosts(int count = 5)
     {
       return await _context.BlogPosts
         .Include(x => x.Categories)
@@ -197,7 +197,7 @@ namespace CodePulse.API.Repositories.Implementation
         .ToListAsync();
     }
 
-    public async Task<List<BlogPost>> GetPostByAuthorAsync(string authorId)
+    public async Task<IEnumerable<BlogPost>> GetPostByAuthorAsync(string authorId)
     {
       return await _context.BlogPosts
         .Include(x => x.Categories)
@@ -205,5 +205,17 @@ namespace CodePulse.API.Repositories.Implementation
         .Where(x => x.AuthorId == authorId)
         .ToListAsync();
     }
+
+    public async Task<IEnumerable<BlogPost>> GetPopularPostsByAuthorAsync(string authorId, int count = 5)
+{
+    return await _context.BlogPosts
+        .Where(p => p.AuthorId == authorId)
+        .OrderByDescending(p => p.ViewCount)
+        .Take(count)
+        .Include(p => p.Categories)
+        .Include(p => p.AuthorProfile).ThenInclude(a => a.Image)
+        .ToListAsync();
+}
+
   }
 }

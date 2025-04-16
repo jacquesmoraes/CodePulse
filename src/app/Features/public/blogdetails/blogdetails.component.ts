@@ -4,9 +4,10 @@ import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { Observable } from 'rxjs';
 import { BlogPostService } from '../../blog-post/services/blog-post.service';
 import { ViewportScroller } from '@angular/common';
-
 import { User } from '../../auth/models/user.model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { FavoriteService } from '../../favorite/favorite.service';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-blogdetails',
@@ -18,23 +19,27 @@ export class BlogdetailsComponent implements OnInit {
   blogposts$?: Observable<BlogPost>;
   error: string | null = null;
   mostViewedPosts: BlogPost[] = [];
-  relatedPosts: BlogPost[] = []; // ✅ NOVO: posts relacionados por categoria
+  relatedPosts: BlogPost[] = [];
   showCommentForm: boolean = false;
   newComment: string = '';
   blogPostId: string | undefined;
   user?: User;
+  isFavorited: boolean = false;
+  isAuthenticated: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private blogpost: BlogPostService,
     private viewportScroller: ViewportScroller,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private favoriteService: FavoriteService,
+    private authService:AuthService
   ) {}
 
   ngOnInit(): void {
     this.spinner.show();
     this.viewportScroller.scrollToPosition([0, 0]);
-
+    this.isAuthenticated = !!this.authService.getUser(); 
     this.route.paramMap.subscribe({
       next: (params) => {
         this.url = params.get('url');
@@ -48,9 +53,17 @@ export class BlogdetailsComponent implements OnInit {
 
               this.blogPostId = post.id;
 
+              // Verifica se o post está nos favoritos
+              if (this.blogPostId) {
+                this.favoriteService.isFavorite(this.blogPostId).subscribe({
+                  next: (res) => this.isFavorited = res.isFavorite,
+                  error: () => this.isFavorited = false
+                });
+              }
+
               this.loadDisqus(this.blogPostId, post.urlHandle);
               this.loadMostViewedPosts();
-              this.loadRelatedPosts(this.blogPostId); // ✅ NOVO: carrega posts relacionados
+              this.loadRelatedPosts(this.blogPostId);
 
               this.spinner.hide();
             },
@@ -115,5 +128,20 @@ export class BlogdetailsComponent implements OnInit {
   shareOnLinkedIn() {
     const url = window.location.href;
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+  }
+
+  // Novo método para favoritos
+  toggleFavorite(): void {
+    if (!this.blogPostId) return;
+
+    if (this.isFavorited) {
+      this.favoriteService.removeFavorite(this.blogPostId).subscribe({
+        next: () => this.isFavorited = false
+      });
+    } else {
+      this.favoriteService.addFavorite(this.blogPostId).subscribe({
+        next: () => this.isFavorited = true
+      });
+    }
   }
 }

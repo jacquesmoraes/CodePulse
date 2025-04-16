@@ -38,7 +38,7 @@ namespace CodePulse.API.Controllers
       {
         return BadRequest ( "The payload is empty." );
       }
-      createBlogPost.UrlHandle = FormatUrlHandle(createBlogPost.UrlHandle);
+      createBlogPost.UrlHandle = FormatUrlHandle ( createBlogPost.UrlHandle );
 
       var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
       var user = await _userManager.FindByIdAsync(userId);
@@ -65,7 +65,7 @@ namespace CodePulse.API.Controllers
         [FromQuery] int? pageSize )
     {
       var blogPosts = await _postRepository.GetAllAsync(query, sortBy, sortDirection, pageNumber, pageSize);
-       
+
       var mapped = blogPosts.Select(BlogPostMapperHelper.MapToDto).ToList();
       return Ok ( mapped );
     }
@@ -87,9 +87,9 @@ namespace CodePulse.API.Controllers
 
 
 
-    [HttpGet("my-posts")]
-    
-    [Authorize(Roles = "Writer, Admin")]
+    [HttpGet ( "my-posts" )]
+
+    [Authorize ( Roles = "Writer, Admin" )]
     public async Task<IActionResult> GetAuthorPosts ( )
     {
       var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -99,11 +99,19 @@ namespace CodePulse.API.Controllers
         await _postRepository.GetPostByAuthorAsync(userId);
 
       var maped = posts.Select(BlogPostMapperHelper.MapToDto).ToList();
-      return Ok(maped);
+      return Ok ( maped );
 
     }
 
 
+    [HttpGet ( "author/{authorId}" )]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostsByAuthorId ( [FromRoute] string authorId )
+    {
+      var posts = await _postRepository.GetPostByAuthorAsync(authorId);
+      var mappedPosts = posts.Select(BlogPostMapperHelper.MapToDto).ToList();
+      return Ok ( mappedPosts );
+    }
 
 
     [HttpGet ( "{urlHandle}" )]
@@ -112,7 +120,7 @@ namespace CodePulse.API.Controllers
       var post = await _postRepository.GetBlogPostByUrlHandle(urlHandle);
       if ( post == null ) return NotFound ( );
       post.ViewCount++;
-      await _postRepository.UpdateBlogPostAsync(post);
+      await _postRepository.UpdateBlogPostAsync ( post );
       var dto = BlogPostMapperHelper.MapToDto(post);
       return Ok ( dto );
     }
@@ -134,7 +142,7 @@ namespace CodePulse.API.Controllers
       {
         return Forbid ( );
       }
-       updateBlogPost.UrlHandle = FormatUrlHandle(updateBlogPost.UrlHandle);
+      updateBlogPost.UrlHandle = FormatUrlHandle ( updateBlogPost.UrlHandle );
       // Mapeamento manual
       existingBlogPost.Title = updateBlogPost.Title;
       existingBlogPost.ShortDescription = updateBlogPost.ShortDescription;
@@ -205,28 +213,46 @@ namespace CodePulse.API.Controllers
       }
     }
 
+    [HttpGet ( "mostPopular/author/{authorId}" )]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetMostViewedPostsByAuthor ( [FromRoute] string authorId, [FromQuery] int count = 5 )
+    {
+      try
+      {
+        var posts = await _postRepository.GetPopularPostsByAuthorAsync(authorId, count);
+        var mappedPosts = posts.Select(BlogPostMapperHelper.MapToDto).ToList();
+        return Ok ( mappedPosts );
+      }
+      catch ( Exception ex )
+      {
+        _logger.LogError ( ex, "Erro ao buscar posts mais populares por autor" );
+        return StatusCode ( 500, "Erro interno ao buscar posts mais populares" );
+      }
+    }
 
-    [HttpGet("related/{postId:guid}")]
-public async Task<IActionResult> GetRelatedPosts([FromRoute] Guid postId)
-{
-    var relatedPosts = await _postRepository.GetRelatedPostsAsync(postId);
-    var mapped = relatedPosts.Select(BlogPostMapperHelper.MapToDto).ToList();
-    return Ok(mapped);
-}
 
-    private string FormatUrlHandle(string urlHandle)
-{
-    if (string.IsNullOrEmpty(urlHandle))
+
+    [HttpGet ( "related/{postId:guid}" )]
+    public async Task<IActionResult> GetRelatedPosts ( [FromRoute] Guid postId )
+    {
+      var relatedPosts = await _postRepository.GetRelatedPostsAsync(postId);
+      var mapped = relatedPosts.Select(BlogPostMapperHelper.MapToDto).ToList();
+      return Ok ( mapped );
+    }
+
+    private string FormatUrlHandle ( string urlHandle )
+    {
+      if ( string.IsNullOrEmpty ( urlHandle ) )
         return string.Empty;
 
-    return urlHandle
-        .ToLowerInvariant()
-        .Trim()
-        .Replace(" ", "-")           // Substitui espaços por hífens
-        .Replace("--", "-")          // Remove hífens duplicados
-        .Replace("[^a-z0-9\\-]", "") // Remove caracteres especiais
-        .Replace("-+", "-");         // Remove múltiplos hífens seguidos
-}
+      return urlHandle
+          .ToLowerInvariant ( )
+          .Trim ( )
+          .Replace ( " ", "-" )           // Substitui espaços por hífens
+          .Replace ( "--", "-" )          // Remove hífens duplicados
+          .Replace ( "[^a-z0-9\\-]", "" ) // Remove caracteres especiais
+          .Replace ( "-+", "-" );         // Remove múltiplos hífens seguidos
+    }
   }
 
 

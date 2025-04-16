@@ -23,7 +23,7 @@ namespace CodePulse.API.Controllers
     {
       var userId = User.FindFirstValue( ClaimTypes.NameIdentifier);
       var result = await _favoriteRepository.AddToFavoritesAsync ( userId, postId );
-      if ( result == null)
+      if ( result == null )
       {
         return BadRequest ( "post already in favorites" );
       }
@@ -38,6 +38,14 @@ namespace CodePulse.API.Controllers
       var userId = User.FindFirstValue( ClaimTypes.NameIdentifier);
       var posts = await _favoriteRepository.GetFavoriteByUserAsync ( userId );
       return Ok ( posts );
+    }
+
+    [HttpGet ( "user/{userId}" )]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetFavoritesByUserId ( [FromRoute] string userId )
+    {
+      var favorites = await _favoriteRepository.GetFavoriteByUserAsync(userId);
+      return Ok ( favorites );
     }
 
 
@@ -55,12 +63,15 @@ namespace CodePulse.API.Controllers
     {
       var userId = User.FindFirstValue( ClaimTypes.NameIdentifier);
       var result = await _favoriteRepository.RemoveFromFavoritesAsync ( userId, postId );
-     
-      return result ? Ok ( "removed from favorites") : BadRequest ( "could not remove from favorites" );
+
+      if ( !result )
+        return BadRequest ( "could not remove from favorites" );
+
+      return NoContent ( );
     }
 
 
-    
+
 
   }
 }

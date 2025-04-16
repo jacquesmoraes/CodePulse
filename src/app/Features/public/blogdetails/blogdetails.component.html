@@ -14,15 +14,23 @@
                   {{ category.name }}
                 </span>
               </div>
-              
+
               <h1 class="blog-post-title">{{ blogpost.title }}</h1>
-              
+              <button (click)="toggleFavorite()" class="favorite-btn-compact" [class.favorited]="isFavorited"
+                *ngIf="isAuthenticated"
+                [attr.aria-label]="isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
+                <i class="bi" [class.bi-heart-fill]="isFavorited" [class.bi-heart]="!isFavorited"></i>
+                <span class="favorite-text">
+                  {{ isFavorited ? 'Salvo' : 'Salvar' }}
+                </span>
+              </button>
+
+
               <!-- Meta info do autor -->
               <div class="author-meta">
                 <div class="author-info">
-                  <img [src]="blogpost.author.imageUrl || 'assets/default-avatar.png'" 
-                       alt="Author avatar" 
-                       class="author-avatar">
+                  <img [src]="blogpost.author.imageUrl || 'assets/default-avatar.png'" alt="Author avatar"
+                    class="author-avatar">
                   <div class="author-details">
                     <a [routerLink]="['/profile', blogpost.author.userName]" class="author-name">
                       {{ blogpost.author.fullName }}
@@ -31,7 +39,7 @@
                     <time class="post-date">{{ blogpost.publishedDate | date: 'longDate' }}</time>
                   </div>
                 </div>
-                
+
                 <!-- Botões de compartilhamento -->
                 <div class="share-buttons">
                   <button class="share-btn" (click)="shareOnTwitter()">
@@ -49,9 +57,7 @@
 
             <!-- Imagem principal -->
             <div class="featured-image-container" *ngIf="blogpost.featuredImageUrl">
-              <img [src]="blogpost.featuredImageUrl" 
-                   alt="Imagem do post"
-                   class="featured-image">
+              <img [src]="blogpost.featuredImageUrl" alt="Imagem do post" class="featured-image">
             </div>
 
             <!-- Conteúdo do post -->
@@ -63,9 +69,8 @@
             <div class="post-tags" *ngIf="blogpost.categories?.length">
               <h4>Tags relacionadas:</h4>
               <div class="tags-container">
-                <a *ngFor="let category of blogpost.categories" 
-                   [routerLink]="['/category', category.urlHandle]" 
-                   class="tag">
+                <a *ngFor="let category of blogpost.categories" [routerLink]="['/category', category.urlHandle]"
+                  class="tag">
                   #{{ category.name }}
                 </a>
               </div>
@@ -89,9 +94,7 @@
             <div class="posts-list">
               <div *ngFor="let post of mostViewedPosts" class="post-card">
                 <div class="post-image">
-                  <img [src]="post.featuredImageUrl" 
-                       [alt]="post.title" 
-                       loading="lazy">
+                  <img [src]="post.featuredImageUrl" [alt]="post.title" loading="lazy">
                 </div>
                 <div class="post-info">
                   <h4>
@@ -112,9 +115,7 @@
             <div class="posts-list">
               <div *ngFor="let post of relatedPosts" class="post-card">
                 <div class="post-image">
-                  <img [src]="post.featuredImageUrl" 
-                       [alt]="post.title" 
-                       loading="lazy">
+                  <img [src]="post.featuredImageUrl" [alt]="post.title" loading="lazy">
                 </div>
                 <div class="post-info">
                   <h4>

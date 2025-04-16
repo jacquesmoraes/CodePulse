@@ -6,6 +6,7 @@ export interface UserProfile {
     bio?: string;
     interests?: string
     imageUrl?: string;
+    role: 'Writer' | 'User';
 
   }
   
