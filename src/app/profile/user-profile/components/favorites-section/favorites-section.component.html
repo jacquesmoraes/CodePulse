@@ -1,0 +1,94 @@
+<!-- favorites-section.component.html -->
+<div class="favorites-section" *ngIf="favoritePosts.length > 0 || writerPosts.length > 0">
+  
+  <div class="section-header">
+    <h3>{{ sectionTitle }}</h3>
+    <div class="list-filters">
+      <!-- Botão de Favoritos -->
+      <button class="filter-btn" 
+              [class.active]="activeFilter === 'all'" 
+              (click)="onFilterChange('all')">
+        <i class="bi bi-heart"></i> Favoritos
+      </button>
+
+      <!-- Botão de Posts do Autor (simplificado) -->
+      <button class="filter-btn" 
+              *ngIf="profile?.role === 'Writer'"
+              [class.active]="activeFilter === 'posts'"
+              (click)="onFilterChange('posts')">
+        <i class="bi bi-journal-text"></i> Posts do Autor
+      </button>
+    </div>
+  </div>
+
+  <div class="posts-grid">
+    <ng-container *ngIf="!favoritesLoading">
+      <!-- Favorite Posts -->
+      <ng-container *ngIf="activeFilter === 'all'">
+        <div class="post-card" *ngFor="let post of favoritePosts">
+          <div class="post-image">
+            <img [src]="post.blogPostImageUrl" [alt]="post.blogPostTitle" loading="lazy">
+          </div>
+          <div class="post-content">
+            <h4>
+              <a [routerLink]="['/blog', post.blogPostUrlHandle]">
+                {{ post.blogPostTitle }}
+              </a>
+            </h4>
+            <div class="post-meta">
+              <div class="author-info">
+                <img [src]="post.authorImageUrl ? post.authorImageUrl : 'assets/default-avatar.png'"  [alt]="post.authorUserName" class="author-avatar">
+                <span>{{ post.authorUserName }}</span>
+              </div>
+              <time>{{ post.favoritedAt | date:'mediumDate' }}</time>
+            </div>
+
+            <button *ngIf="isOwnProfile" class="remove-favorite-btn" (click)="onRemoveFavorite(post.id)">
+              <i class="bi bi-heart-fill"></i>
+              Remover dos favoritos
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Writer Posts -->
+      <ng-container *ngIf="activeFilter === 'posts' && isWriter">
+        <div class="post-card" *ngFor="let post of writerPosts">
+          <div class="post-image">
+            <img [src]="post.featuredImageUrl" [alt]="post.title" loading="lazy">
+          </div>
+          <div class="post-content">
+            <div class="post-categories" *ngIf="post.categories?.length">
+              <span class="category-tag" *ngFor="let category of post.categories">
+                {{ category.name }}
+              </span>
+            </div>
+            <h4>
+              <a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a>
+            </h4>
+            <p class="post-description">{{ post.shortDescription }}</p>
+            <div class="post-meta">
+              <time>{{ post.publishedDate | date:'mediumDate' }}</time>
+              <span class="view-count">
+                <i class="bi bi-eye"></i> {{ post.viewCount }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" *ngIf="favoritesLoading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!favoritesLoading && displayPosts.length === 0">
+    <i class="bi" [class.bi-heart]="activeFilter === 'all'" [class.bi-journal-text]="activeFilter === 'posts'"></i>
+    <p>{{ activeFilter === 'all' ? 'Nenhum favorito encontrado' : 'Nenhum post publicado' }}</p>
+  </div>
+</div>

@@ -40,6 +40,11 @@ import { UserprofilelistComponent } from './Features/dashboard/components/userpr
 import { AdminUserListComponent } from './Features/dashboard/admin/admin-user-list/admin-user-list.component';
 import { AdminUserCreateComponent } from './Features/dashboard/admin/admin-user-create/admin-user-create.component';
 import { AdminUserDashboardComponent } from './Features/dashboard/admin/admin-user-dashboard.component';
+import { ProfileHeaderComponent } from './profile/user-profile/components/profile-header/profile-header.component';
+import { ProfileDetailsComponent } from './profile/user-profile/components/profile-details/profile-details.component';
+import { ProfileEditFormComponent } from './profile/user-profile/components/profile-edit-form/profile-edit-form.component';
+import { FavoritesSectionComponent } from './profile/user-profile/components/favorites-section/favorites-section.component';
+import { WriterProfileSectionComponent } from './profile/user-profile/components/writer-profile-section/writer-profile-section.component';
 
 
 
@@ -73,7 +78,12 @@ import { AdminUserDashboardComponent } from './Features/dashboard/admin/admin-us
     UserprofilelistComponent,
     AdminUserListComponent,
     AdminUserCreateComponent,
-    AdminUserDashboardComponent
+    AdminUserDashboardComponent,
+    ProfileHeaderComponent,
+    ProfileDetailsComponent,
+    ProfileEditFormComponent,
+    FavoritesSectionComponent,
+    WriterProfileSectionComponent
   ],
   imports: [
     BrowserModule,

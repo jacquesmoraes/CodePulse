@@ -1,0 +1,20 @@
+<!-- profile-details.component.html -->
+<div class="profile-details">
+    <div class="bio-block" *ngIf="profile?.bio">
+      <label>Bio</label>
+      <p>{{ profile?.bio }}</p>
+    </div>
+    
+    <div class="bio-block" *ngIf="profile?.interests">
+      <label>Interesses</label>
+      <p>{{ profile?.interests }}</p>
+    </div>
+  
+    <!-- Edit button only shows on own profile -->
+    <button *ngIf="isOwnProfile" 
+            type="button" 
+            class="edit-btn" 
+            (click)="enableEditing.emit()">
+      <i class="bi bi-pencil"></i> Editar
+    </button>
+  </div>

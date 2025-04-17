@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserProfile } from 'src/app/profile/models/user-profile.model';
+import { UserProfile } from 'src/app/profile/user-profile/shared/models/user-profile.model';
 import { environment } from 'src/environments/environment';
 import { CreateUserRequest } from './models/create-user.model';
 

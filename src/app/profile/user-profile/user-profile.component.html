@@ -2,227 +2,58 @@
   <div class="profile-wrapper">
 
     <!-- PERFIL PÚBLICO (outro usuário) -->
-    <div class="profile-main" *ngIf="!isOwnProfile && profile">
-      <div class="profile-header">
-        <div class="profile-photo-wrapper">
-          <div class="profile-photo">
-            <img [src]="displayImageUrl" alt="Foto de perfil" />
-          </div>
-        </div>
+    
+      <app-profile-header
+       [profile]="profile"
+        [displayImageUrl]="displayImageUrl"
+       [isOwnProfile]="isOwnProfile"
+        [favoritesCount]="favoritePosts.length"
+         [writerPostsCount]="writerPosts.length"
+         [imageJustUpdated]="imageJustUpdated"
+        (photoSelected)="onFileSelected($event)"
+         (imageLoaded)="onImageLoaded()">
+      </app-profile-header>
 
-        <div class="profile-info public">
-          <h2>{{ profile.fullName }}</h2>
-          <p class="username">{{'@'+ profile.userName }}</p>
-          <p class="email" *ngIf="isOwnProfile">{{ profile.email }}</p>
-
-          <div class="stats-container">
-            <div class="stat-item">
-              <span class="stat-value">0</span>
-              <span class="stat-label">Listas</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">{{ favoritePosts.length }}</span>
-              <span class="stat-label">Favoritos</span>
-            </div>
-            <div class="stat-item" *ngIf="profile?.role === 'Writer'">
-              <span class="stat-value">{{ writerPosts.length }}</span>
-              <span class="stat-label">Posts</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="profile-details">
-        <div class="bio-block" *ngIf="profile.bio">
-          <label>Bio</label>
-          <p>{{ profile.bio }}</p>
-        </div>
-        <div class="bio-block" *ngIf="profile.interests">
-          <label>Interesses</label>
-          <p>{{ profile.interests }}</p>
-        </div>
-      </div>
-    </div>
+      <app-profile-edit-form
+      *ngIf="isOwnProfile && profile && isEditing"
+      [profile]="profile"
+      [userNameExists]="userNameExists"
+      (formSubmit)="onSubmit($event)"
+      (cancelEdit)="cancelEdit()"
+      (deleteProfile)="onDeleteMyProfile()"
+      >        
+      </app-profile-edit-form>
 
     <!-- PERFIL PRÓPRIO (edição e visualização) -->
-    <div class="profile-main" *ngIf="isOwnProfile && profile">
-      <div class="profile-header">
-        <div class="profile-photo-wrapper">
-          <div class="profile-photo">
-            <img [src]="displayImageUrl"
-                 alt="Foto de perfil"
-                 [class.fade-in]="imageJustUpdated"
-                 (load)="onImageLoaded()" />
-            <button type="button" class="edit-photo-btn" (click)="photoInput.click()">
-              <i class="bi bi-camera"></i>
-            </button>
-            <input #photoInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none;" />
-          </div>
-
-          <button *ngIf="selectedImageFile" type="button" class="update-photo-btn" (click)="updateProfileImage()">
-            <i class="bi bi-cloud-upload"></i> Atualizar Foto
-          </button>
-        </div>
-
-        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
-          <ng-container *ngIf="!isEditing; else editMode">
-            <div class="profile-info">
-              <h2>{{ profile.fullName }}</h2>
-              <p class="username">{{'@'+ profile.userName }}</p>
-              <p class="email">{{ profile.email }}</p>
-
-              <div class="stats-container">
-                <div class="stat-item">
-                  <span class="stat-value">0</span>
-                  <span class="stat-label">Listas</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-value">{{ favoritePosts.length }}</span>
-                  <span class="stat-label">Favoritos</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-value">{{ writerPosts.length }}</span>
-                  <span class="stat-label">Posts</span>
-                </div>
-              </div>
-
-              <div class="bio-block" *ngIf="profile.bio">
-                <label>Bio</label>
-                <p>{{ profile.bio }}</p>
-              </div>
-              <div class="bio-block" *ngIf="profile.interests">
-                <label>Interesses</label>
-                <p>{{ profile.interests }}</p>
-              </div>
-
-              <button type="button" class="edit-btn" (click)="enableEdit()">
-                <i class="bi bi-pencil"></i> Editar
-              </button>
-            </div>
-          </ng-container>
-
-          <ng-template #editMode>
-            <div class="edit-form">
-              <div class="form-group">
-                <label class="form-label">Nome completo</label>
-                <input formControlName="fullName" class="form-input" />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Nome de usuário</label>
-                <input formControlName="userName" class="form-input" />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Bio</label>
-                <textarea formControlName="bio" rows="3" class="form-textarea"></textarea>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Interesses</label>
-                <textarea formControlName="interests" rows="3" class="form-textarea"></textarea>
-              </div>
-
-              <div class="edit-actions">
-                <button type="submit" class="save-btn" [disabled]="profileForm.invalid || userNameExists">
-                  <i class="bi bi-check-lg"></i> Salvar
-                </button>
-                <button type="button" class="cancel-btn" (click)="cancelEdit()">
-                  <i class="bi bi-x-lg"></i> Cancelar
-                </button>
-                <button type="button" class="delete-btn" (click)="onDeleteMyProfile()">
-                  <i class="bi bi-trash"></i> Excluir meu perfil
-                </button>
-              </div>
-            </div>
-          </ng-template>
-        </form>
-      </div>
-    </div>
-
-    <!-- FAVORITOS (privado ou público) -->
-    <div class="favorites-section" *ngIf="favoritePosts.length > 0">
-      <div class="section-header">
-        <h3>Posts Favoritos</h3>
-        <div class="list-filters">
-          <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="filterFavorites('all')">
-            <i class="bi bi-grid"></i> Todos
-          </button>
-          <button class="filter-btn" [class.active]="activeFilter === 'author'" (click)="filterFavorites('author')">
-            <i class="bi bi-person"></i> Por Autor
-          </button>
-          <button class="filter-btn" [class.active]="activeFilter === 'category'" (click)="filterFavorites('category')">
-            <i class="bi bi-tag"></i> Por Categoria
-          </button>
-        </div>
-      </div>
-<!--Favoritos grid -->
-     <!-- Posts Favoritos -->
-<ng-container *ngIf="!favoritesLoading && favoritePosts.length > 0">
-  <div class="favorite-card" *ngFor="let post of favoritePosts">
-    <div class="favorite-image">
-      <img [src]="post.blogPostImageUrl" [alt]="post.blogPostTitle" loading="lazy">
-    </div>
-    <div class="favorite-content">
-      <h4>
-        <a [routerLink]="['/blog', post.blogPostUrlHandle]">{{ post.blogPostTitle }}</a>
-      </h4>
-      <div class="favorite-meta">
-        <div class="author-info">
-          <img [src]="'assets/default-avatar.png'" 
-               [alt]="post.authorUserName"
-               class="author-avatar">
-          <span>{{ post.authorUserName }}</span>
-        </div>
-        <time>{{ post.favoritedAt | date:'mediumDate' }}</time>
-      </div>
-      <!-- Opção 1: Usando div com ngIf -->
-      <div *ngIf="isOwnProfile">
-        <button class="remove-favorite-btn" (click)="removeFavorite(post.id)">
-          <i class="bi bi-heart-fill"></i>
-          Remover dos favoritos
-        </button>
-      </div>
-   
-      
+      <app-profile-edit-form
+      *ngIf="isOwnProfile && isEditing"
+      [profile]="profile"
+      [userNameExists]="userNameExists"
+      (formSubmit)="onSubmit($event)"
+      (cancelEdit)="cancelEdit()"
+      (deleteProfile)="onDeleteMyProfile()">
+      </app-profile-edit-form>
     
-    </div>
-  </div>
-</ng-container>
-    </div>
+      <app-profile-details
+    *ngIf="!isEditing"
+    [profile]="profile"
+    [isOwnProfile]="isOwnProfile"
+    (enableEditing)="enableEdit()">
+      </app-profile-details>
+
+   
 
     <!-- POSTS DO WRITER -->
-    <div class="favorites-section" *ngIf="!isOwnProfile && profile?.role === 'Writer' && writerPosts.length > 0">
-      <div class="section-header">
-        <h3>Posts publicados por {{ profile?.fullName }}</h3>
-      </div>
-
-      <div class="favorites-grid">
-        <div class="favorite-card" *ngFor="let post of writerPosts">
-          <div class="favorite-image">
-            <img [src]="post.featuredImageUrl" [alt]="post.title" loading="lazy">
-          </div>
-          <div class="favorite-content">
-            <div class="favorite-categories">
-              <span class="category-tag" *ngFor="let category of post.categories">
-                {{ category.name }}
-              </span>
-            </div>
-            <h4>
-              <a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a>
-            </h4>
-            <p class="favorite-description">{{ post.shortDescription }}</p>
-            <div class="favorite-meta">
-              <div class="author-info">
-                <img [src]="post.author?.imageUrl || 'assets/default-avatar.png'" class="author-avatar">
-                <span>{{ post.author?.userName }}</span>
-              </div>
-              <time>{{ post.publishedDate | date:'mediumDate' }}</time>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-favorites-section
+    [favoritePosts]="favoritePosts"
+    [writerPosts]="writerPosts"
+    [profile]="profile"
+    [isOwnProfile]="isOwnProfile"
+    [favoritesLoading]="favoritesLoading"
+    [activeFilter]="activeFilter"
+    (filterChange)="filterFavorites($event)"
+    (removeFavorite)="removeFavorite($event)">
+  </app-favorites-section>
 
   </div>
 </div>

@@ -16,6 +16,7 @@ namespace CodePulse.API.Helper
                 BlogPostUrlHandle = favorite.BlogPost?.UrlHandle ?? "",
                 BlogPostImageUrl = favorite.BlogPost?.FeaturedImageUrl ?? "",
                 AuthorUserName = favorite.BlogPost?.AuthorProfile?.UserName ?? "",
+                 AuthorImageUrl = favorite.BlogPost.AuthorProfile.Image?.Url,
                 FavoritedAt = favorite.FavoritedAt
             };
         }

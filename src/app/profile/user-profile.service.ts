@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { UserProfile } from './models/user-profile.model';
+import { UserProfile } from './user-profile/shared/models/user-profile.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { UpdateProfile } from './models/update-profile.model';
+import { UpdateProfile } from './user-profile/shared/models/update-profile.model';
 
 @Injectable({
   providedIn: 'root'
@@ -49,9 +49,8 @@ export class UserProfileService {
   }
 
   getFullImageUrl(imagePath?: string): string {
-    return imagePath
-      ? `${environment.apiBaseUrl}/${imagePath}`
-      : 'assets/default-avatar.png';
+    if (!imagePath) return 'assets/default-avatar.png';
+    return `${environment.apiBaseUrl}/${imagePath}?t=${new Date().getTime()}`;
   }
   
   deleteUser() {

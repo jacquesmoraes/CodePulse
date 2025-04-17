@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserProfile } from 'src/app/profile/models/user-profile.model';
+import { UserProfile } from 'src/app/profile/user-profile/shared/models/user-profile.model';
 import { AdminUserService } from '../admin-user.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';

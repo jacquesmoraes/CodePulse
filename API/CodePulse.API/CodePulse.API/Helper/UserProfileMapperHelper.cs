@@ -4,7 +4,7 @@ using CodePulse.API.Models.Dto;
 namespace CodePulse.API.Helper;
 public static class UserProfileMapperHelper
 {
-    public static UserProfileDto MapToDto(UserProfile profile, HttpRequest request)
+  public static UserProfileDto MapToDto(UserProfile profile, HttpRequest request, string role)
     {
         return new UserProfileDto
         {
@@ -14,18 +14,17 @@ public static class UserProfileMapperHelper
             Email = profile.Email,
             Bio = profile.Bio,
             Interests = profile.Interests,
-            ImageUrl = profile.Image != null
-                ? $"{request.Scheme}://{request.Host}/{profile.Image.Url}"
-                : null
+            Role = role,
+            ImageUrl = profile.Image?.Url
         };
     }
 
-    public static void MapToDomain(UserProfile profile, UpdateUserProfileRequestDto request)
-    {
-        profile.FullName = request.FullName;
-        profile.UserName = request.UserName;
-        profile.Bio = request.Bio;
+  public static void MapToDomain ( UserProfile profile, UpdateUserProfileRequestDto request )
+  {
+    profile.FullName = request.FullName;
+    profile.UserName = request.UserName;
+    profile.Bio = request.Bio;
     profile.Interests = request.Interests;
-        // A imagem (ImageId) deve ser tratada no repositório após upload.
-    }
+    // A imagem (ImageId) deve ser tratada no repositório após upload.
+  }
 }

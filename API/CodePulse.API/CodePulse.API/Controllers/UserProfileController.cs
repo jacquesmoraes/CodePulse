@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using CodePulse.API.Helper;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -44,15 +45,27 @@ public class UserProfileController : ControllerBase
 
 
   //endpoint publico pra visualizar um usuario pelo username
-    [HttpGet("public/{username}")]
-    public async Task<IActionResult> GetProfileByUserName(string username)
-    {
-        var profile = await _userRepository.GetUserProfileByUserNameAsync(username);
-        if (profile == null)
-            return NotFound("Perfil não encontrado.");
+  [HttpGet("public/{username}")]
+[AllowAnonymous]
+public async Task<IActionResult> GetPublicProfile(string username)
+{
+    var user = await _userManager.Users
+        .Include(u => u.Image)
+        .FirstOrDefaultAsync(u => u.UserName == username);
 
-        return Ok(profile);
-    }
+    if (user == null)
+        return NotFound();
+
+    var roles = await _userManager.GetRolesAsync(user);
+    var role = roles.FirstOrDefault() ?? "User";
+
+    var dto = UserProfileMapperHelper.MapToDto(user, Request, role);
+
+    return Ok(dto);
+}
+
+
+
 
 
 

@@ -12,7 +12,7 @@ import { RegisterRequest } from '../models/register-request-model';
   providedIn: 'root'
 })
 export class AuthService {
-
+  private userRole: string = '';
   $user = new BehaviorSubject<User | undefined>(undefined);
 
   constructor(private http: HttpClient, private cookieService: CookieService) { 
@@ -20,6 +20,10 @@ export class AuthService {
   if (savedUser) {
     this.$user.next(savedUser);
   }
+  }
+
+  getUserRole(): string {
+    return this.userRole;
   }
 
   login(request: LoginRequest): Observable<loginResponse> {
@@ -30,9 +34,13 @@ export class AuthService {
       tap(response => {
         // ✅ Salvar o token no localStorage
         localStorage.setItem('token', response.token);
+        this.userRole = response.roles[0];
   
         // ✅ Setar o user no BehaviorSubject
-        this.setUser({ email: response.email, roles: response.roles, userName: response.userName });
+        this.setUser({ 
+          email: response.email,
+           roles: response.roles,
+            userName: response.userName });
       })
     );
   }

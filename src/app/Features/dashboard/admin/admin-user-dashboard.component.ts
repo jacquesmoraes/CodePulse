@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { UserProfile } from 'src/app/profile/models/user-profile.model';
+import { UserProfile } from 'src/app/profile/user-profile/shared/models/user-profile.model';
 import { UserProfileService } from 'src/app/profile/user-profile.service';
 import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { BlogPostService } from '../../blog-post/services/blog-post.service';

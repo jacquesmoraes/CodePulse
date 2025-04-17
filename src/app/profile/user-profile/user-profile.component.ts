@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { UserProfile } from '../models/user-profile.model';
+import { UserProfile } from './shared/models/user-profile.model';
 import { UserProfileService } from '../user-profile.service';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/Features/auth/services/auth.service';
 import { FavoriteService } from 'src/app/Features/favorite/favorite.service';
 import { BlogPostService } from 'src/app/Features/blog-post/services/blog-post.service';
+import { FavoritePost } from 'src/app/Features/favorite/favorite-post.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -27,7 +28,7 @@ export class UserProfileComponent implements OnInit {
   isOwnProfile: boolean = false;
   profileRole: string = '';
 
-  favoritePosts: any[] = [];
+  favoritePosts: FavoritePost[] = [];
   favoritesLoading: boolean = false;
   activeFilter: string = 'all';
 
@@ -84,7 +85,12 @@ export class UserProfileComponent implements OnInit {
 
   filterFavorites(filter: string): void {
     this.activeFilter = filter;
-    this.loadFavorites();
+    if (filter === 'posts' && this.profile?.id && this.profile.role === 'Writer') {
+      // Load writer posts if not already loaded
+      if (this.writerPosts.length === 0 && !this.writerPostsLoading) {
+        this.loadWriterPosts(this.profile.id);
+      }
+    }
   }
 
   removeFavorite(favoriteId: string): void {
@@ -103,13 +109,13 @@ export class UserProfileComponent implements OnInit {
 
   loadOwnProfile(): void {
     this.loading = true;
-    this.isOwnProfile = true;
-
+    this.isOwnProfile = true;  // Make sure this is set to true
+  
     this.userProfileService.GetMyProfile().subscribe({
       next: (profile: UserProfile) => {
-        this.initProfileForm(profile);
-        this.userProfileService.setProfile(profile);
-        this.profileRole = profile.role;
+        this.profile = profile;
+        this.displayImageUrl = this.userProfileService.getFullImageUrl(profile.imageUrl);
+        this.loading = false;
         this.loadFavorites();
       },
       error: () => {
@@ -122,19 +128,18 @@ export class UserProfileComponent implements OnInit {
   loadPublicProfile(username: string): void {
     this.loading = true;
     this.isOwnProfile = false;
-
+  
     this.userProfileService.GetPublicProfile(username).subscribe({
       next: (profile: UserProfile) => {
+       
         this.profile = profile;
         this.displayImageUrl = this.userProfileService.getFullImageUrl(profile.imageUrl);
-        this.profileRole = profile.role;
+        this.loading = false;
         this.loadFavorites();
-
-        if (this.profileRole === 'Writer') {
+        
+        if (profile.role === 'Writer') {
           this.loadWriterPosts(profile.id);
         }
-
-        this.loading = false;
       },
       error: () => {
         this.toastr.error('Erro ao carregar perfil público.');
@@ -197,28 +202,77 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: Event): void {
+  onFileSelected(file: File): void {
     if (!this.isOwnProfile) return;
-
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedImageFile = input.files[0];
-    }
+    this.selectedImageFile = file;
+    this.updateProfileImage(); // Add this line to automatically update when file is selected
+  }
+  onImageLoaded(): void {
+    setTimeout(() => {
+      this.imageJustUpdated = false;
+    }, 500);
   }
 
-  onSubmit(): void {
-    if (!this.isOwnProfile || this.profileForm.invalid) {
-      this.profileForm.markAllAsTouched();
-      return;
+  onSubmit(formValues: {
+    fullName: string;
+    userName: string;
+    bio: string;
+    interests: string;
+  }): void {
+    if (!this.isOwnProfile || !this.profile) return;
+  
+    const formData = new FormData();
+    formData.append('fullName', formValues.fullName);
+    formData.append('userName', formValues.userName);
+    formData.append('bio', formValues.bio || '');
+    formData.append('interests', formValues.interests || '');
+  
+    if (this.selectedImageFile) {
+      formData.append('imageFile', this.selectedImageFile);
     }
-
-    this.sendProfileUpdateRequest();
+  
+    this.userProfileService.UpdateMyProfile(formData).subscribe({
+      next: () => {
+        this.toastr.success('Perfil atualizado com sucesso!');
+        this.selectedImageFile = undefined;
+        this.imageJustUpdated = true;
+        this.isEditing = false;
+        this.loadOwnProfile();
+      },
+      error: (error) => {
+        if (error.status === 400 && error.error === 'Nome de usuário já está em uso.') {
+          this.userNameExists = true;
+        } else {
+          this.toastr.error('Erro ao atualizar perfil.');
+        }
+      }
+    });
   }
 
   updateProfileImage(): void {
-    if (!this.isOwnProfile || !this.selectedImageFile) return;
-
-    this.sendProfileUpdateRequest(true);
+    if (!this.selectedImageFile) return;
+  
+    const formData = new FormData();
+    formData.append('imageFile', this.selectedImageFile);
+  
+    this.userProfileService.UpdateMyProfile(formData).subscribe({
+      next: (response) => {
+        this.imageJustUpdated = true;
+        this.selectedImageFile = undefined;
+        
+        // Force a new URL with timestamp to prevent caching
+        this.displayImageUrl = `${environment.apiBaseUrl}/${response.imageUrl}?t=${new Date().getTime()}`;
+        
+        // Optionally, you can also reload the profile to ensure all data is fresh
+        this.loadOwnProfile();
+        
+        this.toastr.success('Foto de perfil atualizada com sucesso!');
+      },
+      error: (error) => {
+        this.toastr.error('Erro ao atualizar foto de perfil.');
+        console.error('Error updating profile image:', error);
+      }
+    });
   }
 
   private sendProfileUpdateRequest(onlyImageUpdate: boolean = false): void {
@@ -262,6 +316,8 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  
+
   onDeleteMyProfile(): void {
     const confirmed = confirm('Tem certeza que deseja excluir seu perfil? Esta ação não poderá ser desfeita.');
 
@@ -289,9 +345,5 @@ export class UserProfileComponent implements OnInit {
     return this.profileForm.controls;
   }
 
-  onImageLoaded(): void {
-    setTimeout(() => {
-      this.imageJustUpdated = false;
-    }, 500);
-  }
+ 
 }

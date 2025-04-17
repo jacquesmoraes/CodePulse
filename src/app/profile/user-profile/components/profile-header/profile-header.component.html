@@ -1,0 +1,46 @@
+<!-- profile-header.component.html -->
+<div class="profile-header">
+    <div class="profile-photo-wrapper">
+      <div class="profile-photo">
+        <img [src]="displayImageUrl"
+             alt="Foto de perfil"
+             [class.fade-in]="imageJustUpdated"
+             (load)="onImageLoad()" />
+        
+        <!-- Photo edit button only shows on own profile -->
+        <button *ngIf="isOwnProfile" 
+                type="button" 
+                class="edit-photo-btn" 
+                (click)="photoInput.click()">
+          <i class="bi bi-camera"></i>
+        </button>
+        
+        <input #photoInput 
+               type="file" 
+               (change)="onFileSelected($event)" 
+               accept="image/*" 
+               style="display: none;" />
+      </div>
+    </div>
+  
+    <div class="profile-info" [class.public]="!isOwnProfile">
+      <h2>{{ profile?.fullName }}</h2>
+      <p class="username">{{'@'+ profile?.userName }}</p>
+      <p class="email" *ngIf="isOwnProfile">{{ profile?.email }}</p>
+  
+      <div class="stats-container">
+        <div class="stat-item">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Listas</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ favoritesCount }}</span>
+          <span class="stat-label">Favoritos</span>
+        </div>
+        <div class="stat-item" *ngIf="profile?.role === 'Writer'">
+          <span class="stat-value">{{ writerPostsCount }}</span>
+          <span class="stat-label">Posts</span>
+        </div>
+      </div>
+    </div>
+  </div>

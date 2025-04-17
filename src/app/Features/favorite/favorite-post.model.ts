@@ -6,5 +6,6 @@ export interface FavoritePost{
     blogPostUrlHandle: string;
     blogPostImageUrl: string;
     authorUserName: string;
+    authorImageUrl?: string;
     favoritedAt: string;
 }

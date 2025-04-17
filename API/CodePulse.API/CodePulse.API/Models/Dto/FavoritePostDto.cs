@@ -11,7 +11,7 @@ namespace CodePulse.API.Models.Dto
     public string BlogPostTitle { get; set; }
     public string BlogPostUrlHandle { get; set; }
     public string BlogPostImageUrl { get; set; }
-
+    public string? AuthorImageUrl { get; set; }
     public string AuthorUserName { get; set; }
     public DateTime FavoritedAt { get; set; }
   }

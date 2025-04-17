@@ -4,10 +4,10 @@ import { BlogPostAuthor } from "./blogpost-author.model";
 export interface BlogPost {
     id: string;
     title: string;
-    shortDescription: string;
-    content: string;
-    featuredImageUrl: string;
     urlHandle: string;
+    shortDescription: string;
+    featuredImageUrl: string;
+    content: string;
     publishedDate: Date;
     isVisible: boolean;
     author: BlogPostAuthor;

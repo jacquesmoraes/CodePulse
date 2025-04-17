@@ -12,5 +12,6 @@ namespace CodePulse.API.Models.Dto
         public string? Bio { get; set; }
         public string? Interests { get; set; }
         public string? ImageUrl { get; set; }
-    }
+    public string Role { get; set; }
+  }
 }
