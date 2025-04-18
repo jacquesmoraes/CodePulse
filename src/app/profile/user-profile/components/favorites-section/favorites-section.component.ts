@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BlogPost } from 'src/app/Features/blog-post/models/blog-post.model';
 import { FavoritePost } from 'src/app/Features/favorite/favorite-post.model';
+import { UserProfileService } from 'src/app/profile/user-profile.service';
 
 @Component({
   selector: 'app-favorites-section',
@@ -18,6 +19,7 @@ export class FavoritesSectionComponent {
   @Output() filterChange = new EventEmitter<string>();
   @Output() removeFavorite = new EventEmitter<string>();
 
+  constructor(public userProfileService: UserProfileService) {}
   get isWriter(): boolean {
     return this.profile?.role === 'Writer';
   }
@@ -26,7 +28,7 @@ export class FavoritesSectionComponent {
     if (this.activeFilter === 'posts' && this.isWriter) {
       return `Posts publicados por ${this.profile?.fullName || ''}`;
     }
-    return 'Posts Favoritos';
+    return 'Posts Favoritos ';
   }
 
   get displayPosts(): any[] {
@@ -34,6 +36,9 @@ export class FavoritesSectionComponent {
       return this.writerPosts;
     }
     return this.favoritePosts;
+  }
+  getImageUrl(path?: string): string {
+    return this.userProfileService.getFullImageUrl(path);
   }
 
   onFilterChange(filter: string): void {

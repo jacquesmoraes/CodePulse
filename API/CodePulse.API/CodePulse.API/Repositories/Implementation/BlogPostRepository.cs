@@ -109,19 +109,19 @@ namespace CodePulse.API.Repositories.Implementation
         .ToListAsync();
 }
 
-    public async Task<BlogPost?> UpdateBlogPostAsync(BlogPost blogPost)
+    public async Task<BlogPost?> UpdateBlogPostAsync(BlogPost updateBlogPost)
     {
       var existingPost = await _context.BlogPosts
         .Include(bp => bp.Categories)
         .Include(bp => bp.AuthorProfile)
-        .FirstOrDefaultAsync(bp => bp.Id == blogPost.Id);
+        .FirstOrDefaultAsync(bp => bp.Id == updateBlogPost.Id);
 
       if (existingPost == null)
         return null;
 
-      _context.Entry(existingPost).CurrentValues.SetValues(blogPost);
+      _context.Entry(existingPost).CurrentValues.SetValues(updateBlogPost);
 
-      var categoryIds = blogPost.Categories.Select(x => x.Id).ToList();
+      var categoryIds = updateBlogPost.Categories.Select(x => x.Id).ToList();
       var categories = await _context.Categories
         .Where(c => categoryIds.Contains(c.Id))
         .ToListAsync();

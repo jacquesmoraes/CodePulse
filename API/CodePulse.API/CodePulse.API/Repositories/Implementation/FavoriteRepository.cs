@@ -1,3 +1,4 @@
+using CodePulse.API.Data;
 using CodePulse.API.Helper;
 using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.Dto;
@@ -46,7 +47,8 @@ namespace CodePulse.API.Repositories.Implementation
       var favorites = await _applicationContext.FavoritePosts
         .Where(x => x.UserId == userId )
         .Include(x => x.BlogPost)
-        .ThenInclude(x => x.AuthorProfile)
+        .ThenInclude(x => x.AuthorProfile).
+        ThenInclude(x=> x.Image)
           .ToListAsync ( );
 
       return favorites.Select( FavoritePostMapper.ToDto );

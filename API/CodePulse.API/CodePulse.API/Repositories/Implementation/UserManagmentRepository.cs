@@ -11,20 +11,20 @@ public class UserManagementRepository : IUserManagmentRepository
   private readonly UserManager<UserProfile> _userManager;
   private readonly IWebHostEnvironment _environment;
   private readonly ApplicationContext _appContext;
-  private readonly ILogger<UserManagementRepository> _logger1;
+  
   private readonly AuthContext _context;
 
   public UserManagementRepository (
       UserManager<UserProfile> userManager,
       IWebHostEnvironment environment,
       ApplicationContext appContext,
-      ILogger<UserManagementRepository> logger1,
+      
       AuthContext context )
   {
     _userManager = userManager;
     _environment = environment;
     _appContext = appContext;
-    _logger1 = logger1;
+    
     _context = context;
   }
 
@@ -63,6 +63,7 @@ public class UserManagementRepository : IUserManagmentRepository
         }
 
         await transaction.CommitAsync();
+
 
         return await _userManager.FindByIdAsync(userProfile.Id);
     }

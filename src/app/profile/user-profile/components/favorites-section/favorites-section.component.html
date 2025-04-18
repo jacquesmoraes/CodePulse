@@ -37,7 +37,10 @@
             </h4>
             <div class="post-meta">
               <div class="author-info">
-                <img [src]="post.authorImageUrl ? post.authorImageUrl : 'assets/default-avatar.png'"  [alt]="post.authorUserName" class="author-avatar">
+                <img [src]="getImageUrl(post.authorImageUrl)" 
+     [alt]="post.authorUserName" 
+     class="author-avatar">
+
                 <span>{{ post.authorUserName }}</span>
               </div>
               <time>{{ post.favoritedAt | date:'mediumDate' }}</time>

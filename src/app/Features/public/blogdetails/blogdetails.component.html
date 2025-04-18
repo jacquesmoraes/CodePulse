@@ -16,14 +16,19 @@
               </div>
 
               <h1 class="blog-post-title">{{ blogpost.title }}</h1>
-              <button (click)="toggleFavorite()" class="favorite-btn-compact" [class.favorited]="isFavorited"
-                *ngIf="isAuthenticated"
-                [attr.aria-label]="isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
-                <i class="bi" [class.bi-heart-fill]="isFavorited" [class.bi-heart]="!isFavorited"></i>
-                <span class="favorite-text">
-                  {{ isFavorited ? 'Salvo' : 'Salvar' }}
-                </span>
-              </button>
+              <!-- blogdetails.component.html -->
+              <button 
+              class="favorite-btn-compact" 
+              [class.favorited]="isFavorited"
+              [disabled]="isFavorited"
+              *ngIf="isAuthenticated"
+              (click)="addToFavorites()"
+              [attr.aria-label]="isFavorited ? 'Post já salvo nos favoritos' : 'Adicionar aos favoritos'">
+              <i class="bi" [class.bi-heart-fill]="isFavorited" [class.bi-heart]="!isFavorited"></i>
+              <span class="favorite-text">
+                  {{ isFavorited ? 'Salvo ✓' : 'Salvar' }}
+              </span>
+          </button>
 
 
               <!-- Meta info do autor -->

@@ -423,3 +423,11 @@
     width: 100%;
   }
 }
+.favorite-btn-compact.disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.favorite-btn-compact.disabled:hover {
+  transform: none; /* remove qualquer animação de hover */
+}

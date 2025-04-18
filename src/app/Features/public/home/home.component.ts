@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
     private spinner: NgxSpinnerService
   ) { }
   ngOnInit(): void {
-    this.viewportScroller.scrollToPosition([0, 0]);
+    
   
     forkJoin({
       posts: this.blogpostservice.GetAllBlogPosts(),
@@ -124,7 +124,7 @@ export class HomeComponent implements OnInit {
   }
 
   clearCategoryFilter(): void {
-    this.viewportScroller.scrollToPosition([0, 0]);
+   
     this.loading = true;
     this.spinner.show();
   

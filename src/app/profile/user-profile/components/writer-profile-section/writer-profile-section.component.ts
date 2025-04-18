@@ -22,14 +22,7 @@ export class WriterProfileSectionComponent {
     return this.profile?.role === 'Writer';
   }
 
-  get sectionTitle(): string {
-    if (this.isWriter) {
-      return this.activeFilter === 'posts' 
-        ? `Posts publicados por ${this.profile?.fullName || ''}`
-        : 'Posts Favoritos';
-    }
-    return 'Posts Favoritos';
-  }
+ 
 
   onFilterChange(filter: string): void {
     this.filterChange.emit(filter);

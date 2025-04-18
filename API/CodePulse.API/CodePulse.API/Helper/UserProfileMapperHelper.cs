@@ -4,7 +4,7 @@ using CodePulse.API.Models.Dto;
 namespace CodePulse.API.Helper;
 public static class UserProfileMapperHelper
 {
-  public static UserProfileDto MapToDto(UserProfile profile, HttpRequest request, string role)
+  public static UserProfileDto MapToDto(UserProfile profile,  string role)
     {
         return new UserProfileDto
         {

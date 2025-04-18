@@ -8,6 +8,7 @@ import { User } from '../../auth/models/user.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FavoriteService } from '../../favorite/favorite.service';
 import { AuthService } from '../../auth/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-blogdetails',
@@ -33,13 +34,16 @@ export class BlogdetailsComponent implements OnInit {
     private viewportScroller: ViewportScroller,
     private spinner: NgxSpinnerService,
     private favoriteService: FavoriteService,
-    private authService:AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this.spinner.show();
-    this.viewportScroller.scrollToPosition([0, 0]);
+    
+ 
     this.isAuthenticated = !!this.authService.getUser(); 
+    
     this.route.paramMap.subscribe({
       next: (params) => {
         this.url = params.get('url');
@@ -54,11 +58,18 @@ export class BlogdetailsComponent implements OnInit {
               this.blogPostId = post.id;
 
               // Verifica se o post está nos favoritos
-              if (this.blogPostId) {
+              if (this.isAuthenticated && this.blogPostId) {
                 this.favoriteService.isFavorite(this.blogPostId).subscribe({
-                  next: (res) => this.isFavorited = res.isFavorite,
-                  error: () => this.isFavorited = false
+                  next: (res) => {
+                    this.isFavorited = res;
+                    console.log('✓ isFavorited atualizado corretamente:', this.isFavorited);
+                  },
+                  error: (err) => {
+                    console.error('Erro ao verificar favorito:', err);
+                    this.isFavorited = false;
+                  }
                 });
+                 
               }
 
               this.loadDisqus(this.blogPostId, post.urlHandle);
@@ -102,18 +113,32 @@ export class BlogdetailsComponent implements OnInit {
   loadDisqus(postId: string, urlHandle: string): void {
     const pageUrl = window.location.href;
     const pageIdentifier = postId;
-
+  
     (window as any).disqus_config = function () {
       this.page.url = pageUrl;
       this.page.identifier = pageIdentifier;
     };
-
-    const d = document;
-    const s = d.createElement('script');
-    s.src = 'https://codepulse-blog.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', Date.now().toString());
-    (d.head || d.body).appendChild(s);
+  
+    const disqus = (window as any).DISQUS;
+  
+    if (disqus) {
+      disqus.reset({
+        reload: true,
+        config: function () {
+          this.page.url = pageUrl;
+          this.page.identifier = pageIdentifier;
+        }
+      });
+    } else {
+      const d = document;
+      const s = d.createElement('script');
+      s.src = 'https://codepulse-blog.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', Date.now().toString());
+      s.async = true;
+      (d.head || d.body).appendChild(s);
+    }
   }
+  
 
   shareOnTwitter() {
     const url = window.location.href;
@@ -130,18 +155,22 @@ export class BlogdetailsComponent implements OnInit {
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
   }
 
-  // Novo método para favoritos
-  toggleFavorite(): void {
-    if (!this.blogPostId) return;
+  addToFavorites(): void {
+    if (!this.blogPostId || this.isFavorited) return;
 
-    if (this.isFavorited) {
-      this.favoriteService.removeFavorite(this.blogPostId).subscribe({
-        next: () => this.isFavorited = false
-      });
-    } else {
-      this.favoriteService.addFavorite(this.blogPostId).subscribe({
-        next: () => this.isFavorited = true
-      });
-    }
+    this.favoriteService.addFavorite(this.blogPostId).subscribe({
+      next: () => {
+        this.isFavorited = true;
+        this.toastr.success('Post salvo nos favoritos!');
+      },
+      error: (error) => {
+        if (error.status === 400) {
+          this.isFavorited = true;
+          this.toastr.info('Este post já está nos seus favoritos');
+        } else {
+          this.toastr.error('Erro ao salvar nos favoritos');
+        }
+      }
+    });
   }
 }

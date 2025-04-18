@@ -21,9 +21,10 @@ return this.http.get<FavoritePost[]>(this.baseUrl);
   }
   
 
-  isFavorite(postId: string): Observable<{isFavorite : boolean}>{
-return this.http.get<{isFavorite: boolean}>(`${this.baseUrl}/isFavorite/${postId}`);
+  isFavorite(postId: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.baseUrl}/isFavorite/${postId}`);
   }
+  
 
   addFavorite(postId:string): Observable<FavoritePost>{
     return this.http.post<FavoritePost>(`${this.baseUrl}/${postId}`, {});

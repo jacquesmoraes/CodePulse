@@ -1,7 +1,7 @@
-using CodePulse.API.Models.Dto;
-
-public class BlogPostDto
+namespace CodePulse.API.Models.Dto
 {
+  public class BlogPostDto
+  {
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string ShortDescription { get; set; }
@@ -10,9 +10,10 @@ public class BlogPostDto
     public string UrlHandle { get; set; }
     public DateTime PublishedDate { get; set; }
     public bool IsVisible { get; set; }
-    public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
-  public int ViewCount { get; set; }
-  public BlogPostAuthorDto Author { get; set; }
+    public List<CategoryDto> Categories { get; set; } = new List<CategoryDto> ( );
+    public int ViewCount { get; set; }
+    public BlogPostAuthorDto Author { get; set; }
 
 
+  }
 }

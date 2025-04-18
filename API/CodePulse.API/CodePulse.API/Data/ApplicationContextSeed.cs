@@ -7,11 +7,11 @@ namespace CodePulse.API.Data
 {
   public class ApplicationContextSeed
   {
-    public static async Task SeedAsync(ApplicationContext applicationContext, UserManager<UserProfile> userManager)
+    public  static async Task SeedAsync(ApplicationContext applicationContext, UserManager<UserProfile> userManager)
     {
       if ( !applicationContext.Categories.Any ( ) )
       {
-        var categoriesData = File.ReadAllText("Data/SeedData/Category.json");
+        var categoriesData = await File.ReadAllTextAsync("Data/SeedData/Category.json");
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var categories = JsonSerializer.Deserialize<List<Category>>(categoriesData, options);
         applicationContext.Categories.AddRange(categories);
@@ -19,13 +19,8 @@ namespace CodePulse.API.Data
 
       if ( !applicationContext.BlogPosts.Any ( ) )
       {
-        var adminUser = await userManager.FindByEmailAsync("admin@codepulse.com");
-        if (adminUser == null)
-        {
-          throw new Exception("Admin user not found. Please ensure the admin user is created before seeding blog posts.");
-        }
-
-        var BlogPostsData = File.ReadAllText("Data/SeedData/BlogPost.json");
+        var adminUser =  await userManager.FindByEmailAsync("admin@codepulse.com")  ?? throw new Exception("Admin user not found. Please ensure the admin user is created before seeding blog posts.");
+        var BlogPostsData = await File.ReadAllTextAsync("Data/SeedData/BlogPost.json");
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var blogPosts = JsonSerializer.Deserialize<List<BlogPost>>(BlogPostsData, options);
         

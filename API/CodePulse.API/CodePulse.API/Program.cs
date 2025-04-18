@@ -88,4 +88,4 @@ catch(Exception err)
     logger.LogError(err, "an error occured during migration");
 }
 
-app.Run();
+await app.RunAsync();

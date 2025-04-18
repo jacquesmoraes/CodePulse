@@ -1,6 +1,7 @@
 using CodePulse.API.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 
+namespace CodePulse.API.Data;
 public class ApplicationContext : DbContext
 {
   public DbSet<BlogPost> BlogPosts { get; set; }
