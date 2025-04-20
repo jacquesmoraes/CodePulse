@@ -1,31 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { UserProfile } from 'src/app/profile/user-profile/shared/models/user-profile.model';
 import { UserProfileService } from 'src/app/profile/user-profile.service';
-import { BlogPost } from '../../blog-post/models/blog-post.model';
-import { BlogPostService } from '../../blog-post/services/blog-post.service';
-import { AuthService } from '../../auth/services/auth.service';
-import { Router } from '@angular/router';
+import { BlogPost } from '../../../blog-post/models/blog-post.model';
+import { BlogPostService } from '../../../blog-post/services/blog-post.service';
+import { AdminUserService } from '../services/admin-user.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-admin-user-dashboard',
+  templateUrl: './admin-user-dashboard.component.html',
+  styleUrls: ['./admin-user-dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class AdminUserDashboardComponent {
   profile?: UserProfile;
   blogPosts: BlogPost[] = [];
   loading = true;
   displayImageUrl: string = '';
   selectedSection: string = 'posts';
+  authors: UserProfile[] = []; 
   selectedImageFile: File | null = null;
 
-  isAdmin: boolean = false;
+
   constructor(
     private userProfileService: UserProfileService,
     private blogPostService: BlogPostService,
-    private toastr: ToastrService,
-    
+    private adminUserService: AdminUserService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -36,12 +36,11 @@ export class DashboardComponent implements OnInit {
     this.userProfileService.GetMyProfile().subscribe({
       next: (profile) => {
         this.profile = profile;
-        this.displayImageUrl =this.userProfileService.getFullImageUrl(profile.imageUrl);
+        this.displayImageUrl = this.userProfileService.getFullImageUrl(profile.imageUrl);
 
         this.blogPostService.getMyPosts().subscribe({
           next: (posts) => {
             this.blogPosts = posts;
-            
             this.loading = false;
           },
           error: () => {
@@ -55,17 +54,30 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
       }
     });
+
+    // Usando o AdminUserService em vez do UserProfileService
+    this.adminUserService.getAllUsers().subscribe({
+      next: (data) => {
+        // opcional: filtra o admin fora da lista
+        this.authors = data.filter(author => author.userName.toLowerCase() !== 'admin');
+      },
+      error: (error) => {
+        console.error('Erro ao carregar autores:', error);
+        this.toastr.error('Erro ao carregar autores');
+      }
+    });
   }
 
   onSectionChange(section: string) {
     this.selectedSection = section;
   }
+
+
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    if (!file) return;
   
-    if (!file.type.match(/image\/*/)) {
-      this.toastr.error('Por favor, selecione um arquivo de imagem válido.');
+    if (!file || !file.type.startsWith('image/')) {
+      this.toastr.error('Por favor, selecione uma imagem válida.');
       return;
     }
   
@@ -75,37 +87,26 @@ export class DashboardComponent implements OnInit {
     }
   
     this.selectedImageFile = file;
-    this.uploadProfileImage();
+    this.uploadAdminProfileImage();
   }
   
-  uploadProfileImage(): void {
+
+  uploadAdminProfileImage(): void {
     if (!this.selectedImageFile) return;
   
     const formData = new FormData();
-    formData.append('fullName', this.profile?.fullName || '');
-    formData.append('userName', this.profile?.userName || '');
-    formData.append('bio', this.profile?.bio || '');
     formData.append('imageFile', this.selectedImageFile);
   
     this.userProfileService.UpdateMyProfile(formData).subscribe({
       next: (updatedProfile) => {
-        this.toastr.success('Imagem de perfil atualizada!');
+        this.toastr.success('Imagem de perfil atualizada com sucesso!');
         this.profile = updatedProfile;
         this.displayImageUrl = this.userProfileService.getFullImageUrl(updatedProfile.imageUrl);
         this.selectedImageFile = null;
-        this.userProfileService.setProfile(updatedProfile);
       },
       error: () => {
-        this.toastr.error('Erro ao atualizar imagem do perfil.');
+        this.toastr.error('Erro ao atualizar imagem de perfil.');
       }
     });
   }
-  
- 
-
-
 }
-
-
-
-

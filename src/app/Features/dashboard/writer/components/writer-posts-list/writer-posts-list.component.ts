@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BlogPost } from 'src/app/Features/blog-post/models/blog-post.model';
 import { UserProfile } from 'src/app/profile/user-profile/shared/models/user-profile.model';
-import { AdminUserService } from '../../admin/admin-user.service';
+
 import { BlogPostService } from 'src/app/Features/blog-post/services/blog-post.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';

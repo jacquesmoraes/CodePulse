@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserProfile } from 'src/app/profile/user-profile/shared/models/user-profile.model';
-import { AdminUserService } from '../admin-user.service';
+
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AdminUserService } from '../../services/admin-user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin-user-list',
@@ -16,7 +18,8 @@ export class AdminUserListComponent implements OnInit {
 
   constructor(
     private adminUserService: AdminUserService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +50,31 @@ export class AdminUserListComponent implements OnInit {
   viewProfile(userName: string): void {
     this.router.navigate(['/profile', userName]);
   }
+
+  onRoleChange(user: UserProfile): void {
+    Swal.fire({
+      title: 'Alterar papel?',
+      text: `Tem certeza que deseja definir como "${user.role}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, alterar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.adminUserService.updateUserRole(user.id, user.role).subscribe({
+          next: () => {
+            this.toastr.success('Papel atualizado com sucesso!');
+          },
+          error: () => {
+            this.toastr.error('Erro ao atualizar o papel.');
+          }
+        });
+      }
+    });
+  }
+
+
+
 
   deleteUser(userId: string): void {
     Swal.fire({

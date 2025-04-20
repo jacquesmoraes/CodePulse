@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserProfile } from '../../shared/models/user-profile.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile-edit-form',
@@ -44,13 +45,21 @@ export class ProfileEditFormComponent {
     this.cancelEdit.emit();
   }
 
-  onDelete(): void {
-    if (confirm('Tem certeza que deseja excluir seu perfil? Esta ação não poderá ser desfeita.')) {
+  async onDelete(): Promise<void> {
+    const result = await Swal.fire({
+      title: 'Excluir perfil?',
+      text: 'Esta ação é irreversível. Deseja continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
       this.deleteProfile.emit();
     }
   }
 
-  // Helper methods for form validation
   get f() { 
     return this.profileForm.controls; 
   }

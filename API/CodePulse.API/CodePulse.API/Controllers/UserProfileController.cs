@@ -196,21 +196,23 @@ namespace CodePulse.API.Controllers
 
 
     // Endpoint para usuário autenticado deletar seu próprio perfil
-    [HttpDelete ( "me" )]
-    [Authorize]
-    public async Task<IActionResult> DeleteMyProfile ( )
+   [HttpDelete("me")]
+[Authorize]
+public async Task<IActionResult> DeleteMyProfile()
+{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    var deletedProfile = await _userRepository.DeleteUserProfileAsync(userId);
+
+    if (deletedProfile == null)
     {
-      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-      var deleted = await _userRepository.DeleteUserProfileAsync(userId);
-
-      if ( !deleted )
-      {
-        return NotFound ( "Perfil não encontrado ou já foi excluído." );
-      }
-
-      return NoContent ( );
+        return NotFound("Perfil não encontrado ou já foi excluído.");
     }
+
+    return NoContent();
+}
+
+
 
 
 
@@ -232,7 +234,8 @@ namespace CodePulse.API.Controllers
               Email = p.Email,
               FullName = p.FullName,
               Bio = p.Bio,
-              ImageUrl = p.Image != null ? p.Image.Url : null
+              ImageUrl = p.Image != null ? p.Image.Url : null,
+              Role = "Writer"
             })
             .ToListAsync();
 

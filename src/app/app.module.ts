@@ -22,27 +22,18 @@ import { LoginComponent } from './Features/auth/login/login.component';
 import { AuthInterceptor } from './Core/interceptors/auth.interceptor';
 import { RegisterComponent } from './Features/auth/register/register.component';
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
-import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
+import {  NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { LazyLoadDirective } from './shared/directives/lazy-load.directive';
-import { UserProfileComponent } from './profile/user-profile/user-profile.component';
+
 import { SidebarComponent } from './Features/public/sidebar/sidebar.component';
-import { DashboardComponent } from './Features/dashboard/writer/dashboard.component';
-import { WriterSidebarComponent } from './Features/dashboard/writer/writer-sidebar/writer-sidebar.component';
-import { WriterPostsComponent } from './Features/dashboard/writer/writer-posts/writer-posts.component';
-import { WriterPostsListComponent } from './Features/dashboard/writer/writer-posts-list/writer-posts-list.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MarkdownModule } from 'ngx-markdown';
-import { WriterProfileComponent } from './Features/dashboard/writer/writer-profile/writer-profile.component';
-import { AdminUserListComponent } from './Features/dashboard/admin/admin-user-list/admin-user-list.component';
-import { AdminUserCreateComponent } from './Features/dashboard/admin/admin-user-create/admin-user-create.component';
-import { AdminUserDashboardComponent } from './Features/dashboard/admin/admin-user-dashboard.component';
-import { ProfileHeaderComponent } from './profile/user-profile/components/profile-header/profile-header.component';
-import { ProfileDetailsComponent } from './profile/user-profile/components/profile-details/profile-details.component';
-import { ProfileEditFormComponent } from './profile/user-profile/components/profile-edit-form/profile-edit-form.component';
-import { FavoritesSectionComponent } from './profile/user-profile/components/favorites-section/favorites-section.component';
-import { WriterProfileSectionComponent } from './profile/user-profile/components/writer-profile-section/writer-profile-section.component';
+import { DashboardModule } from './Features/dashboard/dashboard.module';
+import { UserProfileModule } from './profile/user-profile/user-profile.module';
+
+
 
 
 
@@ -64,28 +55,17 @@ import { WriterProfileSectionComponent } from './profile/user-profile/components
     LoginComponent,
     RegisterComponent,
     LazyLoadDirective,
-    UserProfileComponent,
-    SidebarComponent,
-    DashboardComponent,
-    WriterSidebarComponent,
-    WriterPostsComponent,
-    WriterPostsListComponent,
-    WriterProfileComponent,
-    UserProfileComponent,
-    AdminUserListComponent,
-    AdminUserCreateComponent,
-    AdminUserDashboardComponent,
-    ProfileHeaderComponent,
-    ProfileDetailsComponent,
-    ProfileEditFormComponent,
-    FavoritesSectionComponent,
-    WriterProfileSectionComponent
+    SidebarComponent
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    DashboardModule,
+    UserProfileModule,
+    
     MarkdownModule.forRoot(),
     NgApexchartsModule,
     NgxSpinnerModule,

@@ -13,12 +13,8 @@ import { LoginComponent } from './Features/auth/login/login.component';
 import { authGuard } from './Features/auth/guards/auth.guard';
 import { RegisterComponent } from './Features/auth/register/register.component';
 import { UserProfileComponent } from './profile/user-profile/user-profile.component';
-import { DashboardComponent } from './Features/dashboard/writer/dashboard.component';
 import { adminGuard } from './Features/auth/guards/admin.guard';
-import { AdminUserDashboardComponent } from './Features/dashboard/admin/admin-user-dashboard.component';
-import { AdminUserListComponent } from './Features/dashboard/admin/admin-user-list/admin-user-list.component';
-import { AdminUserCreateComponent } from './Features/dashboard/admin/admin-user-create/admin-user-create.component';
-import { WriterProfileComponent } from './Features/dashboard/writer/writer-profile/writer-profile.component';
+
 
 
 const routes: Routes = [
@@ -29,12 +25,6 @@ const routes: Routes = [
   { path: 'admin/blogpost/add', component: AddBlogpostComponent, canActivate: [authGuard] },
   { path: 'admin/blogpost/:id', component: EditBlogPostComponent, canActivate: [authGuard] },
   { path: 'admin/blogpost/details/:id', component: BlogPostDetailsComponent, canActivate: [authGuard] },
-  {path: 'admin/dashboard', component: AdminUserDashboardComponent, canActivate:[adminGuard]},
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'dashboard/edit/:id', component: EditBlogPostComponent, canActivate: [authGuard] },
-  { path: 'dashboard/details/:id', component: BlogPostDetailsComponent, canActivate: [authGuard] },
-  {path: 'dashboard/add', component:AddBlogpostComponent, canActivate: [authGuard]},
-  { path: 'dashboard/atualizarperfil', component:WriterProfileComponent, canActivate: [authGuard] },
   { path: '', component: HomeComponent },
   { path: 'blog/:url', component: BlogdetailsComponent },
   { path: 'login', component: LoginComponent },

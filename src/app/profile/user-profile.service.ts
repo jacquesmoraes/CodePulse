@@ -30,7 +30,9 @@ export class UserProfileService {
   UpdateMyProfile(data: FormData): Observable<UserProfile>{
     return this.http.put<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/me`, data)
   }
-
+  getAllWriters(): Observable<UserProfile[]> {
+    return this.http.get<UserProfile[]>(`${environment.apiBaseUrl}/api/UserProfile/writers`);
+  }
  
   GetPublicProfile(username: string): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/public/${username}`);

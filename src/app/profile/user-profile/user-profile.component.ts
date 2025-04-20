@@ -319,27 +319,24 @@ export class UserProfileComponent implements OnInit {
   
 
   onDeleteMyProfile(): void {
-    const confirmed = confirm('Tem certeza que deseja excluir seu perfil? Esta ação não poderá ser desfeita.');
-
-    if (confirmed) {
-      this.userProfileService.deleteUser().subscribe({
-        next: () => {
-          this.toastr.success('Perfil excluído com sucesso.');
-          this.authService.lougout();
-          setTimeout(() => {
-            this.router.navigateByUrl('/login');
-          }, 1500);
-        },
-        error: (error) => {
-          if (error.status === 403) {
-            this.toastr.error('Você não tem permissão para excluir este perfil.');
-          } else {
-            this.toastr.error('Erro ao excluir o perfil.');
-          }
+    this.userProfileService.deleteUser().subscribe({
+      next: () => {
+        this.toastr.success('Perfil excluído com sucesso.');
+        this.authService.lougout();
+        setTimeout(() => {
+          this.router.navigateByUrl('/login');
+        }, 1500);
+      },
+      error: (error) => {
+        if (error.status === 403) {
+          this.toastr.error('Você não tem permissão para excluir este perfil.');
+        } else {
+          this.toastr.error('Erro ao excluir o perfil.');
         }
-      });
-    }
+      }
+    });
   }
+  
 
   get f(): { [key: string]: AbstractControl } {
     return this.profileForm.controls;

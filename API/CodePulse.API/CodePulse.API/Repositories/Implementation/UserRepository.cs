@@ -13,6 +13,7 @@ namespace CodePulse.API.Repositories.Implementation
     private readonly AuthContext _context;
     private readonly IWebHostEnvironment _environment;
     private readonly IUserImageProfileRepository _userImageRepository;
+    private readonly ApplicationContext _appContext;
     private readonly ILogger<UserRepository> _logger;
 
     public UserRepository(
@@ -20,12 +21,14 @@ namespace CodePulse.API.Repositories.Implementation
       AuthContext context,
       IWebHostEnvironment environment,
       IUserImageProfileRepository userImageRepository,
+      ApplicationContext appContext,
       ILogger<UserRepository> logger)
     {
       _userManager = userManager;
       _context = context;
       _environment = environment;
       _userImageRepository = userImageRepository;
+      _appContext = appContext;
       _logger = logger;
     }
 
@@ -73,7 +76,7 @@ namespace CodePulse.API.Repositories.Implementation
       };
     }
 
-    public async Task<UpdateUserProfileResponseDto?> UpdateUserProfileAsync(string userId, UpdateUserProfileRequestDto request)
+   public async Task<UpdateUserProfileResponseDto?> UpdateUserProfileAsync(string userId, UpdateUserProfileRequestDto request)
 {
     using var transaction = await _context.Database.BeginTransactionAsync();
     try
@@ -97,7 +100,8 @@ namespace CodePulse.API.Repositories.Implementation
             if (existingProfile != null)
                 throw new ArgumentException("Nome de usuário já está em uso.");
 
-            profile.UserName = request.UserName;
+            profile.UserName = request.UserName.Replace(" ","");
+            profile.NormalizedUserName = request.UserName.ToUpper().Replace(" ",""); // <- ESSENCIAL para o Identity funcionar corretamente
         }
 
         if (!string.IsNullOrWhiteSpace(request.Bio))
@@ -131,7 +135,7 @@ namespace CodePulse.API.Repositories.Implementation
             UserId = profile.Id,
             FullName = profile.FullName,
             UserName = profile.UserName,
-            Bio = profile.Bio,
+          Bio = profile.Bio,
             Interests = profile.Interests,
             Image = profile.Image != null ? new UserImageProfileDto
             {
@@ -149,20 +153,27 @@ namespace CodePulse.API.Repositories.Implementation
     }
 }
 
-   public async Task<bool> DeleteUserProfileAsync(string userId)
+   public async Task<UserProfile?> DeleteUserProfileAsync(string userId)
 {
     using var transaction = await _context.Database.BeginTransactionAsync();
 
     try
     {
+        // Remove favoritos primeiro, usando _appContext
+        var favorites = await _appContext.FavoritePosts
+            .Where(f => f.UserId == userId)
+            .ToListAsync();
+        _appContext.FavoritePosts.RemoveRange(favorites);
+        await _appContext.SaveChangesAsync(); // 🔥 ESSENCIAL para evitar erro de FK
+
         var profile = await _context.UsersProfiles
             .Include(p => p.Image)
             .FirstOrDefaultAsync(p => p.Id == userId);
 
         if (profile == null)
-            return false;
+            return null;
 
-        // Deleta imagem do disco e do banco
+        // Remove imagem física e lógica
         if (profile.Image != null)
         {
             var imagePath = Path.Combine(_environment.WebRootPath, profile.Image.Url);
@@ -176,7 +187,7 @@ namespace CodePulse.API.Repositories.Implementation
         await _context.SaveChangesAsync();
         await transaction.CommitAsync();
 
-        return true;
+        return profile;
     }
     catch
     {
@@ -184,6 +195,8 @@ namespace CodePulse.API.Repositories.Implementation
         throw;
     }
 }
+
+
 
     public async Task<UserProfileDto?> GetUserProfileByUserNameAsync(string username)
     {

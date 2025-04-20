@@ -118,10 +118,15 @@
           [popularLoading]="popularLoading"
           [sidebarLoading]="loading"
           [categories$]="categories$"
+          [writers]="writers"
+          [selectedWriterIds]="selectedWriterIds"
           [selectedCategoryIds]="selectedCategoryIds"
           (categoryClicked)="onCategoryClick($event)"
           (categoryRemoved)="removeCategory($event)"
           (clearCategories)="clearCategoryFilter()"
+          (writerClicked)="onWriterClick($event)"
+          (writerRemoved)="removeWriter($event)"
+          (clearWriters)="clearWriterFilter()"
           [trackByFn]="trackByFn"
         ></side-bar>
         

@@ -14,7 +14,7 @@ namespace CodePulse.API.Repositories.Interface
     
 
 
-        Task<bool> DeleteUserProfileAsync(string userId);
+        Task<UserProfile> DeleteUserProfileAsync(string userId);
         Task<UserProfileDto?> GetUserProfileByUserNameAsync(string username);
         Task<List<UserProfileDto>> GetAllProfilesAsync();
         Task<UserProfile?> GetUserProfileByIdentityUserIdAsync(string userId);

@@ -14,15 +14,7 @@
          (imageLoaded)="onImageLoaded()">
       </app-profile-header>
 
-      <app-profile-edit-form
-      *ngIf="isOwnProfile && profile && isEditing"
-      [profile]="profile"
-      [userNameExists]="userNameExists"
-      (formSubmit)="onSubmit($event)"
-      (cancelEdit)="cancelEdit()"
-      (deleteProfile)="onDeleteMyProfile()"
-      >        
-      </app-profile-edit-form>
+    
 
     <!-- PERFIL PRÓPRIO (edição e visualização) -->
       <app-profile-edit-form

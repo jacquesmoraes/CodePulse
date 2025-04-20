@@ -6,12 +6,12 @@ namespace CodePulse.API.Repositories.Interface
 {
   public interface IUserManagmentRepository
   {
-     Task<UserProfile> CreateUserAsync(UserProfile userProfile, string password, string email, string role);
-    Task<List<UserProfile>> GetAllUsersAsync();
-    Task<UserProfile?> GetWriterByIdAsync(string userId);
-    Task<UserProfile?> UpdateUserRoleAsync(string userId, string newRole);
+     Task<UserProfileDto> CreateUserAsync(UserProfile userProfile, string password, string email, string role);
+    Task<List<UserProfileDto>> GetAllUsersAsync();
+    Task<UserProfileDto?> GetWriterByIdAsync(string userId);
+    Task<UserProfileDto?> UpdateUserRoleAsync(string userId, string newRole);
     
-    Task<UserProfile?> RemoveUserAsync(string userIdToRemove, ClaimsPrincipal currentUser);
+    Task<UserProfileDto?> RemoveUserAsync(string userIdToRemove, ClaimsPrincipal currentUser);
     Task<bool> IsUserWriterAsync(string userId);
   }
 }

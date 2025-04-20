@@ -29,6 +29,36 @@
         </div>
       </div>
     </ng-container>
+    <!-- Writers Widget -->
+<div class="categories-widget widget-item">
+  <h3 class="widget-title">Writers</h3>
+  <div class="badge-grid mb-2">
+    <span *ngFor="let writer of writers; trackBy: trackByFn" 
+          class="category-badge"
+          (click)="writerClicked.emit(writer.id)" 
+          [class.disabled]="selectedWriterIds.includes(writer.id)"
+          role="button" 
+          tabindex="0">
+      {{ writer.fullName }}
+    </span>
+  </div>
+
+  <div *ngIf="selectedWriterIds.length > 0" class="selected-categories mt-2">
+    <small class="text-muted">Writers selecionados:</small>
+    <div class="selected-category-badges mt-1">
+      <span *ngFor="let id of selectedWriterIds; trackBy: trackByFn" class="selected-badge">
+        {{ getWriterName(id) }}
+        <button (click)="writerRemoved.emit(id)" 
+                class="remove-btn" 
+                aria-label="Remover writer">&times;</button>
+      </span>
+    </div>
+    <button class="btn btn-sm btn-outline-secondary mt-2" 
+            (click)="clearWriters.emit()">
+      Limpar todos
+    </button>
+  </div>
+</div>
 
     <!-- Recent Posts Widget -->
     <div class="recent-posts-widget widget-item">

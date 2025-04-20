@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AdminUserService } from '../admin-user.service';
+
 import Swal from 'sweetalert2';
-import { CreateUserRequest } from '../models/create-user.model';
+import { CreateUserRequest } from '../../models/create-user.model';
+import { AdminUserService } from '../../services/admin-user.service';
 @Component({
   selector: 'app-admin-user-create',
   templateUrl: './admin-user-create.component.html',

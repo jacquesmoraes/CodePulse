@@ -102,7 +102,7 @@ namespace CodePulse.API.Controllers
       // Cria o novo usuário com perfil integrado
       var userProfile = new UserProfile
       {
-        UserName = registerDto.UserName,
+        UserName = registerDto.UserName.Replace(" ", "" ),
         Email = registerDto.Email,
         FullName = registerDto.FullName,
         Bio = registerDto.Bio

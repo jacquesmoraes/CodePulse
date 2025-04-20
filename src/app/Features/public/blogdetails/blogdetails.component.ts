@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { Observable } from 'rxjs';
 import { BlogPostService } from '../../blog-post/services/blog-post.service';
-import { ViewportScroller } from '@angular/common';
 import { User } from '../../auth/models/user.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FavoriteService } from '../../favorite/favorite.service';
@@ -31,7 +30,6 @@ export class BlogdetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private blogpost: BlogPostService,
-    private viewportScroller: ViewportScroller,
     private spinner: NgxSpinnerService,
     private favoriteService: FavoriteService,
     private authService: AuthService,
@@ -62,10 +60,8 @@ export class BlogdetailsComponent implements OnInit {
                 this.favoriteService.isFavorite(this.blogPostId).subscribe({
                   next: (res) => {
                     this.isFavorited = res;
-                    console.log('✓ isFavorited atualizado corretamente:', this.isFavorited);
-                  },
-                  error: (err) => {
-                    console.error('Erro ao verificar favorito:', err);
+                     },
+                  error: () => {
                     this.isFavorited = false;
                   }
                 });
