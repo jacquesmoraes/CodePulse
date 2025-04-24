@@ -1,141 +1,218 @@
-/* writer-profile-section.component.css */
-.writer-section {
-    margin-top: 30px;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .section-header {
-    margin-bottom: 20px;
-  }
-  
-  .section-header h3 {
-    margin: 0;
-    color: #333;
-    font-size: 1.5rem;
-  }
-  
-  .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-  }
-  
-  .post-card {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-    background: #fff;
-  }
-  
-  .post-card:hover {
-    transform: translateY(-4px);
-  }
-  
-  .post-image {
-    height: 200px;
-    overflow: hidden;
-  }
-  
-  .post-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .post-content {
+/* -------------------- Seção Principal -------------------- */
+.favorites-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* -------------------- Cabeçalho da Seção -------------------- */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.list-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background: #f8f9fa;
+  color: #6c757d;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: #f26522;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* -------------------- Grid de Posts -------------------- */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* -------------------- Card do Post -------------------- */
+.post-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+}
+
+/* -------------------- Imagem -------------------- */
+.post-image {
+  position: relative;
+  padding-top: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+}
+
+.post-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -------------------- Conteúdo do Post -------------------- */
+.post-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.post-categories {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.category-tag {
+  padding: 4px 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.post-content h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+}
+
+.post-content h4 a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-content h4 a:hover {
+  color: #f26522;
+}
+
+.post-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: auto;
+}
+
+.view-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.view-count i {
+  font-size: 1rem;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.author-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* -------------------- Botão de Remover Favorito -------------------- */
+.remove-favorite-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background: #dc3545;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.remove-favorite-btn:hover {
+  background: #c82333;
+}
+
+/* -------------------- Loading e Empty -------------------- */
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.empty-state i {
+  font-size: 2rem;
+  color: #999;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* -------------------- Responsivo -------------------- */
+@media (max-width: 768px) {
+  .favorites-section {
     padding: 15px;
   }
-  
-  .post-categories {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
+
+  .posts-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .category-tag {
-    padding: 4px 8px;
-    background: #f0f0f0;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    color: #666;
+
+  .post-image {
+    padding-top: 66.67%; /* 3:2 para mobile */
   }
-  
-  .post-content h4 {
-    margin: 0 0 10px 0;
-    font-size: 1.1rem;
-  }
-  
-  .post-content h4 a {
-    color: #333;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  
-  .post-content h4 a:hover {
-    color: #f26522;
-  }
-  
-  .post-description {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .post-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #666;
-  }
-  
-  .author-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .author-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-  }
-  
-  /* Loading and empty states */
-  .loading-state,
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-  }
-  
-  .empty-state i {
-    font-size: 2rem;
-    color: #999;
-    margin-bottom: 10px;
-    display: block;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .writer-section {
-      padding: 15px;
-    }
-  
-    .posts-grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .post-image {
-      height: 180px;
-    }
-  }
+}

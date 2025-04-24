@@ -1,7 +1,9 @@
 using AutoMapper;
+using CodePulse.API.Exceptions;
 using CodePulse.API.Models.Domain;
 using CodePulse.API.Models.Dto;
 using CodePulse.API.Repositories.Interface;
+using CodePulse.API.Repositories.Interface.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,17 +17,20 @@ namespace CodePulse.API.Controllers
     private readonly ITokenRepository _tokenRepository;
     private readonly IMapper _mapper;
     private readonly ILogger<AuthController> _logger;
+    private readonly IAuthRepository _authRepository;
 
     public AuthController (
         UserManager<UserProfile> userManager,
         ITokenRepository tokenRepository,
         IMapper mapper,
-        ILogger<AuthController> logger )
+        ILogger<AuthController> logger,
+        IAuthRepository authRepository)
     {
       _userManager = userManager;
       _tokenRepository = tokenRepository;
       _mapper = mapper;
       _logger = logger;
+      _authRepository = authRepository;
     }
 
     [HttpPost]
@@ -123,5 +128,41 @@ namespace CodePulse.API.Controllers
 
       return Ok ( response );
     }
+
+
+
+    [HttpPost ( "forgot-password" )]
+    public async Task<IActionResult> ForgotPassword ( [FromBody] ForgotPasswordRequestDto request )
+    {
+      if ( !ModelState.IsValid )
+        return BadRequest ( new { message = "Dados inválidos", errors = ModelState.Values.SelectMany ( x => x.Errors ) } );
+
+      var result = await _authRepository.ForgotPasswordAsync(request);
+
+      // Sempre retorna OK para não revelar se o email existe
+      return Ok ( new { message = "Se o email existir em nossa base, você receberá as instruções para redefinição de senha." } );
+    }
+
+    
+
+
+    [HttpPost ( "reset-password" )]
+    public async Task<IActionResult> ResetPassword ( [FromBody] ResetPasswordRequestDto request )
+    {
+      if ( !ModelState.IsValid )
+        return BadRequest ( new { message = "invalid data", errors = ModelState.Values.SelectMany ( x => x.Errors ) } );
+
+      try
+      {
+        await _authRepository.ResetPasswordAsync ( request );
+        return Ok ( new { message = "password updated" } );
+      }
+      catch ( BusinessException ex )
+      {
+        return BadRequest ( new { message = ex.Message } );
+      }
+    }
+
+
   }
-}
+  }

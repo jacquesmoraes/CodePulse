@@ -100,10 +100,31 @@
 }
 
 /* Sidebar */
+/* ... existing code ... */
+
+/* Sidebar */
 .sidebar {
   position: sticky;
   top: 100px;
+  transform: translateZ(0);
+  will-change: transform;
+  transition: transform 0.3s ease-out;
 }
+
+/* Adicione esta nova classe para o container da sidebar */
+.sidebar-container {
+  position: relative;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+@media (min-width: 992px) {
+  .sidebar-container {
+    transform: translateY(calc(var(--scroll-amount, 0) * 0.5px));
+  }
+}
+
+/* ... existing code ... */
 
 .widget-item {
   background: #fff;
@@ -228,4 +249,24 @@
   .card-title {
     font-size: 1.2rem;
   }
+}
+.author-link:hover {
+  opacity: 0.8;
+}
+
+.author-avatar {
+  object-fit: cover;
+  border: 2px solid #eee;
+}
+
+.author-name {
+  font-weight: 500;
+  color: #333;
+}
+.post-date {
+  font-style: italic;
+}
+
+.post-date time {
+  font-weight: 500;
 }

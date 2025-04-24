@@ -1,114 +1,158 @@
 <div class="widgets-container" data-aos="fade-up" data-aos-delay="200">
-   
 
-    <!-- Categories Widget -->
-    <ng-container *ngIf="categories$ | async as categories">
-      <div class="categories-widget widget-item">
-        <h3 class="widget-title">Categories</h3>
-        <div class="badge-grid mb-2">
-          <span *ngFor="let category of categories; trackBy: trackByFn" class="category-badge"
+
+  <!-- Categories Widget -->
+  <ng-container *ngIf="categories$ | async as categories">
+    <div class="categories-widget widget-item">
+      <h3 class="widget-title">Categorias</h3>
+      <div class="badge-grid mb-2">
+        <span *ngFor="let category of categories; trackBy: trackByFn" class="category-badge"
           (click)="categoryClicked.emit(category.id)" [class.disabled]="selectedCategoryIds.includes(category.id)"
-            role="button" tabindex="0">
-            {{ category.name }}
+          role="button" tabindex="0">
+          {{ category.name }}
+        </span>
+      </div>
+
+      <div *ngIf="selectedCategoryIds.length > 0 && categories?.length" class="selected-categories mt-2">
+        <small class="text-muted">Filters:</small>
+        <div class="selected-category-badges mt-1">
+          <span *ngFor="let id of selectedCategoryIds; trackBy: trackByFn" class="selected-badge">
+            {{ getCategoryName(id) }}
+            <button (click)="categoryRemoved.emit(id)" class="remove-btn"
+              aria-label="Remover categoria">&times;</button>
           </span>
         </div>
+        <button class="btn btn-sm btn-outline-secondary mt-2" (click)="clearCategories.emit()">
 
-        <div *ngIf="selectedCategoryIds.length > 0 && categories?.length" class="selected-categories mt-2">
-          <small class="text-muted">Filtros aplicados:</small>
-          <div class="selected-category-badges mt-1">
-            <span *ngFor="let id of selectedCategoryIds; trackBy: trackByFn" class="selected-badge">
-              {{ getCategoryName(id) }}
-              <button (click)="categoryRemoved.emit(id)" class="remove-btn"
-                aria-label="Remover categoria">&times;</button>
-            </span>
+          limpar filtros
+        </button>
+      </div>
+    </div>
+  </ng-container>
+  <!-- Writers Widget -->
+  <div class="writers-widget widget-item">
+    <h3 class="widget-title">Quem Escreve</h3>
+  
+    <div class="writers-grid">
+      <div *ngFor="let writer of writers; trackBy: trackByFn"
+           class="writer-card"
+           (click)="writerClicked.emit(writer.id)"
+           [class.disabled]="selectedWriterIds.includes(writer.id)"
+           tabindex="0"
+           role="button"
+           [title]="writer.fullName || writer.userName">
+  
+        <img [src]="getFullImageUrl(writer.imageUrl)"
+             [alt]="writer.fullName || writer.userName"
+             class="writer-avatar"
+             loading="lazy">
+  
+        <div class="writer-name">{{ writer.fullName || '@' + writer.userName }}</div>
+      </div>
+    </div>
+  
+    <div *ngIf="selectedWriterIds.length > 0" class="selected-categories mt-2">
+      <small class="text-muted">Escritores selecionados:</small>
+      <div class="selected-category-badges mt-1">
+        <span *ngFor="let id of selectedWriterIds; trackBy: trackByFn" class="selected-badge">
+          {{ getWriterName(id) }}
+          <button (click)="writerRemoved.emit(id)" class="remove-btn" aria-label="Remover writer">&times;</button>
+        </span>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary mt-2" (click)="clearWriters.emit()">
+        Limpar todos
+      </button> 
+    </div>
+  </div>
+  
+  <!-- Readers Widget -->
+  <div class="categories-widget widget-item">
+    <h3 class="widget-title">Quem lê</h3>
+
+    <div class="readers-carousel-container">
+      <!-- Botão anterior -->
+      <button class="carousel-nav prev" (click)="previousReaders()" [disabled]="currentReaderPage === 0">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <!-- Container dos leitores -->
+      <div class="readers-wrapper">
+        <div class="readers-slide" [style.transform]="'translateX(' + (-currentReaderPage * 100) + '%)'">
+          <div class="readers-grid">
+            <a *ngFor="let reader of getCurrentPageReaders(); trackBy: trackByFn"
+              [routerLink]="['/profile', reader.userName]" class="reader-item"
+              [title]="reader.fullName || reader.userName">
+              <img [src]="getFullImageUrl(reader.imageUrl)" [alt]="reader.fullName || reader.userName" width="40"
+                height="40" class="rounded-circle border" loading="lazy">
+              <span class="reader-username">{{ '@' + reader.userName }}</span>
+            </a>
           </div>
-          <button class="btn btn-sm btn-outline-secondary mt-2"  (click)="clearCategories.emit()">
-            
-            Limpar todos
-          </button>
+        </div>
+      </div>
+
+      <!-- Botão próximo -->
+      <button class="carousel-nav next" (click)="nextReaders()" [disabled]="isLastPage()">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Indicadores de página -->
+    <div class="carousel-indicators">
+      <span *ngFor="let dot of getDotArray(); let i = index" class="dot" [class.active]="i === currentReaderPage"
+        (click)="goToPage(i)">
+      </span>
+    </div>
+  </div>
+
+  <!-- Recent Posts Widget -->
+  <div class="recent-posts-widget widget-item">
+    <h3 class="widget-title">Posts recentes</h3>
+    <ng-container *ngIf="!sidebarLoading; else skeletonSidebar">
+      <div *ngFor="let post of recentPosts; trackBy: trackByFn" class="post-item">
+
+        <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
+          height="60" decoding="async">
+        <div>
+          <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+          <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
+        </div>
+
+      </div>
+    </ng-container>
+
+    <ng-template #skeletonSidebar>
+      <div class="post-item" *ngFor="let s of [1,2,3,4,5]; trackBy: trackByFn">
+        <div class="skeleton skeleton-image" style="width: 80px; height: 60px;" aria-hidden="true"></div>
+        <div class="ms-2" style="flex: 1;">
+          <div class="skeleton skeleton-title" style="width: 100%; height: 16px;" aria-hidden="true"></div>
+          <div class="skeleton skeleton-text" style="width: 60%; height: 12px;" aria-hidden="true"></div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Popular Posts Widget -->
+  <div class="recent-posts-widget widget-item">
+    <h3 class="widget-title">Mais Acessados</h3>
+    <ng-container *ngIf="!popularLoading; else skeletonPopular">
+      <div *ngFor="let post of popularPosts; trackBy: trackByFn" class="post-item">
+        <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
+          height="60" decoding="async">
+        <div>
+          <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
+          <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
         </div>
       </div>
     </ng-container>
-    <!-- Writers Widget -->
-<div class="categories-widget widget-item">
-  <h3 class="widget-title">Writers</h3>
-  <div class="badge-grid mb-2">
-    <span *ngFor="let writer of writers; trackBy: trackByFn" 
-          class="category-badge"
-          (click)="writerClicked.emit(writer.id)" 
-          [class.disabled]="selectedWriterIds.includes(writer.id)"
-          role="button" 
-          tabindex="0">
-      {{ writer.fullName }}
-    </span>
-  </div>
 
-  <div *ngIf="selectedWriterIds.length > 0" class="selected-categories mt-2">
-    <small class="text-muted">Writers selecionados:</small>
-    <div class="selected-category-badges mt-1">
-      <span *ngFor="let id of selectedWriterIds; trackBy: trackByFn" class="selected-badge">
-        {{ getWriterName(id) }}
-        <button (click)="writerRemoved.emit(id)" 
-                class="remove-btn" 
-                aria-label="Remover writer">&times;</button>
-      </span>
-    </div>
-    <button class="btn btn-sm btn-outline-secondary mt-2" 
-            (click)="clearWriters.emit()">
-      Limpar todos
-    </button>
+    <ng-template #skeletonPopular>
+      <div class="post-item" *ngFor="let s of [1,2,3,4]; trackBy: trackByFn">
+        <div class="skeleton skeleton-image" style="width: 80px; height: 60px;" aria-hidden="true"></div>
+        <div class="ms-2" style="flex: 1;">
+          <div class="skeleton skeleton-title" style="width: 100%; height: 16px;" aria-hidden="true"></div>
+          <div class="skeleton skeleton-text" style="width: 60%; height: 12px;" aria-hidden="true"></div>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </div>
-
-    <!-- Recent Posts Widget -->
-    <div class="recent-posts-widget widget-item">
-      <h3 class="widget-title">Recent Posts</h3>
-      <ng-container *ngIf="!sidebarLoading; else skeletonSidebar">
-        <div *ngFor="let post of recentPosts; trackBy: trackByFn" class="post-item">
-         
-          <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
-            height="60" decoding="async">
-          <div>
-            <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
-            <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
-          </div>
-          
-        </div>
-      </ng-container>
-
-      <ng-template #skeletonSidebar>
-        <div class="post-item" *ngFor="let s of [1,2,3,4,5]; trackBy: trackByFn">
-          <div class="skeleton skeleton-image" style="width: 80px; height: 60px;" aria-hidden="true"></div>
-          <div class="ms-2" style="flex: 1;">
-            <div class="skeleton skeleton-title" style="width: 100%; height: 16px;" aria-hidden="true"></div>
-            <div class="skeleton skeleton-text" style="width: 60%; height: 12px;" aria-hidden="true"></div>
-          </div>
-        </div>
-      </ng-template>
-    </div>
-
-    <!-- Popular Posts Widget -->
-    <div class="recent-posts-widget widget-item">
-      <h3 class="widget-title">Most Popular posts</h3>
-      <ng-container *ngIf="!popularLoading; else skeletonPopular">
-        <div *ngFor="let post of popularPosts; trackBy: trackByFn" class="post-item">
-          <img [src]="post.featuredImageUrl" loading="lazy" [alt]="post.title" class="flex-shrink-0" width="60"
-            height="60" decoding="async">
-          <div>
-            <h4><a [routerLink]="['/blog', post.urlHandle]">{{ post.title }}</a></h4>
-            <time>{{ post.publishedDate | date: 'mediumDate' }}</time>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-template #skeletonPopular>
-        <div class="post-item" *ngFor="let s of [1,2,3,4]; trackBy: trackByFn">
-          <div class="skeleton skeleton-image" style="width: 80px; height: 60px;" aria-hidden="true"></div>
-          <div class="ms-2" style="flex: 1;">
-            <div class="skeleton skeleton-title" style="width: 100%; height: 16px;" aria-hidden="true"></div>
-            <div class="skeleton skeleton-text" style="width: 60%; height: 12px;" aria-hidden="true"></div>
-          </div>
-        </div>
-      </ng-template>
-    </div>
-  </div>

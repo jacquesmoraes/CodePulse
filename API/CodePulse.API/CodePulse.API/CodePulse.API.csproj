@@ -7,6 +7,7 @@
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <UserSecretsId>ff560c7c-edfd-447c-8385-9cd638c355bb</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Configuration\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Repositories\Interface\Service\" />
   </ItemGroup>
 
 </Project>

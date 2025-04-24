@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BlogPostService } from '../../blog-post/services/blog-post.service';
 import { BlogPost } from '../../blog-post/models/blog-post.model';
 import { Category } from '../../Categories/models/category.model';
@@ -29,28 +29,32 @@ export class HomeComponent implements OnInit {
   popularPosts: BlogPost[] = [];
   selectedCategoryIds: string[] = [];
   writers: UserProfile[] = [];
+  readers: UserProfile[] = [];
   selectedWriterIds: string[] = [];
   categories$ = this.categoryService.categories$;
   categoryList: Category[] = [];
 
+
+
   constructor(
+   
     private blogpostservice: BlogPostService,
     private categoryService: CategoryService,
     private userProfileService:UserProfileService,
     private viewportScroller: ViewportScroller,
-    private spinner: NgxSpinnerService
-  ) { }
+    private spinner: NgxSpinnerService,
+    
+  ){} 
+  
   ngOnInit(): void {
     forkJoin({
       posts: this.blogpostservice.GetAllBlogPosts(),
       categories: this.categoryService.loadAllCategories(),
-      writers: this.userProfileService.getAllWriters()
+      writers: this.userProfileService.getAllWriters(),
+      readers: this.userProfileService.getAllReaders() 
     }).subscribe({
-      next: ({ posts, categories, writers }) => {
-        console.log('Posts:', posts);
-        console.log('Categories:', categories);
-        console.log('Writers:', writers);
-        
+      next: ({ posts, categories, writers,readers }) => {
+    
         const sorted = posts.sort((a, b) =>
           new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()
         );
@@ -61,10 +65,12 @@ export class HomeComponent implements OnInit {
         this.selectedCategoryIds = [];
         this.pageNumber = 1;
         this.writers = writers.filter(w => w.role === 'Writer');
+        this.readers = readers.filter(r => r.role === 'User');
         this.selectedWriterIds = [];
         this.updatePagination();
         this.loading = false;
         this.sidebarLoading = false;
+        
       },
       error: (error) => {
         console.error('Erro ao carregar dados:', error);
@@ -239,5 +245,5 @@ export class HomeComponent implements OnInit {
     return index;
   }
 
-  
+ 
 }

@@ -37,7 +37,7 @@ export class RegisterComponent implements OnInit {
         Validators.minLength(6),
         Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/)
       ]],
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
+      fullName: [''],
       bio: [''],
       photoUrl: ['', [Validators.pattern(/https?:\/\/.+\.(jpg|jpeg|png)/)]]
     });

@@ -15,13 +15,7 @@
         <small *ngIf="f['userName'].errors?.['minlength'] && f['userName'].touched" class="text-danger">Mínimo 3 caracteres.</small>
       </div>
 
-      <div class="form-group">
-        <label for="fullName">Nome Completo</label>
-        <input id="fullName" type="text" formControlName="fullName" [ngClass]="{ 'invalid': f['fullName'].invalid && f['fullName'].touched }">
-        <small *ngIf="f['fullName'].errors?.['required'] && f['fullName'].touched" class="text-danger">Obrigatório.</small>
-        <small *ngIf="f['fullName'].errors?.['minlength'] && f['fullName'].touched" class="text-danger">Mínimo 3 caracteres.</small>
-      </div>
-
+     
       <div class="form-group">
         <label for="email">Email</label>
         <input id="email" type="email" formControlName="email" [ngClass]="{ 'invalid': f['email'].invalid && f['email'].touched }">

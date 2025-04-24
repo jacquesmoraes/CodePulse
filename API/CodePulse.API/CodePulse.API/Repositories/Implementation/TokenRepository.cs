@@ -21,12 +21,12 @@ namespace CodePulse.API.Repositories.Implementation
             //create claims
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email ?? ""),
-                new Claim(ClaimTypes.Name, user.UserName ?? ""),
-                new Claim("FullName", user.FullName),
-                new Claim("Bio", user.Bio ?? ""),
-                new Claim("Interests", user.Interests ?? "")
+                new(ClaimTypes.NameIdentifier, user.Id),
+                new (ClaimTypes.Email, user.Email ?? ""),
+                new(ClaimTypes.Name, user.UserName ?? ""),
+                new("FullName", user.FullName),
+                new("Bio", user.Bio ?? ""),
+                new("Interests", user.Interests ?? "")
             };
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 

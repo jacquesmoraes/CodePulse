@@ -1,12 +1,11 @@
-/* sidebar.component.css */
+/* -------------------- Container Principal -------------------- */
 .widgets-container {
-  position: sticky;
   top: 100px;
 }
 
+/* -------------------- Widgets -------------------- */
 .widget-item {
   background: #ffffff;
-  border: none;
   border-radius: 16px;
   padding: 25px;
   margin-bottom: 30px;
@@ -44,7 +43,7 @@
   width: 80px;
 }
 
-/* Categories Widget */
+/* -------------------- Categorias & Writers -------------------- */
 .badge-grid {
   display: flex;
   flex-wrap: wrap;
@@ -76,6 +75,7 @@
   pointer-events: none;
 }
 
+/* -------------------- Filtros Selecionados -------------------- */
 .selected-categories {
   margin-top: 20px;
   padding-top: 15px;
@@ -117,7 +117,7 @@
   transform: scale(1.1);
 }
 
-/* Recent and Popular Posts */
+/* -------------------- Posts Recentes e Populares -------------------- */
 .post-item {
   display: flex;
   align-items: center;
@@ -177,7 +177,7 @@
   color: #f26522;
 }
 
-/* Skeleton Loading */
+/* -------------------- Skeleton Loader -------------------- */
 .skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
@@ -207,10 +207,10 @@
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Clear Categories Button */
+/* -------------------- Botão "Limpar Todos" -------------------- */
 .btn-outline-secondary {
   color: #f26522;
   border: 1px solid #f26522;
@@ -227,4 +227,184 @@
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(242, 101, 34, 0.2);
+}
+
+/* -------------------- Leitores (Carousel) -------------------- */
+.readers-carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0 20px;
+}
+
+.readers-wrapper {
+  overflow: hidden;
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.readers-slide {
+  display: flex;
+  transition: transform 0.3s ease;
+}
+
+.readers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 0.8rem;
+  width: 100%;
+  min-width: 100%;
+  padding: 0.5rem;
+}
+
+.reader-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.reader-item:hover {
+  transform: translateY(-2px);
+  background: rgba(242, 101, 34, 0.1);
+  border-radius: 8px;
+}
+
+.reader-item img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  margin-bottom: 0.3rem;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reader-username {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* -------------------- Navegação do Carousel -------------------- */
+.carousel-nav {
+  background: rgba(242, 101, 34, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: absolute;
+  z-index: 2;
+}
+
+.carousel-nav:hover {
+  background: rgba(242, 101, 34, 0.2);
+}
+
+.carousel-nav:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carousel-nav.prev {
+  left: -10px;
+}
+
+.carousel-nav.next {
+  right: -10px;
+}
+
+/* Indicadores */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ddd;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dot.active {
+  background: #f26522;
+}
+
+/* -------------------- Responsividade -------------------- */
+@media (max-width: 576px) {
+  .readers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+  }
+}
+/* -------------------- Cards dos Writers -------------------- */
+.writers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 12px;
+}
+
+.writer-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.writer-card:hover {
+  background: #fff3ed;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(242, 101, 34, 0.1);
+}
+
+.writer-card.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.writer-avatar {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.writer-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.2;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+/* Responsividade: menos colunas em telas estreitas */
+@media (max-width: 576px) {
+  .writers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

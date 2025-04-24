@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityService(builder.Configuration);
+builder.Services.AddEmailServices ( builder.Configuration );
 builder.WebHost.UseWebRoot("wwwroot");
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

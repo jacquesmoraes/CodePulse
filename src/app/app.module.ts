@@ -32,6 +32,9 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { MarkdownModule } from 'ngx-markdown';
 import { DashboardModule } from './Features/dashboard/dashboard.module';
 import { UserProfileModule } from './profile/user-profile/user-profile.module';
+import { ForgotPasswordComponent } from './Features/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './Features/auth/reset-password/reset-password.component';
+
 
 
 
@@ -55,7 +58,10 @@ import { UserProfileModule } from './profile/user-profile/user-profile.module';
     LoginComponent,
     RegisterComponent,
     LazyLoadDirective,
-    SidebarComponent
+    SidebarComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    
     
   ],
   imports: [

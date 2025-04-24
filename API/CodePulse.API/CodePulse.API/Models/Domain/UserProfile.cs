@@ -7,7 +7,7 @@ namespace CodePulse.API.Models.Domain
   [Index(nameof(UserName), IsUnique = true)]
   public class UserProfile : IdentityUser
   {
-    public required string FullName { get; set; }
+    public string? FullName { get; set; }
     public string? Bio { get; set; }
     public string? Interests { get; set; }
     public Guid? ImageId { get; set; }
@@ -18,15 +18,6 @@ namespace CodePulse.API.Models.Domain
      public ICollection<BlogPost> BlogPosts { get; set; } = new List<BlogPost> ( );
     public ICollection<FavoritePost> FavoriteBlogPosts { get; set; } = new List<FavoritePost>();
 
-    public UserProfile()
-    {
-    }
-
-    public UserProfile(string fullName, string userName, string email) : base(userName)
-    {
-      FullName = fullName;
-      Email = email;
-      UserName = userName;
-    }
+   
   }
 }

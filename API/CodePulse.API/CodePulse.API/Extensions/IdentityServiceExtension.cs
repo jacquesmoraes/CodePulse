@@ -22,7 +22,8 @@ namespace CodePulse.API.Extensions
         .AddRoles<IdentityRole> ( )
         .AddTokenProvider<DataProtectorTokenProvider<UserProfile>> ( "CodePulse" )
         .AddEntityFrameworkStores<AuthContext> ( )
-        .AddDefaultTokenProviders ( );
+        .AddDefaultTokenProviders();
+        
       services.Configure<IdentityOptions> ( opt =>
       {
         opt.Password.RequireDigit = false;
@@ -32,6 +33,10 @@ namespace CodePulse.API.Extensions
         opt.Password.RequireUppercase = false;
         opt.Password.RequiredUniqueChars = 1;
         opt.User.RequireUniqueEmail = true;
+      } );
+      services.Configure<DataProtectionTokenProviderOptions> ( opt =>
+      {
+        opt.TokenLifespan = TimeSpan.FromMinutes ( 5 );
       } );
       services.AddAuthentication ( JwtBearerDefaults.AuthenticationScheme )
         .AddJwtBearer ( opt =>

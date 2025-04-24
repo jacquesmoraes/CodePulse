@@ -34,6 +34,10 @@ export class UserProfileService {
     return this.http.get<UserProfile[]>(`${environment.apiBaseUrl}/api/UserProfile/writers`);
   }
  
+  getAllReaders(): Observable<UserProfile[]> {
+    return this.http.get<UserProfile[]>(`${environment.apiBaseUrl}/api/UserProfile/readers`);
+  }
+
   GetPublicProfile(username: string): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${environment.apiBaseUrl}/api/UserProfile/public/${username}`);
 

@@ -196,20 +196,47 @@ namespace CodePulse.API.Controllers
 
 
     // Endpoint para usuário autenticado deletar seu próprio perfil
-   [HttpDelete("me")]
-[Authorize]
-public async Task<IActionResult> DeleteMyProfile()
-{
-    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-    var deletedProfile = await _userRepository.DeleteUserProfileAsync(userId);
-
-    if (deletedProfile == null)
+    [HttpDelete ( "me" )]
+    [Authorize]
+    public async Task<IActionResult> DeleteMyProfile ( )
     {
-        return NotFound("Perfil não encontrado ou já foi excluído.");
+      var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+      var deletedProfile = await _userRepository.DeleteUserProfileAsync(userId);
+
+      if ( deletedProfile == null )
+      {
+        return NotFound ( "Perfil não encontrado ou já foi excluído." );
+      }
+
+      return NoContent ( );
     }
 
-    return NoContent();
+
+  [HttpGet("readers")]
+[AllowAnonymous]
+public async Task<IActionResult> GetAllReaders()
+{
+    var readers = await _userManager.GetUsersInRoleAsync("User");
+    var readerIds = readers.Select(r => r.Id).ToList();
+
+    var readerProfiles = await _authContext.UsersProfiles
+        .Include(p => p.Image)
+        .Where(p => readerIds.Contains(p.Id))
+        .Select(p => new UserProfileDto
+        {
+            Id = p.Id,
+            UserName = p.UserName,
+            Email = p.Email,
+            FullName = p.FullName,
+            Bio = p.Bio,
+            Interests = p.Interests,
+            ImageUrl = p.Image != null ? p.Image.Url : null,
+            Role = "User"
+        })
+        .ToListAsync();
+
+    return Ok(readerProfiles);
 }
 
 

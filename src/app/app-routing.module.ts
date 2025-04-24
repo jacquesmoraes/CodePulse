@@ -14,6 +14,8 @@ import { authGuard } from './Features/auth/guards/auth.guard';
 import { RegisterComponent } from './Features/auth/register/register.component';
 import { UserProfileComponent } from './profile/user-profile/user-profile.component';
 import { adminGuard } from './Features/auth/guards/admin.guard';
+import { ForgotPasswordComponent } from './Features/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './Features/auth/reset-password/reset-password.component';
 
 
 
@@ -30,7 +32,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'aboutme', component: UserProfileComponent, canActivate: [authGuard] },
-  { path: 'profile/:username', component: UserProfileComponent }
+  { path: 'profile/:username', component: UserProfileComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent }
+
 
 ];
 

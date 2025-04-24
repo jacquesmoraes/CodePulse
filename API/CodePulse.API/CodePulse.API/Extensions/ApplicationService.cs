@@ -1,7 +1,9 @@
 using CodePulse.API.Data;
+using CodePulse.API.Exceptions;
 using CodePulse.API.Mapping;
 using CodePulse.API.Repositories.Implementation;
 using CodePulse.API.Repositories.Interface;
+using CodePulse.API.Repositories.Interface.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -60,7 +62,8 @@ namespace CodePulse.API.Extensions
           var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
           options.IncludeXmlComments(xmlPath);
       });
-      
+
+      services.AddScoped<BusinessException> ( );
       services.AddScoped<ICategoryRepository, CategoryRepository> ( );
       services.AddScoped<IBlogPostRepository, BlogPostRepository> ( );
       services.AddScoped<IImageRepository, ImageRepository> ( );
@@ -69,7 +72,10 @@ namespace CodePulse.API.Extensions
       services.AddScoped<IUserImageProfileRepository, UserImageProfileRepository>();
       services.AddScoped<IUserManagmentRepository , UserManagementRepository>();
       services.AddScoped<IFavoriteRepository, FavoriteRepository> ( );
-      
+      services.AddScoped<IAuthRepository, AuthRepository> ( );
+      services.AddScoped<IEmailService, SmtpEmailService> ( );
+      services.AddScoped< EmailTemplateServiceExtension> ( );
+
 
       return services;
     }
