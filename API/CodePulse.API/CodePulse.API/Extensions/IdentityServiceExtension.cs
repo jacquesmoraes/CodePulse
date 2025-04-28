@@ -15,7 +15,7 @@ namespace CodePulse.API.Extensions
     {
       services.AddDbContext<AuthContext> ( opt =>
       {
-        opt.UseSqlServer ( configuration.GetConnectionString ( "CodePulseConnectionString" ) );
+        opt.UseNpgsql ( configuration.GetConnectionString ( "CodePulseConnectionString" ) );
       } );
 
       services.AddIdentityCore<UserProfile> ( )

@@ -1,5 +1,3 @@
-using CodePulse.API.Models.Domain;
-
 namespace CodePulse.API.Models.Dto
 {
   public class CreateBlogPostRequestDto
@@ -11,6 +9,6 @@ namespace CodePulse.API.Models.Dto
     public string UrlHandle { get; set; }
     public DateTime PublishedDate { get; set; }
     public bool IsVisible { get; set; }
-    public List<Guid> Categories { get; set; } = new List<Guid>();
+    public List<Guid> Categories { get; set; } = new List<Guid> ( );
   }
 }

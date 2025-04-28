@@ -30,14 +30,14 @@ export class BlogdetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private blogpost: BlogPostService,
-    private spinner: NgxSpinnerService,
+    
     private favoriteService: FavoriteService,
     private authService: AuthService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.spinner.show();
+    
     
  
     this.isAuthenticated = !!this.authService.getUser(); 
@@ -72,11 +72,11 @@ export class BlogdetailsComponent implements OnInit {
               this.loadMostViewedPosts();
               this.loadRelatedPosts(this.blogPostId);
 
-              this.spinner.hide();
+              
             },
             error: () => {
               this.error = 'Erro ao carregar o post.';
-              this.spinner.hide();
+              
             }
           });
         }

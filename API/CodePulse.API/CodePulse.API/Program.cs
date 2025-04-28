@@ -25,13 +25,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
 app.UseCors(options =>
 {
-    options.AllowAnyHeader();
-    options.WithOrigins("http://localhost:4200", "https://localhost:7167");
-    options.AllowAnyMethod();
-    options.AllowCredentials();
+    options.WithOrigins(allowedOrigins)
+           .AllowAnyHeader()
+           .AllowAnyMethod()
+           .AllowCredentials();
 });
+
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
     private categoryService: CategoryService,
     private userProfileService:UserProfileService,
     private viewportScroller: ViewportScroller,
-    private spinner: NgxSpinnerService,
+  
     
   ){} 
   
@@ -101,11 +101,11 @@ export class HomeComponent implements OnInit {
   
     this.pageNumber = 1;
     this.loading = true;
-    this.spinner.show();
+   
     setTimeout(() => {
       this.updatePagination();
       this.loading = false;
-      this.spinner.hide();
+      
       this.viewportScroller.scrollToPosition([0, 0]);
     }, 0);
   }
@@ -162,11 +162,11 @@ export class HomeComponent implements OnInit {
   
     this.pageNumber = 1;
     this.loading = true;
-    this.spinner.show();
+    
     setTimeout(() => {
       this.updatePagination();
       this.loading = false;
-      this.spinner.hide();
+    
       this.viewportScroller.scrollToPosition([0, 0]);
     }, 0);
   }
@@ -188,14 +188,14 @@ export class HomeComponent implements OnInit {
   clearCategoryFilter(): void {
    
     this.loading = true;
-    this.spinner.show();
+    
   
     setTimeout(() => {
       this.selectedCategoryIds = [];
       this.pageNumber = 1;
       this.updatePagination();
       this.loading = false;
-      this.spinner.hide();
+    
     }, 0);
   }
 
@@ -226,7 +226,7 @@ export class HomeComponent implements OnInit {
   onSearch(query: string) {
     this.viewportScroller.scrollToPosition([0, 0]);
     this.loading = true;
-    this.spinner.show();
+    
   
     this.blogpostservice.GetAllBlogPosts(query).subscribe(posts => {
       const sorted = posts.sort((a, b) =>
@@ -237,7 +237,7 @@ export class HomeComponent implements OnInit {
       this.updatePagination();
   
       this.loading = false;
-      this.spinner.hide();
+      
     });
   }
   

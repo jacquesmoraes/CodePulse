@@ -43,7 +43,7 @@
         <ng-container *ngIf="isEditing">
           <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || userNameExists">Salvar</button>
           <button type="button" class="btn btn-outline-danger" (click)="cancelEdit()">Cancelar</button>
-          <button class="btn btn-outline-danger mt-3" (click)="onDeleteMyProfile()">
+          <button type="button" class="btn btn-outline-danger mt-3" (click)="onDeleteMyProfile()">
             Excluir meu perfil
           </button>
         </ng-container>

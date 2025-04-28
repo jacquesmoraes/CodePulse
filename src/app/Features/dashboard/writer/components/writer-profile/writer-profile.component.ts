@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/Features/auth/services/auth.service';
 import { UserProfile } from 'src/app/profile/user-profile/shared/models/user-profile.model';
 import { UserProfileService } from 'src/app/profile/user-profile.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-writer-profile',
@@ -212,17 +213,23 @@ export class WriterProfileComponent implements OnInit {
     });
   }
 
-  onDeleteMyProfile(): void {
-    const confirmed = confirm('Tem certeza que deseja excluir seu perfil? Esta ação não poderá ser desfeita.');
-  
-    if (confirmed) {
+
+
+onDeleteMyProfile(): void {
+  Swal.fire({
+    title: 'Tem certeza?',
+    text: 'Esta ação não poderá ser desfeita!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sim, excluir',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.userProfileService.deleteUser().subscribe({
         next: () => {
           this.toastr.success('Perfil excluído com sucesso.');
-          this.authService.lougout(); // Importante: fazer logout após deletar o perfil
-          setTimeout(() => {
-            this.router.navigateByUrl('/login');
-          }, 1500);
+          this.authService.lougout(); // faz logout após excluir
+          setTimeout(() => this.router.navigateByUrl('/login'), 1500);
         },
         error: (error) => {
           console.error(error);
@@ -234,7 +241,9 @@ export class WriterProfileComponent implements OnInit {
         }
       });
     }
+  });
 }
+
 
 
   get f() {

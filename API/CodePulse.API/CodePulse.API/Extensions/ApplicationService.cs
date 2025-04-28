@@ -27,7 +27,7 @@ namespace CodePulse.API.Extensions
 
       services.AddDbContext<ApplicationContext> ( opt =>
       {
-        opt.UseSqlServer(config.GetConnectionString ( "CodePulseConnectionString" ) );
+        opt.UseNpgsql(config.GetConnectionString ( "CodePulseConnectionString" ) );
       } );
       services.AddSwaggerGen(options =>
       {

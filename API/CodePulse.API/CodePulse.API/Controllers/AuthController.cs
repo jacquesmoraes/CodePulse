@@ -35,6 +35,7 @@ namespace CodePulse.API.Controllers
 
     [HttpPost]
     [Route ( "login" )]
+    
     public async Task<IActionResult> login ( [FromBody] LoginRequestDto request )
     {
       _logger.LogInformation ( "Login attempt for email: {Email}", request.Email );

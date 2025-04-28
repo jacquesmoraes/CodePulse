@@ -396,6 +396,11 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# SonarQube
+.sonarqube/
+*.pb
+
+
 # JetBrains Rider
 *.sln.iml
 .angular/cache/
