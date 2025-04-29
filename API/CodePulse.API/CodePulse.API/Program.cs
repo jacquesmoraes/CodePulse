@@ -24,16 +24,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+app.Urls.Add($"http://*:{port}");
+
 app.UseHttpsRedirection();
-var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
 
 app.UseCors(options =>
 {
-    options.WithOrigins(allowedOrigins)
-           .AllowAnyHeader()
-           .AllowAnyMethod()
-           .AllowCredentials();
+    options.AllowAnyHeader();
+    options.WithOrigins(
+        builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    );
+    options.AllowAnyMethod();
+    options.AllowCredentials();
 });
+
 
 
 app.UseAuthentication();
