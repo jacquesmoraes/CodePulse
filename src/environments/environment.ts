@@ -1,3 +1,5 @@
 export const environment = {
-    apiBaseUrl: 'https://localhost:7167'
+    production: true,
+  apiBaseUrl: 'https://codepulse-7ufa.onrender.com', 
+  clientBaseUrl: 'code-pulse-khaki.vercel.app'
 };
