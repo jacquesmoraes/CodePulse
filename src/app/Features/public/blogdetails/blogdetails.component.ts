@@ -8,6 +8,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { FavoriteService } from '../../favorite/favorite.service';
 import { AuthService } from '../../auth/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
+import { UserProfileService } from 'src/app/profile/user-profile.service';
 
 @Component({
   selector: 'app-blogdetails',
@@ -26,11 +28,12 @@ export class BlogdetailsComponent implements OnInit {
   user?: User;
   isFavorited: boolean = false;
   isAuthenticated: boolean = false;
+  
 
   constructor(
     private route: ActivatedRoute,
     private blogpost: BlogPostService,
-    
+    public userProfileService:UserProfileService,
     private favoriteService: FavoriteService,
     private authService: AuthService,
     private toastr: ToastrService
@@ -105,6 +108,8 @@ export class BlogdetailsComponent implements OnInit {
       }
     });
   }
+
+  
 
   loadDisqus(postId: string, urlHandle: string): void {
     const pageUrl = window.location.href;

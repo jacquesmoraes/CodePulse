@@ -31,9 +31,7 @@ public static class BlogPostMapperHelper
       Id = post.AuthorProfile.Id,
       UserName = post.AuthorProfile.UserName,
       FullName = post.AuthorProfile.FullName,
-      ImageUrl = post.AuthorProfile.Image != null
-        ? $"https://localhost:7167/{post.AuthorProfile.Image.Url}"
-        : null,
+      ImageUrl = post.AuthorProfile.Image?.Url,
 
 
       Bio = post.AuthorProfile.Bio

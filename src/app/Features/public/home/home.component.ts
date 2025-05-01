@@ -5,11 +5,10 @@ import { Category } from '../../Categories/models/category.model';
 import { CategoryService } from '../../Categories/services/category.service';
 
 import { ViewportScroller } from '@angular/common';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { query } from '@angular/animations';
 import { forkJoin } from 'rxjs';
 import { UserProfile } from 'src/app/profile/user-profile/shared/models/user-profile.model';
 import { UserProfileService } from 'src/app/profile/user-profile.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +16,7 @@ import { UserProfileService } from 'src/app/profile/user-profile.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+ 
   allPosts: BlogPost[] = [];
   filteredBlogposts: BlogPost[] = [];
   recentPosts: BlogPost[] = [];
@@ -34,13 +34,13 @@ export class HomeComponent implements OnInit {
   categories$ = this.categoryService.categories$;
   categoryList: Category[] = [];
 
-
+  
 
   constructor(
    
     private blogpostservice: BlogPostService,
     private categoryService: CategoryService,
-    private userProfileService:UserProfileService,
+    public userProfileService:UserProfileService,
     private viewportScroller: ViewportScroller,
   
     
@@ -222,6 +222,7 @@ export class HomeComponent implements OnInit {
 
     }
   }
+   
 
   onSearch(query: string) {
     this.viewportScroller.scrollToPosition([0, 0]);

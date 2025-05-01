@@ -44,31 +44,28 @@
                           </a>
                         </h2>
                         <p class="text-muted mb-2">{{ blog.shortDescription }}</p>
-                      
-                      <!--author-->
-                      
-                      <div class="d-flex align-items-center justify-content-between mb-1">
-                        <div class="post-meta">
-                          <a [routerLink]="['/profile', blog.author.userName]" class="author-link d-flex align-items-center text-decoration-none">
-                            <img 
-                              [src]="blog.author.imageUrl || 'assets/default-avatar.png'" 
-                              [alt]="'Avatar de ' + blog.author.userName"
-                              class="author-avatar rounded-circle me-3" 
-                              width="48" 
-                              height="48" 
-                            />
-                            <div class="author-info">
-                              <span class="author-name d-block">{{ blog.author.userName }}</span>
-                              <small class="text-muted">Conheça mais sobre o autor</small>
-                            </div>
-                          </a>
+
+                        <!--author-->
+
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                          <div class="post-meta">
+                            <a [routerLink]="['/profile', blog.author.userName]"
+                              class="author-link d-flex align-items-center text-decoration-none">
+                              <img [src]="userProfileService.getFullImageUrl(blog.author.imageUrl)"
+                                [alt]="'Avatar de ' + blog.author.userName" class="author-avatar rounded-circle me-3"
+                                width="48" height="48" loading="lazy" />
+                              <div class="author-info">
+                                <span class="author-name d-block">{{ blog.author.userName }}</span>
+                                <small class="text-muted">Conheça mais sobre o autor</small>
+                              </div>
+                            </a>
+                          </div>
+                          <div class="post-date">
+                            <small class="text-muted">
+                              Publicado em <time>{{ blog.publishedDate | date: 'dd MMM, yyyy' }}</time>
+                            </small>
+                          </div>
                         </div>
-                        <div class="post-date">
-                          <small class="text-muted">
-                            Publicado em <time>{{ blog.publishedDate | date: 'dd MMM, yyyy' }}</time>
-                          </small>
-                        </div>
-                      </div>
 
 
 
@@ -110,35 +107,25 @@
         <div class="col-lg-4 sidebar">
           <div class="sidebar-container">
             <div class="sidebar">
-          <!-- Search Widget -->
-          <div class="search-widget widget-item">
-            <h3 class="widget-title">busca</h3>
-            <form (submit)="onSearch(queryText.value); $event.preventDefault()">
-              <input type="text" #queryText aria-label="Pesquisar posts" autocomplete="off">
-              <button type="submit" title="Search" aria-label="Pesquisar">
-                <i class="bi bi-search" aria-hidden="true"></i>
-              </button>
-            </form>
-          </div>
+              <!-- Search Widget -->
+              <div class="search-widget widget-item">
+                <h3 class="widget-title">busca</h3>
+                <form (submit)="onSearch(queryText.value); $event.preventDefault()">
+                  <input type="text" #queryText aria-label="Pesquisar posts" autocomplete="off">
+                  <button type="submit" title="Search" aria-label="Pesquisar">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                  </button>
+                </form>
+              </div>
 
 
-          <side-bar [recentPosts]="recentPosts"
-           [popularPosts]="popularPosts"
-           [popularLoading]="popularLoading"
-           [sidebarLoading]="loading"
-           [categories$]="categories$" 
-           [writers]="writers" 
-           [readers]="readers"
-           [selectedWriterIds]="selectedWriterIds" 
-           [selectedCategoryIds]="selectedCategoryIds"
-           (categoryClicked)="onCategoryClick($event)" 
-           (categoryRemoved)="removeCategory($event)"
-           (clearCategories)="clearCategoryFilter()" 
-           (writerClicked)="onWriterClick($event)"
-           (writerRemoved)="removeWriter($event)" 
-           (clearWriters)="clearWriterFilter()" 
-           [trackByFn]="trackByFn">
-          </side-bar>
+              <side-bar [recentPosts]="recentPosts" [popularPosts]="popularPosts" [popularLoading]="popularLoading"
+                [sidebarLoading]="loading" [categories$]="categories$" [writers]="writers" [readers]="readers"
+                [selectedWriterIds]="selectedWriterIds" [selectedCategoryIds]="selectedCategoryIds"
+                (categoryClicked)="onCategoryClick($event)" (categoryRemoved)="removeCategory($event)"
+                (clearCategories)="clearCategoryFilter()" (writerClicked)="onWriterClick($event)"
+                (writerRemoved)="removeWriter($event)" (clearWriters)="clearWriterFilter()" [trackByFn]="trackByFn">
+              </side-bar>
             </div>
           </div>
         </div>

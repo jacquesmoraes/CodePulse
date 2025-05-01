@@ -29,7 +29,8 @@
               <!-- Meta info do autor -->
               <div class="author-meta">
                 <div class="author-info">
-                  <img [src]="blogpost.author.imageUrl || 'assets/default-avatar.png'" alt="Author avatar"
+                  <img [src]="userProfileService.getFullImageUrl(blogpost.author.imageUrl)" 
+                  alt="Author avatar"
                     class="author-avatar">
                   <div class="author-details">
                     <a [routerLink]="['/profile', blogpost.author.userName]" class="author-name">
