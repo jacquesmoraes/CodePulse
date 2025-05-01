@@ -11,17 +11,15 @@ import { CookieService } from 'ngx-cookie-service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private cookieService: CookieService) {}
+  
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const tokenRaw = this.cookieService.get('Authorization');
-    const token = decodeURIComponent(tokenRaw);
+    const token = localStorage.getItem('token');
 
-    // Só adiciona o token se a URL for da sua API
-    if (token && request.url.startsWith('https://localhost:7167')) {
+    if (token) {
       const authRequest = request.clone({
         setHeaders: {
-          Authorization: token
+          Authorization: `Bearer ${token}`
         }
       });
       return next.handle(authRequest);
