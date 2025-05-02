@@ -4,11 +4,12 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 1rem;
   margin-bottom: 1rem;
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
 }
 
 .post-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .post-card-body {
@@ -23,12 +24,42 @@
   object-fit: cover;
   border-radius: 8px;
   flex-shrink: 0;
- 
 }
 
 .post-content {
   flex: 1;
   min-width: 0;
+}
+
+.post-content h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.post-content p {
+  margin: 0 0 0.75rem;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.post-meta a {
+  color: #f26522;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.post-meta time {
+  color: #888;
 }
 
 .actions {
@@ -37,13 +68,15 @@
   margin-top: 0.5rem;
 }
 
-.actions a {
+.actions a, .actions button {
   padding: 0.4rem 0.8rem;
   border-radius: 0.5rem;
   font-size: 0.85rem;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s;
+  border: none;
+  cursor: pointer;
 }
 
 .actions a:first-child {
@@ -55,7 +88,12 @@
 .actions a:last-child {
   background-color: #f26522;
   color: white;
-  border: none;
+}
+
+.actions button.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  font-size: 0.85rem;
 }
 
 .actions a:first-child:hover {
@@ -64,4 +102,107 @@
 
 .actions a:last-child:hover {
   background-color: #c2501c;
+}
+
+.actions button.btn-danger:hover {
+  background-color: #bb2d3b;
+}
+
+/* Ajustes para Mobile */
+@media (max-width: 768px) {
+  .post-card {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+  }
+
+  .post-card-body {
+    gap: 0.75rem;
+  }
+
+  .post-image {
+    width: 80px;
+    height: 60px;
+    border-radius: 6px;
+  }
+
+  .post-content h4 {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .post-content p {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-meta {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .actions a, .actions button {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+    flex: 1;
+    text-align: center;
+    min-width: 60px;
+  }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+  .post-card {
+    padding: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .post-image {
+    width: 70px;
+    height: 50px;
+  }
+
+  .post-content h4 {
+    font-size: 0.95rem;
+  }
+
+  .post-content p {
+    font-size: 0.8rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .actions {
+    margin-top: 0.3rem;
+  }
+
+  .actions a, .actions button {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Melhorias na interação touch */
+@media (hover: none) {
+  .post-card:hover {
+    transform: none;
+  }
+
+  .post-card:active {
+    transform: scale(0.99);
+  }
+
+  .actions a:active, .actions button:active {
+    transform: scale(0.95);
+  }
 }

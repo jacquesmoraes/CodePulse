@@ -38,6 +38,13 @@
   font-size: 0.95rem;
 }
 
+.profile-image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
 .profile-image img {
   width: 120px;
   height: 120px;
@@ -59,42 +66,120 @@
   scroll-behavior: smooth;
 }
 
+.edit-photo-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 50%;
+  transform: translateX(45px);
+  background-color: #ffffffee;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.edit-photo-btn:hover {
+  background-color: #fff;
+  transform: translateX(45px) scale(1.1);
+}
+
+.edit-photo-btn i {
+  font-size: 1rem;
+}
+
 /* RESPONSIVO */
 @media (max-width: 768px) {
   :host {
     flex-direction: column;
+    height: auto;
+    overflow: auto;
   }
 
   .dashboard-container {
     flex-direction: column;
     height: auto;
+    padding: 0.75rem;
+    gap: 1rem;
+    margin-top: 70px; /* Espaço para a navbar fixa */
   }
 
   .profile-card {
     position: static;
-    width: 100%;
+    width: auto;
+    flex: none;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .profile-image img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+  }
+
+  .profile-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .profile-card p {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
   }
 
   .post-list {
+    padding: 1rem;
+    margin: 0;
+    border-radius: 12px;
     max-height: none;
   }
-}
-.profile-image {
-  position: relative;
+
+  .edit-photo-btn {
+    padding: 6px;
+    bottom: 10px;
+  }
+
+  .edit-photo-btn i {
+    font-size: 0.9rem;
+  }
 }
 
-.edit-photo-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background-color: #ffffffcc;
-  border: none;
-  border-radius: 50%;
-  padding: 8px;
-  cursor: pointer;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+/* Ajustes para telas muito pequenas */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 0.5rem;
+  }
+
+  .profile-card {
+    padding: 0.75rem;
+    border-radius: 10px;
+  }
+
+  .post-list {
+    padding: 0.75rem;
+    border-radius: 10px;
+  }
+
+  .profile-image img {
+    width: 90px;
+    height: 90px;
+  }
 }
 
-.edit-photo-btn i {
-  font-size: 1rem;
+/* Ajuste para altura da tela em dispositivos móveis */
+@media (max-height: 700px) and (max-width: 768px) {
+  .dashboard-container {
+    margin-top: 60px;
+  }
+
+  .profile-card {
+    padding: 0.75rem;
+  }
+
+  .profile-image img {
+    width: 80px;
+    height: 80px;
+  }
 }
